@@ -1,13 +1,13 @@
 #UMS Interface
 ## screen shots
 
-![](https://github.com/outofmemo/UMS-Interface/raw/master/screenshots/p1.png)
+![](https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/screenshots/p1.png)
 
-![](https://github.com/outofmemo/UMS-Interface/raw/master/screenshots/p2.png)
+![](https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/screenshots/p2.png)
 
-![](https://github.com/outofmemo/UMS-Interface/raw/master/screenshots/p3.png)
+![](https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/screenshots/p3.png)
 
-![](https://github.com/outofmemo/UMS-Interface/raw/master/screenshots/p4.png)
+![](https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/screenshots/p4.png)
 ##introduction
  * Root permission is needed,or ANR when launch , if you want to use mount function, busybox is needed too.
  * This program allows you to chose a block device or disk image as a 'disk',and communicate with PC through usb mass storage (just as usb disk do).
