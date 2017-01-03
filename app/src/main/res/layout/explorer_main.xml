@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/explorer_drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
+
+	<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.sjj.echo.explorer.MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay"
+            android:id="@+id/explorer_app_bar">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/explorer_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:titleTextAppearance="@style/title_style"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+            <android.support.design.widget.TabLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/explorer_tab_layout"
+                app:tabGravity="fill"
+                app:tabIndicatorColor="#89E1F8"
+                app:tabMode="fixed"
+                app:tabTextAppearance="@style/title_style">
+
+            </android.support.design.widget.TabLayout>
+
+
+        </android.support.design.widget.AppBarLayout>
+		
+		<!--include layout="@layout/content_main" /-->
+		<android.support.v4.view.ViewPager
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/explorer_id_viewpager"
+            >
+
+
+        </android.support.v4.view.ViewPager>
+
+    </LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/explorer_fab_new"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@mipmap/ic_add_white_32_dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/explorer_fab_paste_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="16dp"
+        android:visibility="invisible"
+        android:src="@mipmap/abc_ic_clear_mtrl_alpha" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/explorer_fab_paste"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="75dp"
+        android:visibility="invisible"
+        android:src="@mipmap/abc_ic_menu_paste_mtrl_am_alpha" />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/explorer_exit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="75dp"
+            android:src="@android:drawable/ic_menu_revert" />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/explorer_select"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="135dp"
+            android:visibility="invisible"
+            android:src="@android:drawable/ic_menu_compass" />
+
+</android.support.design.widget.CoordinatorLayout>
+
+
+		
+</android.support.v4.widget.DrawerLayout>
