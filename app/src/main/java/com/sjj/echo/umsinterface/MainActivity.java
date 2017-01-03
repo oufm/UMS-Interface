@@ -281,6 +281,15 @@ public class MainActivity extends AppCompatActivity
         mDevHistory.addFirst(_dev);
         if(mDevHistory.size()>MAX_HISTORY)
             mDevHistory.removeLast();
+
+        int _i = 0;
+        mSharedPreferences.edit().putInt(KEY_DEVICE_HISTORY_COUNT,mDevHistory.size()).commit();
+        for(String str:mDevHistory)
+        {
+            mSharedPreferences.edit().putString(KEY_DEVICE_HISTORY_BASE+_i,str).commit();
+            _i++;
+        }
+
 //        if(!_exist)
 //        {
 //            mDevHistory.add(mSource);
