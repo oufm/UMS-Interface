@@ -29,27 +29,27 @@ import java.util.LinkedList;
 public class MainActivity extends AppCompatActivity
 {
 
-    private EditText mConfigEdit;
-    private Button mConfigBtn;
-    private EditText mSourceEdit;
-    private Button mSourceBtn;
+    private EditText mPathEdit;
+    private Button mPathBtn;
+    private EditText mDevEdit;
+    private Button mDevBtn;
     private Button mGadgetBtn;
-    private Button mSourceHistoryBtn;
+    private Button mDevHistoryBtn;
     private Button mConfigSearchBtn;
     private CheckBox mReadonlyCheck;
     private TextView mStatusTxt;
     private View mInfoTxt;
     public final static String KEY_CONFIG_PATH = "KEY_CONFIG_PATH";
-    public final static String KEY_SOURCE_PATH =  "KEY_SOURCE_PATH";
+    public final static String KEY_DEVICE_FILE =  "KEY_DEVICE_FILE";
     public final static String KEY_READ_ONLY = "KEY_READ_ONLY";
-    public final static String KEY_SOURCE_HISTORY_COUNT = "KEY_SOURCE_HISTORY_COUNT";
-    public final static String KEY_SOURCE_HISTORY_BASE = "KEY_SOURCE_HISTORY_BASE";
+    public final static String KEY_DEVICE_HISTORY_COUNT = "KEY_DEVICE_HISTORY_COUNT";
+    public final static String KEY_DEVICE_HISTORY_BASE = "KEY_DEVICE_HISTORY_BASE";
     public final static String KEY_FIRST_RUN = "KEY_FIRST_RUN";
     public final static int MAX_HISTORY = 20;
     protected SharedPreferences mSharedPreferences;
-    protected String mSource ;
+//    protected String mSource ;
     protected boolean mReadonly = false;
-    protected LinkedList<String> mSourceHistory = new LinkedList<>();
+    protected LinkedList<String> mDevHistory = new LinkedList<>();
 
     @Override
     protected void onStart() {
@@ -71,15 +71,15 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        mConfigBtn = (Button) findViewById(R.id.config_btn);
-        mConfigEdit = (EditText) findViewById(R.id.config_edit);
-        mSourceBtn = (Button) findViewById(R.id.source_btn);
-        mSourceEdit = (EditText) findViewById(R.id.source_edit);
+        mPathBtn = (Button) findViewById(R.id.config_btn);
+        mPathEdit = (EditText) findViewById(R.id.config_edit);
+        mDevBtn = (Button) findViewById(R.id.source_btn);
+        mDevEdit = (EditText) findViewById(R.id.source_edit);
         mReadonlyCheck = (CheckBox) findViewById(R.id.readonly);
         mGadgetBtn = (Button) findViewById(R.id.gadget_btn);
         mStatusTxt = (TextView) findViewById(R.id.status);
         mInfoTxt = findViewById(R.id.about);
-        mSourceHistoryBtn = (Button) findViewById(R.id.source_history_btn);
+        mDevHistoryBtn = (Button) findViewById(R.id.source_history_btn);
         mConfigSearchBtn = (Button) findViewById(R.id.config_search_btn);
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -90,13 +90,11 @@ public class MainActivity extends AppCompatActivity
             onHelp();
             mSharedPreferences.edit().putBoolean(KEY_FIRST_RUN,false).commit();
         }
-        String _sourcePath = mSharedPreferences.getString(KEY_SOURCE_PATH,null);
-        if(_sourcePath!=null&&!_sourcePath.isEmpty())
+        String _dev = mSharedPreferences.getString(KEY_DEVICE_FILE,null);
+        if(_dev!=null&&!_dev.isEmpty())
         {
-            mSource = _sourcePath;
+            mDevEdit.setText(_dev);
         }
-        if(mSource!=null)
-            mSourceEdit.setText(mSource);
 
         String _configPath = mSharedPreferences.getString(KEY_CONFIG_PATH,null);
         if(_configPath!=null&&! _configPath.isEmpty())
@@ -104,35 +102,42 @@ public class MainActivity extends AppCompatActivity
             MassStorageUnit.mConfigPath = _configPath;
         }else
         {
-            mSourceEdit.postDelayed(new Runnable() {
+            mDevEdit.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    String _path = MassStorageUnit.searchPath();
-                    if(_path!=null)
-                        MassStorageUnit.mConfigPath = _path;
-                    else
-                        Toast.makeText(MainActivity.this,"search config path fail!",Toast.LENGTH_LONG).show();
+                    setConfigPath();
+//                    String _path = MassStorageUnit.searchPath();
+//                    if(_path!=null)
+//                        MassStorageUnit.mConfigPath = _path;
+//                    else
+//                        Toast.makeText(MainActivity.this,"search config path fail!",Toast.LENGTH_LONG).show();
                 }
             },2000);
 
         }
         if(MassStorageUnit.mConfigPath!=null)
-            mConfigEdit.setText(MassStorageUnit.mConfigPath);
+            mPathEdit.setText(MassStorageUnit.mConfigPath);
 
         mReadonly = mSharedPreferences.getBoolean(KEY_READ_ONLY,false);
         mReadonlyCheck.setChecked(mReadonly);
 
-        int _historyCount = mSharedPreferences.getInt(KEY_SOURCE_HISTORY_COUNT,0);
+        int _historyCount = mSharedPreferences.getInt(KEY_DEVICE_HISTORY_COUNT,0);
         for(int i=0;i<_historyCount;i++)
         {
-            mSourceHistory.add(mSharedPreferences.getString(KEY_SOURCE_HISTORY_BASE+i,""));
+            mDevHistory.add(mSharedPreferences.getString(KEY_DEVICE_HISTORY_BASE +i,""));
         }
 
         mGadgetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveStatus();
                 doConfig();
+            }
+        });
+
+        mPathEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                MassStorageUnit.mConfigPath = mDevEdit.getText().toString();
             }
         });
 
@@ -153,7 +158,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        mConfigBtn.setOnClickListener(new View.OnClickListener() {
+        mPathBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this,com.sjj.echo.explorer.MainActivity.class);
@@ -163,7 +168,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        mSourceBtn.setOnClickListener(new View.OnClickListener() {
+        mDevBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this,com.sjj.echo.explorer.MainActivity.class);
@@ -173,7 +178,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        mSourceHistoryBtn.setOnClickListener(new View.OnClickListener() {
+        mDevHistoryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showHistory();
@@ -196,12 +201,12 @@ public class MainActivity extends AppCompatActivity
        // NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         //navigationView.setNavigationItemSelectedListener(this);
 
-        mConfigEdit.postDelayed(new Runnable() {
+        mPathEdit.postDelayed(new Runnable() {
             @Override
             public void run() {
                 refreshStatus();
             }
-        },2000);
+        },1800);
     }
 
     /**
@@ -209,13 +214,13 @@ public class MainActivity extends AppCompatActivity
      * */
     private void showHistory()
     {
-        String[] strs = new String[mSourceHistory.size()];
-        final String[] _histories = mSourceHistory.toArray(strs);
+        String[] strs = new String[mDevHistory.size()];
+        final String[] _histories = mDevHistory.toArray(strs);
         new AlertDialog.Builder(MainActivity.this).setTitle("select a history")
                 .setItems(_histories, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mSourceEdit.setText(_histories[which]);
+                        mDevEdit.setText(_histories[which]);
                         dialog.cancel();
                     }
                 }).create().show();
@@ -227,7 +232,8 @@ public class MainActivity extends AppCompatActivity
     {
         String _path = MassStorageUnit.searchPath();
         if(_path!=null) {
-            mConfigEdit.setText(_path);
+            mPathEdit.setText(_path);
+            MassStorageUnit.mConfigPath = _path;
             Toast.makeText(MainActivity.this,"search config path success!",Toast.LENGTH_SHORT).show();
         }
         else
@@ -241,12 +247,13 @@ public class MainActivity extends AppCompatActivity
             String path = uri.toString().substring(7);
             if(requestCode ==1)
             {
-                mSourceEdit.setText(path);
+                mDevEdit.setText(path);
             }
 
             if(requestCode ==2)
             {
-                mConfigEdit.setText(path);
+                mPathEdit.setText(path);
+                MassStorageUnit.mConfigPath = path;
             }
         }
     }
@@ -256,48 +263,51 @@ public class MainActivity extends AppCompatActivity
      * */
     protected void saveStatus()
     {
-        mSource = mSourceEdit.getText().toString();
-        mSharedPreferences.edit().putString(KEY_SOURCE_PATH,mSource).commit();
+        String _dev = mDevEdit.getText().toString();
+        mSharedPreferences.edit().putString(KEY_DEVICE_FILE,_dev).commit();
         mReadonly = mReadonlyCheck.isChecked();
         mSharedPreferences.edit().putBoolean(KEY_READ_ONLY,mReadonly).commit();
-        MassStorageUnit.mConfigPath = mConfigEdit.getText().toString();
+        MassStorageUnit.mConfigPath = mPathEdit.getText().toString();
         mSharedPreferences.edit().putString(KEY_CONFIG_PATH,MassStorageUnit.mConfigPath).commit();
-        boolean _exist = false;
-        for(String str:mSourceHistory)
+        //boolean _exist = false;
+        for(String str: mDevHistory)
         {
-            if(mSource.equals(str))
+            if(_dev.equals(str))
             {
-                _exist = true;
+                mDevHistory.remove(str);
                 break;
             }
         }
-        if(!_exist)
-        {
-            mSourceHistory.add(mSource);
-            if(mSourceHistory.size()>MAX_HISTORY)
-                mSourceHistory.pollFirst();
-            int _i = 0;
-            mSharedPreferences.edit().putInt(KEY_SOURCE_HISTORY_COUNT,mSourceHistory.size()).commit();
-            for(String str:mSourceHistory)
-            {
-                mSharedPreferences.edit().putString(KEY_SOURCE_HISTORY_BASE+_i,str).commit();
-                _i++;
-            }
-        }
+        mDevHistory.addFirst(_dev);
+        if(mDevHistory.size()>MAX_HISTORY)
+            mDevHistory.removeLast();
+//        if(!_exist)
+//        {
+//            mDevHistory.add(mSource);
+//            if(mDevHistory.size()>MAX_HISTORY)
+//                mDevHistory.pollFirst();
+//            int _i = 0;
+//            mSharedPreferences.edit().putInt(KEY_DEVICE_HISTORY_COUNT,mDevHistory.size()).commit();
+//            for(String str:mDevHistory)
+//            {
+//                mSharedPreferences.edit().putString(KEY_DEVICE_HISTORY_BASE+_i,str).commit();
+//                _i++;
+//            }
+//        }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        saveStatus();
-    }
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        saveStatus();
+//    }
 
     /**
      * read the gadget status information and show it
      * */
     protected void refreshStatus()
     {
-        int ret = MassStorageUnit.refreshStatus();
+        int ret = MassStorageUnit.refreshStatus(mPathEdit.getText().toString());
         if(ret==ShellUnit.EXEC_ERR)
             Toast.makeText(this,"please check root permission",Toast.LENGTH_LONG).show();
         else if(ret !=0&&MassStorageUnit.mError!=null)
@@ -309,7 +319,7 @@ public class MainActivity extends AppCompatActivity
             info += "gadget status: "+ (MassStorageUnit.mStatusEnable.equals("1")?"enabled":"disabled")+"\n";
             info += "gadget functions: "+ MassStorageUnit.mStatusFunction + "\n" ;
             info += "mass storage file: " + MassStorageUnit.mStatusFile + "\n";
-            info += "mass storage mode: " + (MassStorageUnit.mStatusReadonly.equals("1")?"readonly":"readwrite")+"\n";
+            info += "mass storage mode: " + (MassStorageUnit.mStatusReadonly.equals("1")?"readonly":"readwrite");
             mStatusTxt.setText(info);
         }
     }
@@ -319,13 +329,15 @@ public class MainActivity extends AppCompatActivity
      * */
     protected void doConfig()
     {
-        int ret = MassStorageUnit.umsConfig(mSource,mReadonly);
+        int ret = MassStorageUnit.umsConfig(mPathEdit.getText().toString(),mDevEdit.getText().toString(),mReadonly);
         if(ret== ShellUnit.EXEC_ERR)
             Toast.makeText(this,"please check root permission",Toast.LENGTH_SHORT).show();
         else if(ret !=0||MassStorageUnit.mError!=null)
             Toast.makeText(this,MassStorageUnit.mError,Toast.LENGTH_SHORT).show();
-        else
-            Toast.makeText(this,"config success!",Toast.LENGTH_SHORT).show();
+        else {
+            Toast.makeText(this, "config success!", Toast.LENGTH_SHORT).show();
+            saveStatus();
+        }
         refreshStatus();
     }
 

@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 
-import com.sjj.echo.explorer.routine.FileTool;
+import com.sjj.echo.routine.FileTool;
 import com.sjj.echo.lib.FragmentStatePagerAdapterFix;
 
 import java.util.LinkedList;
@@ -29,7 +29,7 @@ public class FilePageAdapter extends FragmentStatePagerAdapterFix {
         if(initDirs!=null&&initDirs.length>0)
             mInitDirs = initDirs;
         else
-            mInitDirs =new String[] {"/dev/block/","/sdcard/","/data/"};
+            mInitDirs =new String[] {"/dev/block/","/sdcard/","/sys/","/data/"};
         //mInitDirs = _initDirs;
         int count = mInitDirs.length;
         for(int i=0;i<count;i++)

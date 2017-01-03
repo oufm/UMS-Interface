@@ -1,4 +1,4 @@
-package com.sjj.echo.explorer.routine;
+package com.sjj.echo.routine;
 
 import android.app.Activity;
 import android.content.Context;

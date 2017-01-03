@@ -34,8 +34,8 @@ public class MountInfoActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final String itemSelect = mInfos.get(position);
                 new AlertDialog.Builder(MountInfoActivity.this)
-                        .setTitle("chose a operation:")
-                        .setItems(new String[]{"  unmount it", "  set it as mass storage path"}, new DialogInterface.OnClickListener() {
+                        .setTitle("chose an operation:")
+                        .setItems(new String[]{"  unmount it", "  set it as mass storage device"}, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 if(which == 0)

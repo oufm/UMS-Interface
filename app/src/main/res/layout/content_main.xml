@@ -8,7 +8,6 @@
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/app_bar_main"
@@ -17,25 +16,24 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="4dp"
         android:layout_centerInParent="true"
         android:orientation="vertical">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="bottom"
-            android:text="select the source file (block device or image)"
+            android:text = "@string/ums_device_tip"
             />
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="75dp"
             android:orientation="horizontal"
             android:paddingLeft="3dp"
             android:gravity="center"
             >
             <EditText
                 android:id="@+id/source_edit"
-                android:hint="input or click the button to select"
+                android:hint="@string/ums_edit_hint"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
@@ -52,7 +50,7 @@
                     android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:text="select"
+                    android:text="@string/ums_select_btn_tip"
                     />
                 <Button
                     android:id="@+id/source_history_btn"
@@ -60,20 +58,20 @@
                     android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:text="history"
+                    android:text="@string/ums_history_btn_tip"
                     />
             </LinearLayout>
 
         </LinearLayout>
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="30dp"
             android:gravity="bottom"
-            android:text="select the config path(android_usb/android0)"
+            android:text = "@string/ums_config_path_tip"
             />
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="75dp"
             android:orientation="horizontal"
             android:paddingLeft="3dp"
             android:gravity="right"
@@ -82,7 +80,7 @@
                 android:id="@+id/config_edit"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:hint="input or click the button to select"
+                android:hint="@string/ums_edit_hint"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 />
@@ -97,14 +95,14 @@
                     android:layout_height="40dp"
                     android:gravity="center"
                     android:layout_gravity="center"
-                    android:text="select"/>
+                    android:text="@string/ums_select_btn_tip"/>
                 <Button
                     android:id="@+id/config_search_btn"
                     android:layout_width="80dp"
                     android:layout_height="40dp"
                     android:gravity="center"
                     android:layout_gravity="center"
-                    android:text="search"/>
+                    android:text="@string/ums_search_btn_tip"/>
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
@@ -117,21 +115,24 @@
                 android:id="@+id/readonly"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="readonly"/>
+                android:text="@string/ums_readonly_check_tip"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center">
-            <TextView
+            <Button
                 android:id="@+id/status"
                 android:layout_gravity="center"
+                android:gravity="left"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="(click to refresh)\n\n\n\n"
-                android:textColor="#DF25A8"/>
+                android:textAppearance="@style/title_style"
+                android:background="@drawable/status_select"
+                android:text="(click to refresh)" />
             <LinearLayout
+                android:layout_margin="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/about"
@@ -150,14 +151,17 @@
                     android:text="write by @echo off\n outofmemo@qq.com\n"/>
             </LinearLayout>
         </LinearLayout>
-
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="60dp" />
     </LinearLayout>
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
+        android:background="@drawable/status_select"
         android:id="@+id/gadget_btn"
-        android:text="config usb gadget"
+        android:text="@string/ums_config_btn_tip"
         android:gravity="center"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"/>

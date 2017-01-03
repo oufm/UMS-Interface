@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="bottom"
-            android:text="select block device or disk image file"
+            android:text="@string/ums_device_tip"
             />
         <LinearLayout
             android:layout_width="match_parent"
@@ -30,7 +30,7 @@
             >
             <EditText
                 android:id="@+id/mount_dev_edit"
-                android:hint="input or click the button to select"
+                android:hint="@string/ums_edit_hint"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
@@ -47,7 +47,7 @@
                     android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:text="select"
+                    android:text="@string/ums_select_btn_tip"
                     />
                 <!--<Button-->
                     <!--android:id="@+id/source_history_btn"-->
@@ -64,7 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:gravity="bottom"
-            android:text="select the target directory"
+            android:text="@string/mount_target_edit_tip"
             />
         <LinearLayout
             android:layout_width="match_parent"
@@ -77,7 +77,7 @@
                 android:id="@+id/mount_target_edit"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:hint="input or click the button to select"
+                android:hint="@string/ums_edit_hint"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 />
@@ -92,7 +92,7 @@
                     android:layout_height="40dp"
                     android:gravity="center"
                     android:layout_gravity="center"
-                    android:text="select"/>
+                    android:text="@string/ums_select_btn_tip"/>
                 <!--<Button-->
                     <!--android:id="@+id/config_search_btn"-->
                     <!--android:layout_width="80dp"-->
@@ -113,13 +113,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:text="readonly"/>
+                android:text="@string/ums_readonly_check_tip"/>
             <CheckBox
                 android:id="@+id/mount_loop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:text="loop"/>
+                android:text="@string/mount_loop_check_tip"/>
             <Spinner
                 android:paddingRight="0dp"
                 android:paddingTop="4dp"
@@ -136,7 +136,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:text="mount"
+            android:text="@string/mount_mount_tip"
             android:id="@+id/mount_btn"/>
     </LinearLayout>
 </RelativeLayout>

@@ -15,7 +15,7 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="DialogTransparent" parent="@style/Theme.AppCompat.Light.Dialog">
-        <item name="android:windowBackground">@color/transparentBackground</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
         <!-- not android:windowNoTitle !! -->
         <item name="windowNoTitle">true</item>

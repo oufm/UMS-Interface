@@ -4,6 +4,32 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>
+    <string name="ums_device_tip">select a block device or an image file</string>
+    <string name="ums_config_path_tip">select the config base path( like \'android_usb/android0\')</string>
+    <string name="ums_edit_hint">input or click the button to select</string>
+    <string name="ums_select_btn_tip">select</string>
+    <string name="ums_history_btn_tip">history</string>
+    <string name="ums_search_btn_tip">search</string>
+    <string name="ums_readonly_check_tip">readonly</string>
+    <string name="ums_config_btn_tip">config usb gadget</string>
+    <string name="mount_target_edit_tip">select the  directory where  to mount</string>
+    <string name="mount_loop_check_tip">loop</string>
+    <string name="mount_mount_tip">mount</string>
+    <string name="explorer_sort_way">sort way</string>
+    <string name="explorer_set_home">set as home</string>
+    <string name="explorer_close_tab">close tab</string>
+    <string name="explorer_refresh">refresh</string>
+    <string name="cancel">cancel</string>
+    <string name="copy">copy</string>
+    <string name="delete">delete</string>
+    <string name="move">move</string>
+    <string name="select_all">select all</string>
+    <string name="ums_show_history">show history</string>
+    <string name="ums_search_path">search config path</string>
+    <string name="ums_reboot_kernel">reboot linux kernel</string>
+    <string name="ums_reboot_recovery">reboot recovery</string>
+    <string name="ums_reboot_fastboot">reboot fastboot</string>
+    <string name="help">help</string>
     <!--<string name="help_en">*This program allows you to chose a block device or disk image as a 'disk',and communicate with PC through usb mass storage (just as usb disk do).-->
 	<!--* Since the configuration of android phones are different, you should select the correct config path firstly,you can simply press 'SEARCH' button to find the path if available ,or specify it manually-->
     <!--* Root permission is needed, if you want to use mount function, busybox is needed too.-->

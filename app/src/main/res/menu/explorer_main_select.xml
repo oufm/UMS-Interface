@@ -76,7 +76,7 @@
         android:orderInCategory="100"
         android:id="@+id/select_menu_back"
         android:icon="@mipmap/abc_ic_ab_back_mtrl_am_alpha"
-        android:title="取消"/>
+        android:title="@string/cancel"/>
     <item
         app:showAsAction="always"
         android:orderInCategory="100"
@@ -88,25 +88,25 @@
         android:orderInCategory="100"
         android:id="@+id/select_menu_copy"
         android:icon="@mipmap/abc_ic_menu_copy_mtrl_am_alpha"
-        android:title="复制"/>
+        android:title="@string/copy"/>
     <item
         app:showAsAction="always"
         android:orderInCategory="100"
         android:id="@+id/select_menu_delete"
         android:icon="@mipmap/ic_delete_white_24dp"
-        android:title="删除"/>
+        android:title="@string/delete"/>
 
     <item
         app:showAsAction="always"
         android:orderInCategory="100"
         android:id="@+id/select_menu_cut"
         android:icon="@mipmap/abc_ic_menu_cut_mtrl_alpha"
-        android:title="剪切"/>
+        android:title="@string/move"/>
     <item
         app:showAsAction="always"
         android:orderInCategory="100"
         android:id="@+id/select_menu_select_all"
         android:icon="@mipmap/abc_ic_menu_selectall_mtrl_alpha"
-        android:title="全选"/>
+        android:title="@string/select_all"/>
 
 </menu>

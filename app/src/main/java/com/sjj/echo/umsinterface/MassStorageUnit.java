@@ -14,7 +14,12 @@ public class MassStorageUnit {
     static public String mStatusFunction;
     static public String mStatusReadonly;
 
-    static public int umsConfig(String source,boolean readonly)
+    /**
+     * config usb mass storage
+     * @param dev block device or image file
+     * @param readonly  readonly or not
+     * */
+    static public int umsConfig(String dev,boolean readonly)
     {
         Boolean ok =true;
         mError = null;
@@ -22,7 +27,7 @@ public class MassStorageUnit {
         //must disable usb device frist.
         cmd += "echo 0 > " + mConfigPath +"enable\n";
         cmd += "echo mass_storage > "+mConfigPath+"functions\n";
-        cmd += "echo "+source+" > "+mConfigPath+"f_mass_storage/lun/file\n";
+        cmd += "echo "+dev+" > "+mConfigPath+"f_mass_storage/lun/file\n";
         cmd += "echo "+(readonly?"1":"0")+" > "+mConfigPath+"f_mass_storage/lun/ro\n";
         cmd += "echo 1 > "+mConfigPath+"enable\n";
         //it maybe make no difference without setting sys.usb.config .
@@ -105,6 +110,29 @@ public class MassStorageUnit {
         }
 
         return exitValue;
+    }
+
+    /**
+     * config usb mass storage
+     * @param configPath the base directory for configuration
+     * @param dev block device or image file
+     * @param readonly  readonly or not
+     * */
+    static public int umsConfig(String configPath,String dev,boolean readonly)
+    {
+        mConfigPath = configPath;
+        return umsConfig(dev,readonly);
+    }
+
+    /**
+     * read the usb mass storage to the member variables
+     * @param configPath the base directory for configuration
+     * @return exit value of the 'su'
+     * */
+    static public int refreshStatus(String configPath)
+    {
+        mConfigPath = configPath;
+        return refreshStatus();
     }
 
 }

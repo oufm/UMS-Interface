@@ -31,7 +31,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sjj.echo.explorer.routine.FileTool;
+import com.sjj.echo.routine.FileTool;
 import com.sjj.echo.umsinterface.R;
 
 import java.util.ArrayList;
