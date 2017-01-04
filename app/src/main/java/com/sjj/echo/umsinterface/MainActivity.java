@@ -422,6 +422,10 @@ public class MainActivity extends AppCompatActivity
         }else if(id == R.id.action_reboot_fastboot)
         {
             ShellUnit.execRoot("reboot bootloader");
+        }else if(id == R.id.action_new_image)
+        {
+            Intent intent = new Intent(MainActivity.this,NewImageActivity.class);
+            startActivity(intent);
         }
         //noinspection SimplifiableIfStatement
 

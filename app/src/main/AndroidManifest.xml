@@ -45,8 +45,12 @@
         <activity
             android:name=".MountActivity"
             android:theme="@style/Theme.AppCompat.Light.Dialog" />
-        <activity android:name=".HelpActivity"
-            android:theme="@style/DialogTransparent"></activity>
+        <activity
+            android:name=".HelpActivity"
+            android:theme="@style/DialogTransparent" />
+        <activity
+            android:name=".NewImageActivity"
+            android:theme="@style/Theme.AppCompat.Light.Dialog"></activity>
     </application>
 
 </manifest>

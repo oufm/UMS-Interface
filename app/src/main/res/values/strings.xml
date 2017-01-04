@@ -30,8 +30,13 @@
     <string name="ums_reboot_recovery">reboot recovery</string>
     <string name="ums_reboot_fastboot">reboot fastboot</string>
     <string name="help">help</string>
+    <string name="help_start">start to use</string>
+    <string name="image_dir_tip">select the image directory</string>
+    <string name="image_file_name_tip">input the image file name</string>
+    <string name="image_size_tip">input the size of the image file(MB)</string>
+    <string name="image_create">create image file</string>
     <!--<string name="help_en">*This program allows you to chose a block device or disk image as a 'disk',and communicate with PC through usb mass storage (just as usb disk do).-->
-	<!--* Since the configuration of android phones are different, you should select the correct config path firstly,you can simply press 'SEARCH' button to find the path if available ,or specify it manually-->
+    <!--* Since the configuration of android phones are different, you should select the correct config path firstly,you can simply press 'SEARCH' button to find the path if available ,or specify it manually-->
     <!--* Root permission is needed, if you want to use mount function, busybox is needed too.-->
-	<!--* There are some special usages. For example, you can select the whole emmc '/dev/block/mmcblk0' and mount it to pc linux, so that you can some tool like gparted to do something like partition."</string>-->
+    <!--* There are some special usages. For example, you can select the whole emmc '/dev/block/mmcblk0' and mount it to pc linux, so that you can some tool like gparted to do something like partition."</string>-->
 </resources>

@@ -72,4 +72,72 @@ public class ShellUnit {
     static public String execRoot(String cmd) {
         return exec(cmd,true);
     }
+
+    static public String exec(final int overtime, String cmd, boolean root)
+    {
+        String outString = "";
+        try {
+            char[] buff = new char[1024*10];
+            String _shell = null;
+            if(root)
+                _shell = "su";
+            else
+                _shell = "sh";
+            final Process process = Runtime.getRuntime().exec(_shell);
+            OutputStreamWriter stdin = new OutputStreamWriter(process.getOutputStream());
+            InputStreamReader stdout = new InputStreamReader(process.getInputStream());
+            stdin.write(cmd+"\n");
+            stdin.write("exit\n");
+            stdin.flush();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(overtime);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        process.destroy();
+                    }catch (Exception e)
+                    {
+
+                    }
+                }
+            }).start();
+
+            exitValue = process.waitFor();
+            //if(exitValue==0)
+            //{
+            int __count = stdout.read(buff);
+            if(__count>0)
+            {
+                outString = new String(buff);
+            }
+            //}
+            stdErr = null;
+            int count = new InputStreamReader(process.getErrorStream()).read(buff);
+            if(count > 0)
+                stdErr = new String(buff);
+        } catch (IOException e) {
+            // TODO 自动生成的 catch 块
+            e.printStackTrace();
+            stdErr = "by exec:IOException,process.exec fail";
+            exitValue = EXEC_ERR;
+            return null;
+        } catch (InterruptedException e) {
+            // TODO 自动生成的 catch 块
+            e.printStackTrace();
+            stdErr = "by exec:InterruptedException,process.waitFor fail";
+            exitValue = EXEC_ERR;
+            return null;
+        }
+        return outString;
+    }
+
+    static public String execRoot(int overtime,String cmd) {
+        return exec(overtime,cmd,true);
+    }
+
 }
