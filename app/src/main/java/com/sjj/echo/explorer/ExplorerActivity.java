@@ -1,6 +1,5 @@
 package com.sjj.echo.explorer;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -32,18 +30,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sjj.echo.routine.FileTool;
+import com.sjj.echo.routine.PermissionUnit;
 import com.sjj.echo.umsinterface.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.os.Build.VERSION_CODES.M;
-
 //must implements ActivityCompat.OnRequestPermissionsResultCallback or it will crash !!
 /**
  * the main activity of the explorer.
  * */
-public class MainActivity extends AppCompatActivity
+public class ExplorerActivity extends AppCompatActivity
         implements FileFragment.OnListChangeListener,ActivityCompat.OnRequestPermissionsResultCallback
 {
     private Toolbar mToolbar;
@@ -112,7 +109,7 @@ public class MainActivity extends AppCompatActivity
         explorerExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.this.finish();
+                ExplorerActivity.this.finish();
             }
         });
         explorerSelect.setOnClickListener(new View.OnClickListener() {
@@ -141,8 +138,9 @@ public class MainActivity extends AppCompatActivity
 //        toggle.syncState();
 //        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
 //        mNavigationView.setNavigationItemSelectedListener(this);
-        if(Build.VERSION.SDK_INT>=23)
-            getPermission();
+
+        PermissionUnit.getPermission(new String[]{"android.permission.RECEIVE_BOOT_COMPLETED",
+                "android.permission.WRITE_EXTERNAL_STORAGE"},this);
         mTabLayout = (TabLayout) findViewById(R.id.explorer_tab_layout);
         mViewPager = (ViewPager) findViewById(R.id.explorer_id_viewpager);
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -204,14 +202,14 @@ public class MainActivity extends AppCompatActivity
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            MainActivity.this.getPermission();
+                            //ExplorerActivity.this.getPermission();
                         }
-                    }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    })/*.setNegativeButton("取消", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    MainActivity.this.finish();
+                    ExplorerActivity.this.finish();
                 }
-            }).create().show();
+            })*/.create().show();
         }
         else//directory maybe opened before the permission approved,so refresh them.
         {
@@ -225,30 +223,30 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @TargetApi(M)
-    private void getPermission()
-    {
-        String[] permissions = {"android.permission.CLEAR_APP_CACHE","android.permission.RECEIVE_BOOT_COMPLETED",
-        "android.permission.WRITE_EXTERNAL_STORAGE"};
-        ArrayList<String> preToDo = new ArrayList<>();
-        boolean tip = false;
-        for(String pre:permissions)
-        {
-            if(checkSelfPermission(pre)!=PackageManager.PERMISSION_GRANTED)
-            {
-                preToDo.add(pre);
-                if(shouldShowRequestPermissionRationale(pre)) {
-                    tip = true;
-                }
-            }
-        }
-        if(preToDo.size()==0)
-            return;
-        if (tip)
-            Toast.makeText(this,"please approve the authorization for file manager",Toast.LENGTH_LONG).show();
-        requestPermissions(preToDo.toArray(new String[preToDo.size()]),0);
-
-    }
+//    @TargetApi(M)
+//    private void getPermission()
+//    {
+//        String[] permissions = {"android.permission.RECEIVE_BOOT_COMPLETED",
+//        "android.permission.WRITE_EXTERNAL_STORAGE"};
+//        ArrayList<String> preToDo = new ArrayList<>();
+//        boolean tip = false;
+//        for(String pre:permissions)
+//        {
+//            if(checkSelfPermission(pre)!=PackageManager.PERMISSION_GRANTED)
+//            {
+//                preToDo.add(pre);
+//                if(shouldShowRequestPermissionRationale(pre)) {
+//                    tip = true;
+//                }
+//            }
+//        }
+//        if(preToDo.size()==0)
+//            return;
+//        if (tip)
+//            Toast.makeText(this,"please approve the authorization for file manager",Toast.LENGTH_LONG).show();
+//        requestPermissions(preToDo.toArray(new String[preToDo.size()]),0);
+//
+//    }
 
     //call this method to hide the TabLayout when the ViewPager is not switching.
     protected void autoShowBar()
@@ -410,7 +408,7 @@ public class MainActivity extends AppCompatActivity
         }else if(id == R.id.action_sort)
         {
             String[] sortModes = {"名称","日期","大小","类型","名称(降序)","日期(降序)","大小(降序)"};
-            new AlertDialog.Builder(MainActivity.this).setTitle("选择排序模式")
+            new AlertDialog.Builder(ExplorerActivity.this).setTitle("选择排序模式")
                     .setSingleChoiceItems(sortModes,0, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -479,7 +477,7 @@ public class MainActivity extends AppCompatActivity
                 title = selects.get(0);
             else
                 title = "多个项目";
-            new AlertDialog.Builder(MainActivity.this).setTitle(title).setMessage("确定删除所选项目?")
+            new AlertDialog.Builder(ExplorerActivity.this).setTitle(title).setMessage("确定删除所选项目?")
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -494,13 +492,13 @@ public class MainActivity extends AppCompatActivity
             return true;
         }else if(id == R.id.select_menu_rename)
         {
-            final View view = MainActivity.this.getLayoutInflater().inflate(R.layout.explorer_new_file_dir_layout,null);
+            final View view = ExplorerActivity.this.getLayoutInflater().inflate(R.layout.explorer_new_file_dir_layout,null);
             final List<String> selects = getCurFileAdapter().getSelect();
             final String curPath = getCurFileList().getCurPath();
             final String oldName = selects.get(0);
             final EditText editText = (EditText)view.findViewById(R.id.new_file_name);
             editText.setText(oldName);
-            new AlertDialog.Builder(MainActivity.this).setTitle("文件夹").setView(view)
+            new AlertDialog.Builder(ExplorerActivity.this).setTitle("文件夹").setView(view)
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -571,8 +569,8 @@ public class MainActivity extends AppCompatActivity
         view.findViewById(R.id.new_dlg_btn_dir).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final View view = MainActivity.this.getLayoutInflater().inflate(R.layout.explorer_new_file_dir_layout,null);
-                new AlertDialog.Builder(MainActivity.this).setTitle("文件夹").setView(view)
+                final View view = ExplorerActivity.this.getLayoutInflater().inflate(R.layout.explorer_new_file_dir_layout,null);
+                new AlertDialog.Builder(ExplorerActivity.this).setTitle("文件夹").setView(view)
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -588,8 +586,8 @@ public class MainActivity extends AppCompatActivity
         view.findViewById(R.id.new_dlg_btn_file).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final View view = MainActivity.this.getLayoutInflater().inflate(R.layout.explorer_new_file_dir_layout,null);
-                new AlertDialog.Builder(MainActivity.this).setTitle("文件").setView(view)
+                final View view = ExplorerActivity.this.getLayoutInflater().inflate(R.layout.explorer_new_file_dir_layout,null);
+                new AlertDialog.Builder(ExplorerActivity.this).setTitle("文件").setView(view)
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -616,20 +614,20 @@ public class MainActivity extends AppCompatActivity
                 if(path!=null&&path.length()>0)
                     mFilePageAdapter.addTab(path);
                 else
-                    Toast.makeText(MainActivity.this,"can't detect the internal sdcard",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ExplorerActivity.this,"can't detect the internal sdcard",Toast.LENGTH_SHORT).show();
                 alertDialog.cancel();
             }
         });
         view.findViewById(R.id.new_dlg_btn_extend_sdcard).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String path = FileTool.getStoragePath(MainActivity.this,true);
+                String path = FileTool.getStoragePath(ExplorerActivity.this,true);
                 if(path!=null)
                 {
                     mFilePageAdapter.addTab(path);
                 }
                 else
-                    Toast.makeText(MainActivity.this,"can't detect the extend sdcard",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ExplorerActivity.this,"can't detect the extend sdcard",Toast.LENGTH_SHORT).show();
                 alertDialog.cancel();
             }
         });
@@ -652,7 +650,7 @@ public class MainActivity extends AppCompatActivity
 //            openDir(mHomeDir);
 //        } else if (id == R.id.nav_info) {
 //
-//            new AlertDialog.Builder(MainActivity.this).setView(MainActivity.this.getLayoutInflater().inflate(R.layout.layout_info,null)).setPositiveButton("确定",null).create().show();
+//            new AlertDialog.Builder(ExplorerActivity.this).setView(ExplorerActivity.this.getLayoutInflater().inflate(R.layout.layout_info,null)).setPositiveButton("确定",null).create().show();
 //
 //        } else if (id == R.id.nav_new) {
 //            onNewDialog();
@@ -748,7 +746,7 @@ public class MainActivity extends AppCompatActivity
                 mTabLayout.post(new Runnable() {
                     @Override
                     public void run() {
-                        MainActivity.this.onTitleChange(fileFragment,title);
+                        ExplorerActivity.this.onTitleChange(fileFragment,title);
                     }
                 });
             else

@@ -11,6 +11,7 @@
         app:showAsAction="never"
         android:orderInCategory="100"
         android:id="@+id/action_set_as_home"
+        android:visible="false"
         android:title="@string/explorer_set_home"/>
     <item
         android:id="@+id/action_close"

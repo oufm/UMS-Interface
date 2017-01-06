@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.sjj.echo.explorer.ExplorerActivity;
 import com.sjj.echo.routine.ShellUnit;
 
 public class MountActivity extends AppCompatActivity {
@@ -91,26 +92,26 @@ public class MountActivity extends AppCompatActivity {
                 new AlertDialog.Builder(MountActivity.this).setTitle("tip")
                         .setMessage("the file you select seems like a block device,but 'loop' is selected." +
                                 "deselect 'loop'?")
-                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //mLoopCheck.setSelected(false);
                                 mLoopCheck.setChecked(false);
                             }
-                        }).setNegativeButton("no", null).create().show();
+                        }).setNegativeButton(getString(R.string.no), null).create().show();
             }
             if(!isBlock&&!_loop)
             {
                 new AlertDialog.Builder(MountActivity.this).setTitle("tip")
                         .setMessage("the file you select doesn't like a block device, but 'loop' is not selected." +
                                 "select 'loop'?")
-                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //mLoopCheck.setSelected(true);
                                 mLoopCheck.setChecked(true);
                             }
-                        }).setNegativeButton("no", null).create().show();
+                        }).setNegativeButton(getString(R.string.no), null).create().show();
 
             }
         }
@@ -120,7 +121,7 @@ public class MountActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_mount_activitry);
-        setTitle("mount");
+        setTitle(getString(R.string.mount_title));
         Button devBtn = (Button) findViewById(R.id.mount_dev_btn);
         Button targetBtn = (Button) findViewById(R.id.mount_target_btn);
         mDevEdit = (EditText) findViewById(R.id.mount_dev_edit);
@@ -130,7 +131,7 @@ public class MountActivity extends AppCompatActivity {
         Button mountBtn = (Button) findViewById(R.id.mount_btn);
         mFilesystemSpinner = (Spinner) findViewById(R.id.mount_file_system_spinner);
 
-        final String[] fileSystems = {" file system","minix","ext","ext2","ext3","ext4","Reiserfs","XFS"
+        final String[] fileSystems = {" "+getString(R.string.filesystem),"minix","ext","ext2","ext3","ext4","Reiserfs","XFS"
                 ,"JFS","xia","msdos","umsdos","vfat","ntfs","proc","nfs","iso9660"
                 ,"hpfs","sysv","smb","ncpfs"};
         mFilesystemSpinner.setAdapter(new ArrayAdapter<String>(this,R.layout.file_system_list_layout,fileSystems));
@@ -154,7 +155,7 @@ public class MountActivity extends AppCompatActivity {
         devBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MountActivity.this,com.sjj.echo.explorer.MainActivity.class);
+                Intent intent = new Intent(MountActivity.this,ExplorerActivity.class);
                 intent.setType("file/*");//设置类型，我这里是任意类型，任意后缀的可以这样写。
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 startActivityForResult(intent,1);
@@ -164,7 +165,7 @@ public class MountActivity extends AppCompatActivity {
         targetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MountActivity.this,com.sjj.echo.explorer.MainActivity.class);
+                Intent intent = new Intent(MountActivity.this,ExplorerActivity.class);
                 intent.setType("directory/*");//设置类型，我这里是任意类型，任意后缀的可以这样写。
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 startActivityForResult(intent,2);

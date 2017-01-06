@@ -17,7 +17,7 @@
         android:icon="@mipmap/ic_image"
         app:showAsAction="always" />
     <item android:id="@+id/action_exec"
-        android:title="execute command"
+        android:title="@string/ums_cmd"
         android:orderInCategory="100"
         android:icon="@mipmap/ic_exec"
         app:showAsAction="ifRoom" />
@@ -39,6 +39,10 @@
         app:showAsAction="never" />
     <item android:id="@+id/action_reboot_fastboot"
         android:title="@string/ums_reboot_fastboot"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_check_update"
+        android:title="@string/check_update"
         android:orderInCategory="100"
         app:showAsAction="never" />
     <item android:id="@+id/action_help"

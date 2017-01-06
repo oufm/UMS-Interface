@@ -27,24 +27,25 @@ public class MountInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mount);
         mListView = (ListView) findViewById(R.id.mount_list);
-        this.setTitle("click the item to continue");
+        this.setTitle(getString(R.string.mount_info_title));
         setAdapter();
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final String itemSelect = mInfos.get(position);
+
                 new AlertDialog.Builder(MountInfoActivity.this)
-                        .setTitle("chose an operation:")
-                        .setItems(new String[]{"  unmount it", "  set it as mass storage device"}, new DialogInterface.OnClickListener() {
+                        .setTitle(getString(R.string.mount_info_opera_title))
+                        .setItems(new String[]{getString(R.string.mount_info_opera_umount),getString(R.string.mount_info_opera_config)}, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 if(which == 0)
                                 {
                                     //umount operation
                                     //ask to confirm first
-                                    new AlertDialog.Builder(MountInfoActivity.this).setTitle("warning!")
-                                            .setMessage("Are you really sure to unmount it? Android may crash ,if the system need it.")
-                                            .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                                    new AlertDialog.Builder(MountInfoActivity.this).setTitle(getString(R.string.warning))
+                                            .setMessage(getString(R.string.mount_info_umount_warning))
+                                            .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     int offset = itemSelect.indexOf(" /");
@@ -68,7 +69,7 @@ public class MountInfoActivity extends AppCompatActivity {
 
                                                 }
                                             })
-                                            .setNegativeButton("no",null).create().show();
+                                            .setNegativeButton(getString(R.string.no),null).create().show();
                                 }else if(which == 1)
                                 {
                                     //select as device operation
@@ -77,6 +78,7 @@ public class MountInfoActivity extends AppCompatActivity {
                                     {
                                         String _path = itemSelect.substring(0,offsetEnd);
                                         Intent intent = getIntent();
+                                        intent.putExtra(MainActivity.KEY_INTENT_CONFIG,true);
                                         intent.setData(Uri.parse("file://"+_path));
                                         MountInfoActivity.this.setResult(Activity.RESULT_OK,intent);
                                         MountInfoActivity.this.finish();

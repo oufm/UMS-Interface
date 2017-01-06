@@ -1,6 +1,5 @@
 package com.sjj.echo.routine;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -115,7 +114,7 @@ public class FileTool {
     /**
      * launch the suitable activity according to the file name
      * */
-    static public void callActivity(String path, Activity activity) {
+    static public void callActivity(String path, Context context) {
         String extString = getExtension(path);
         int count = sMediaTypes.length;
         for(int i=0;i<count;i++)
@@ -124,7 +123,7 @@ public class FileTool {
             {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setDataAndType(Uri.parse("file://"+path), sMediaTypes[i][1]);
-                activity.startActivity(intent);
+                context.startActivity(intent);
                 return;
             }
         }

@@ -357,7 +357,7 @@ public class FileListView extends ListView implements View.OnKeyListener {
 
     protected void openFile(String path)
     {
-        MainActivity activity = (MainActivity)mActivity;
+        ExplorerActivity activity = (ExplorerActivity)mActivity;
         if(activity.mDirectoryRequest)
             FileTool.callActivity(path, mActivity);
         else

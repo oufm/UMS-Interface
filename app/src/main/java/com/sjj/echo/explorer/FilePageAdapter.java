@@ -17,11 +17,11 @@ import java.util.List;
 /*don't extends FragmentPagerAdapter ! It will be in mess after delete a fragment */
 /*there is a bug in FragmentStatePagerAdapter , use FragmentStatePagerAdapterFix*/
 public class FilePageAdapter extends FragmentStatePagerAdapterFix {
-    private MainActivity mActivity;
+    private ExplorerActivity mActivity;
     private ViewPager mViewPager;
     protected List<FileFragment> mFileFragments = new LinkedList<>();
     private String[] mInitDirs;
-    public FilePageAdapter(FragmentManager fm, MainActivity activity, ViewPager viewPager,String[] initDirs) {
+    public FilePageAdapter(FragmentManager fm, ExplorerActivity activity, ViewPager viewPager, String[] initDirs) {
         super(fm);
         this.mActivity = activity;
         this.mViewPager = viewPager;

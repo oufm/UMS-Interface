@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -9,18 +9,20 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/app_bar_main"
     tools:context="com.sjj.echo.umsinterface.MainActivity">
 
     <LinearLayout
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_height="0dp"
         android:orientation="vertical">
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
             android:gravity="bottom"
             android:text = "@string/ums_device_tip"
             />
@@ -64,8 +66,9 @@
 
         </LinearLayout>
         <TextView
+            android:layout_weight="1"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:gravity="bottom"
             android:text = "@string/ums_config_path_tip"
             />
@@ -106,6 +109,7 @@
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
+            android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:orientation="horizontal"
@@ -117,44 +121,45 @@
                 android:layout_height="wrap_content"
                 android:text="@string/ums_readonly_check_tip"/>
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/status"
+            android:layout_gravity="center"
+            android:gravity="left"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center">
-            <Button
-                android:id="@+id/status"
+            android:elevation="0dp"
+            android:textAppearance="@style/title_style"
+            android:background="@drawable/status_select"
+            android:text="(click to refresh)" />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+        <LinearLayout
+            android:layout_margin="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/about"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@mipmap/head"/>
+            <TextView
                 android:layout_gravity="center"
-                android:gravity="left"
-                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:elevation="0dp"
-                android:textAppearance="@style/title_style"
-                android:background="@drawable/status_select"
-                android:text="(click to refresh)" />
-            <LinearLayout
-                android:layout_margin="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/about"
-                android:layout_gravity="center"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@mipmap/head"/>
-                <TextView
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="#bb9931"
-                    android:text="write by @echo off\n outofmemo@qq.com\n"/>
-            </LinearLayout>
+                android:textColor="#bb9931"
+                android:text="write by @echo off\n outofmemo@qq.com\n"/>
         </LinearLayout>
         <Space
             android:layout_width="match_parent"
-            android:layout_height="60dp" />
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            />
     </LinearLayout>
 
     <Button
@@ -167,4 +172,4 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"/>
 
-</RelativeLayout>
+</LinearLayout>
