@@ -65,7 +65,7 @@ public class NewImageActivity extends AppCompatActivity {
                 if(ShellUnit.exitValue==0&&ShellUnit.stdErr==null) {
                     //Toast.makeText(NewImageActivity.this, "create image file success!", Toast.LENGTH_SHORT).show();
                     final String final_path = _path;
-                    new AlertDialog.Builder(NewImageActivity.this).setMessage("create image file success!Do you want to set the image as mass storage device?")
+                    new AlertDialog.Builder(NewImageActivity.this).setMessage(R.string.new_image_success_tip)
                             .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {

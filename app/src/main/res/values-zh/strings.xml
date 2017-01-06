@@ -56,6 +56,13 @@
     <string name="no_newer_version">没有更新的版本.</string>
     <string name="ok">确定</string>
     <string name="filesystem">文件系统</string>
+    <string name="reboot">重启</string>
+    <string name="reboot_confirm">确认重启?</string>
+    <string name="ums_reboot_android">重启安卓框架</string>
+    <string name="deselect_loop_tip">所选的文件似乎是一个块设备,然而\'loop\' 被选中了.取消选中\'loop\'?</string>
+    <string name="select_loop_tip">所选的文件似乎不是一个块设备, 然而 \'loop\' 没被选中.选中 \'loop\'?</string>
+    <string name="new_image_success_tip">创建镜像文件成功!是否把它设为大容量存储镜像?</string>
+    <string name="tip">提示</string>
     <!--<string name="help_en">*This program allows you to chose a block device or disk image as a 'disk',and communicate with PC through usb mass storage (just as usb disk do).-->
 	<!--* Since the configuration of android phones are different, you should select the correct config path firstly,you can simply press 'SEARCH' button to find the path if available ,or specify it manually-->
     <!--* Root permission is needed, if you want to use mount function, busybox is needed too.-->

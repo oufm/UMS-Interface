@@ -89,9 +89,8 @@ public class MountActivity extends AppCompatActivity {
             boolean _loop = mLoopCheck.isChecked();
             if(isBlock&&_loop)
             {
-                new AlertDialog.Builder(MountActivity.this).setTitle("tip")
-                        .setMessage("the file you select seems like a block device,but 'loop' is selected." +
-                                "deselect 'loop'?")
+                new AlertDialog.Builder(MountActivity.this).setTitle(R.string.tip)
+                        .setMessage(R.string.deselect_loop_tip)
                         .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -102,9 +101,8 @@ public class MountActivity extends AppCompatActivity {
             }
             if(!isBlock&&!_loop)
             {
-                new AlertDialog.Builder(MountActivity.this).setTitle("tip")
-                        .setMessage("the file you select doesn't like a block device, but 'loop' is not selected." +
-                                "select 'loop'?")
+                new AlertDialog.Builder(MountActivity.this).setTitle(R.string.tip)
+                        .setMessage(R.string.select_loop_tip)
                         .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -180,7 +178,7 @@ public class MountActivity extends AppCompatActivity {
                 final boolean _loop = mLoopCheck.isChecked();
                 String _type = fileSystems[mFilesystemSpinner.getSelectedItemPosition()];
 
-                String cmd = "busybox mount ";
+                String cmd = "mount ";
                 if(_readonly)
                     cmd +="-o ro ";
                 else
@@ -192,9 +190,15 @@ public class MountActivity extends AppCompatActivity {
                     cmd +="-t "+_type+" ";
                 }
                 cmd += "\""+ mDevEdit.getText().toString()+"\" \""+ mTargetEdit.getText().toString()+"\"";
-                ShellUnit.execRoot(cmd);
-                if(ShellUnit.exitValue==ShellUnit.EXEC_ERR)
-                    Toast.makeText(MountActivity.this,"execute fail,check busybox and root permission",Toast.LENGTH_LONG).show();
+                String busyboxCmd = "busybox "+cmd;
+                ShellUnit.execRoot(busyboxCmd);
+                if(ShellUnit.exitValue==ShellUnit.EXEC_ERR) {
+                    ShellUnit.execRoot(cmd);
+                    if(ShellUnit.exitValue!=0||ShellUnit.stdErr!=null)
+                        Toast.makeText(MountActivity.this, "execute fail,check busybox and root permission", Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(MountActivity.this,"mount success!",Toast.LENGTH_SHORT).show();
+                }
                 else if(ShellUnit.exitValue!=0||ShellUnit.stdErr!=null)
                     Toast.makeText(MountActivity.this,"mount fail:"+ShellUnit.stdErr,Toast.LENGTH_LONG).show();
                 else

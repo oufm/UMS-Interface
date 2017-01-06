@@ -123,6 +123,8 @@ public class FileTool {
             {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setDataAndType(Uri.parse("file://"+path), sMediaTypes[i][1]);
+                //this flag must be set.
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
                 context.startActivity(intent);
                 return;
             }

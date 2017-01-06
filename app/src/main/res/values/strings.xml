@@ -55,6 +55,13 @@
     <string name="no_newer_version">no newer version available.</string>
     <string name="ok">ok</string>
     <string name="filesystem">file system</string>
+    <string name="reboot">reboot</string>
+    <string name="reboot_confirm">Are you sure to reboot?</string>
+    <string name="ums_reboot_android">reboot android framework</string>
+    <string name="deselect_loop_tip">The file you select seems like a block device,but \'loop\' is selected.Deselect \'loop\'?</string>
+    <string name="select_loop_tip">The file you select doesn\'t like a block device, but \'loop\' is not selected.Select \'loop\'?</string>
+    <string name="new_image_success_tip">Create image file success!Do you want to set the image as mass storage device?</string>
+    <string name="tip">tip</string>
     <!--<string name="help_en">*This program allows you to chose a block device or disk image as a 'disk',and communicate with PC through usb mass storage (just as usb disk do).-->
     <!--* Since the configuration of android phones are different, you should select the correct config path firstly,you can simply press 'SEARCH' button to find the path if available ,or specify it manually-->
     <!--* Root permission is needed, if you want to use mount function, busybox is needed too.-->

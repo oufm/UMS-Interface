@@ -16,6 +16,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sjj.echo.explorer.ExplorerActivity;
+import com.sjj.echo.routine.FileTool;
 import com.sjj.echo.routine.PermissionUnit;
 import com.sjj.echo.routine.ShellUnit;
 
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity
     private View mInfoTxt;
     static public String sLang;
     static public long sDownloadId = 0;
+    static public String sDownloadPath;
 //    static public Activity sSelf;
     public final static String KEY_CONFIG_PATH = "KEY_CONFIG_PATH";
     public final static String KEY_DEVICE_FILE =  "KEY_DEVICE_FILE";
@@ -119,12 +122,12 @@ public class MainActivity extends AppCompatActivity
         }
 
         long _lastCheck = mSharedPreferences.getLong(KEY_LAST_CHECK_UPDATE,0);
-        if(new Date().getTime()-_lastCheck>24*60*60*1000)
+        if(new Date().getTime()-_lastCheck>12*60*60*1000)
         {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    checkUpdate();
+                    checkUpdate(true);
                 }
             }).start();
             //never use ".run()"!!!
@@ -257,8 +260,9 @@ public class MainActivity extends AppCompatActivity
             URLConnection connection = url.openConnection();
             connection.connect();
             InputStream input = connection.getInputStream();
-            input.read(buff);
-            return new String(buff);
+            int count = input.read(buff);
+            //never use new String (byte[].int).it return a wrong string
+            return new String(buff,0,count);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -275,26 +279,48 @@ public class MainActivity extends AppCompatActivity
         request.setTitle(getString(R.string.update_download_title));
         request.setDescription(getString(R.string.update_download_desc));
         //设置文件存放目录
-        //request.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, "mydown");
+        //String _dir = Environment.DIRECTORY_DOWNLOADS;
+        String _dir = "update";
+        String _apk = "UMS Interface.apk";
+        request.setDestinationInExternalFilesDir(this,_dir ,_apk);
+        sDownloadPath =getExternalFilesDir(null)+"/"+ _dir+"/"+_apk;
+        Log.d("@echo off","path="+sDownloadPath);
+        FileTool.deleteFile(sDownloadPath);
         DownloadManager downManager = (DownloadManager)getSystemService(Context.DOWNLOAD_SERVICE);
         sDownloadId = downManager.enqueue(request);
     }
 
-    private boolean checkUpdate()
+    private boolean checkUpdate(boolean allowIgnore)
     {
 
         String updateUrl = "https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/update/";
         String _version = getFromUrl(updateUrl+"version");
         if(_version!=null) {
-            final int _newVersion = Integer.parseInt(_version);
+            int __newVersion = 0;
+            try{
+                if(_version.length()>3)
+                    _version = _version.substring(0,3);
+                __newVersion = Integer.parseInt(_version);
+            }catch (java.lang.NumberFormatException e)
+            {
+                e.printStackTrace();
+            }
+            final int _newVersion = __newVersion;
             int _versionCode = 0;
             try {
                 _versionCode = getPackageManager().getPackageInfo(this.getPackageName(), PackageManager.GET_CONFIGURATIONS).versionCode;
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
+            mSharedPreferences.edit().putLong(KEY_LAST_CHECK_UPDATE, new Date().getTime()).commit();
             if(_newVersion > _versionCode)
             {
+                if(allowIgnore) {
+                    int _ignore = mSharedPreferences.getInt(KEY_IGNORE_VERSION, 0);
+                    if (_ignore == _newVersion)
+                        return true;
+                }
+
                 String _logs = "";
                 while(_versionCode++<_newVersion)
                 {
@@ -303,7 +329,6 @@ public class MainActivity extends AppCompatActivity
                         _logs+=_log+"\n";
                     }
                 }
-                mSharedPreferences.edit().putLong(KEY_LAST_CHECK_UPDATE, new Date().getTime());
                 final String _versionName = getFromUrl(updateUrl+"version_name");
                 final String final_logs = _logs;
                 mGadgetBtn.post(new Runnable() {
@@ -373,7 +398,8 @@ public class MainActivity extends AppCompatActivity
             if(requestCode ==1)
             {
                 mDevEdit.setText(path);
-                if(data.getExtras().getBoolean(KEY_INTENT_CONFIG))
+                Bundle bundle =data.getExtras();
+                if(bundle!=null&&bundle.containsKey(KEY_INTENT_CONFIG)&&bundle.getBoolean(KEY_INTENT_CONFIG))
                 {
                     doConfig();
                 }
@@ -544,14 +570,17 @@ public class MainActivity extends AppCompatActivity
             setConfigPath();
         }else if(id==R.id.action_reboot_kernel)
         {
-            ShellUnit.execRoot("reboot");
+            reboot("reboot");
         }else if(id==R.id.action_reboot_recovery)
         {
-            ShellUnit.execRoot("reboot recovery");
+            reboot("reboot recovery");
         }else if(id == R.id.action_reboot_fastboot)
         {
-            ShellUnit.execRoot("reboot bootloader");
-        }else if(id == R.id.action_new_image)
+            reboot("reboot bootloader");
+        }else if(id==R.id.action_reboot_android)
+        {
+            reboot("busybox killall zygote & busybox killall zygote64 & killall zygote & killall zygote64");
+        } else if(id == R.id.action_new_image)
         {
             Intent intent = new Intent(MainActivity.this,NewImageActivity.class);
             intent.setType("file/*");//设置类型，我这里是任意类型，任意后缀的可以这样写。
@@ -562,7 +591,7 @@ public class MainActivity extends AppCompatActivity
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    if(!checkUpdate())
+                    if(!checkUpdate(false))
                     {
                         mGadgetBtn.post(new Runnable() {
                             @Override
@@ -579,6 +608,17 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
 
         return super.onOptionsItemSelected(item);
+    }
+    private void reboot(final String cmd)
+    {
+        new AlertDialog.Builder(this).setTitle(R.string.reboot)
+                .setMessage(R.string.reboot_confirm)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ShellUnit.execRoot(cmd);
+            }
+        }).setNegativeButton(R.string.no,null).create().show();
     }
 
     private void onHelp()

@@ -58,8 +58,8 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="ACTION_DOWNLOAD_COMPLETE"/>
-                <action android:name="ACTION_NOTIFICATION_CLICKED"/>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
+                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED"/>
             </intent-filter>
         </receiver>
     </application>

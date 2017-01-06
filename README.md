@@ -24,5 +24,5 @@
  * [android6.0.1 usb mass storage](http://blog.csdn.net/outofmemo/article/details/53348552)
  * [coolapk](http://www.coolapk.com/apk/com.sjj.echo.umsinterface)
  
-##version 1.1
-[download apk](https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/app/app-release.apk)
+##last version
+ * 1.1.2 [download apk](https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/update/app-release.apk)

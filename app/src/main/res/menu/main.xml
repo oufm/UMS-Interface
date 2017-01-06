@@ -33,6 +33,10 @@
         android:title="@string/ums_reboot_kernel"
         android:orderInCategory="100"
         app:showAsAction="never" />
+    <item android:id="@+id/action_reboot_android"
+        android:title="@string/ums_reboot_android"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
     <item android:id="@+id/action_reboot_recovery"
         android:title="@string/ums_reboot_recovery"
         android:orderInCategory="100"
