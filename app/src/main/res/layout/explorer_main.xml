@@ -47,7 +47,7 @@
 
         </android.support.design.widget.AppBarLayout>
 		
-		<!--include layout="@layout/content_main" /-->
+		<!--<include layout="@layout/content_main" />-->
 		<android.support.v4.view.ViewPager
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -65,7 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@mipmap/ic_add_white_32_dp" />
+        android:src="@mipmap/ic_note_add_white_36dp" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/explorer_fab_paste_cancel"
@@ -93,7 +93,7 @@
             android:layout_gravity="bottom|end"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="75dp"
-            android:src="@android:drawable/ic_menu_revert" />
+            android:src="@mipmap/ic_keyboard_return_white_36dp" />
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/explorer_select"
             android:layout_width="wrap_content"
@@ -102,7 +102,7 @@
             android:layout_marginRight="16dp"
             android:layout_marginBottom="135dp"
             android:visibility="invisible"
-            android:src="@mipmap/ic_check" />
+            android:src="@mipmap/ic_done_white_36dp" />
 
 </android.support.design.widget.CoordinatorLayout>
 

@@ -18,10 +18,10 @@ public class DownLoadReceiver extends BroadcastReceiver {
         // an Intent broadcast.
         Log.d("@echo off","onReceive");
         if(intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)){
-            if(intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)==MainActivity.sDownloadId)
+            if(intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)==FrameActivity.sDownloadId)
             {
-                if(MainActivity.sDownloadPath!=null)
-                    FileTool.callActivity(MainActivity.sDownloadPath,context);
+                if(FrameActivity.sDownloadPath!=null)
+                    FileTool.callActivity(FrameActivity.sDownloadPath,context);
             }
 
         }else if(intent.getAction().equals(DownloadManager.ACTION_NOTIFICATION_CLICKED)){

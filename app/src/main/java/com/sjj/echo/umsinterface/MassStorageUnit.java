@@ -14,6 +14,27 @@ public class MassStorageUnit {
     static public String mStatusFunction;
     static public String mStatusReadonly;
 
+    private static String samsungFix(String lun)
+    {
+        String output = ShellUnit.execRoot("ls \""+lun+"\"");
+        if(output != null&&output.indexOf("No such file or directory")>=0)
+        {
+            String _output = ShellUnit.execRoot("du /sys  |grep \"/lun\"");
+            if(_output == null||ShellUnit.exitValue!=0)
+                return lun;
+            int startOffset = _output.indexOf("/");
+            if(startOffset<0)
+                return lun;
+            int endOffset = _output.indexOf("/android_usb/android0");
+            if(endOffset>startOffset)
+            {
+                return _output.substring(startOffset,endOffset+4);
+            }
+        }
+        return lun;
+
+    }
+
     /**
      * config usb mass storage
      * @param dev block device or image file
@@ -27,7 +48,9 @@ public class MassStorageUnit {
         //must disable usb device frist.
         cmd += "echo 0 > " + mConfigPath +"enable\n";
         cmd += "echo mass_storage > "+mConfigPath+"functions\n";
-        cmd += "echo "+dev+" > "+mConfigPath+"f_mass_storage/lun/file\n";
+        String _lun = mConfigPath+"f_mass_storage/lun";
+        _lun = samsungFix(_lun);
+        cmd += "echo "+dev+" > "+_lun+"/file\n";
         cmd += "echo "+(readonly?"1":"0")+" > "+mConfigPath+"f_mass_storage/lun/ro\n";
         cmd += "echo 1 > "+mConfigPath+"enable\n";
         //it maybe make no difference without setting sys.usb.config .

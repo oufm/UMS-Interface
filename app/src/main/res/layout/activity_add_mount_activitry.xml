@@ -3,27 +3,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_add_mount_activitry"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.sjj.echo.umsinterface.MountActivity">
+    tools:context="com.sjj.echo.umsinterface.FrameActivity">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:padding="4dp"
         android:layout_centerInParent="true"
         android:orientation="vertical">
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"/>
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="bottom"
             android:text="@string/ums_device_tip"
             />
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="55dp"
             android:orientation="horizontal"
             android:paddingLeft="3dp"
             android:gravity="center"
@@ -60,6 +64,10 @@
             </LinearLayout>
 
         </LinearLayout>
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -68,7 +76,7 @@
             />
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="55dp"
             android:orientation="horizontal"
             android:paddingLeft="3dp"
             android:gravity="right"
@@ -102,6 +110,10 @@
                     <!--android:text="search"/>-->
             </LinearLayout>
         </LinearLayout>
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -133,10 +145,125 @@
 
             </Spinner>
         </LinearLayout>
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/charset_tip"/>
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:id="@+id/check_charset"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/content_charset"
+            android:visibility="invisible"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="iocharset"/>
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:id="@+id/edit_iocharset"
+                android:text="utf8"/>
+            <android.support.v4.widget.Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="codepage"/>
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:id="@+id/edit_codepage"
+                android:text="936"/>
+
+        </LinearLayout>
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/permission_tip"/>
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:id="@+id/check_mask"
+                />
+        </LinearLayout>
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/mount_namespace_tip"-->
+            <!--android:textColor="#ccc"/>-->
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/content_mask"
+            android:visibility="invisible"
+            android:layout_gravity="center">
+            <TableRow>
+                <TextView android:text="   " />
+                <TextView android:text="@string/read" />
+                <TextView android:text="@string/write" />
+                <TextView android:text="@string/execute" />
+            </TableRow>
+            <TableRow>
+                <TextView android:text="@string/user"/>
+                <CheckBox android:checked="true" android:id="@+id/check_user_read"/>
+                <CheckBox android:checked="true" android:id="@+id/check_user_write"/>
+                <CheckBox android:checked="true" android:id="@+id/check_user_execute"/>
+            </TableRow>
+            <TableRow>
+                <TextView android:text="@string/group"/>
+                <CheckBox android:checked="true" android:id="@+id/check_group_read"/>
+                <CheckBox android:checked="true" android:id="@+id/check_group_write"/>
+                <CheckBox android:checked="true" android:id="@+id/check_group_execute"/>
+            </TableRow>
+            <TableRow>
+                <TextView android:text="@string/other"/>
+                <CheckBox android:checked="true" android:id="@+id/check_other_read"/>
+                <CheckBox android:checked="true" android:id="@+id/check_other_write"/>
+                <CheckBox android:checked="true" android:id="@+id/check_other_execute"/>
+            </TableRow>
+        </TableLayout>
+
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"/>
         <Button
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="60dp"
             android:text="@string/mount_mount_tip"
             android:id="@+id/mount_btn"/>
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"/>
     </LinearLayout>
 </RelativeLayout>

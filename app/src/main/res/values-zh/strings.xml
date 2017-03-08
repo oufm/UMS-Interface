@@ -4,15 +4,15 @@
     <string name="navigation_drawer_open">打开导航抽屉</string>
     <string name="navigation_drawer_close">关闭导航抽屉</string>
     <string name="action_settings">设置</string>
-    <string name="ums_device_tip">选择块设备或镜像文件</string>
-    <string name="ums_config_path_tip">选择配置基于的目录( 如 \'android_usb/android0\')</string>
+    <string name="ums_device_tip">数据源(选择块设备或镜像文件)</string>
+    <string name="ums_config_path_tip">配置目录(选择配置基于的目录)</string>
     <string name="ums_edit_hint">输入或点击按钮以选择</string>
     <string name="ums_select_btn_tip">选择</string>
     <string name="ums_history_btn_tip">历史</string>
     <string name="ums_search_btn_tip">搜索</string>
     <string name="ums_readonly_check_tip">只读</string>
-    <string name="ums_config_btn_tip">配置usb设备</string>
-    <string name="mount_target_edit_tip">选择要挂载到的目录</string>
+    <string name="ums_config_btn_tip">启动U盘</string>
+    <string name="mount_target_edit_tip">挂载点(要挂载到的目录)</string>
     <string name="mount_loop_check_tip">loop</string>
     <string name="mount_mount_tip">挂载</string>
     <string name="explorer_sort_way">排序方式</string>
@@ -63,6 +63,17 @@
     <string name="select_loop_tip">所选的文件似乎不是一个块设备, 然而 \'loop\' 没被选中.选中 \'loop\'?</string>
     <string name="new_image_success_tip">创建镜像文件成功!是否把它设为大容量存储镜像?</string>
     <string name="tip">提示</string>
+
+    <string name="read">读</string>
+    <string name="write">写</string>
+    <string name="execute">执行</string>
+    <string name="user">用户</string>
+    <string name="group">组</string>
+    <string name="other">其他</string>
+    <string name="permission_tip"><![CDATA[权限掩码(用于vfat)]]></string>
+    <string name="mount_namespace_tip">if \'mount namespace separation\' in SuperSu is checked,this function may be impeded</string>
+    <string name="charset_tip">消除乱码</string>
+    <string name="status">状态</string>
     <!--<string name="help_en">*This program allows you to chose a block device or disk image as a 'disk',and communicate with PC through usb mass storage (just as usb disk do).-->
 	<!--* Since the configuration of android phones are different, you should select the correct config path firstly,you can simply press 'SEARCH' button to find the path if available ,or specify it manually-->
     <!--* Root permission is needed, if you want to use mount function, busybox is needed too.-->

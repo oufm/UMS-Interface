@@ -1,10 +1,36 @@
-   * Root permission is needed,or ANR when launch , if you want to use mount function, busybox is needed too.
-   * This program allows you to chose a block device or disk image as a 'disk',and communicate with PC through usb mass storage (justas usb disk do).
-   * Since the configuration of android phones are different, you should select the correct config path firstly,you can simply press 'SEARCH' button to find the path if available ,or specify it manually.
-   * There are some special usages. For example, you can select the whole emmc '/dev/block/mmcblk0' and mount it to pc linux, so that you can some tool like gparted to do something like partition.And you can also use it as boot disk.
-   * This program is not responsible for data lose and boot exception caused by wrong operations.
-   * Different mobile phones for each partition corresponding to the block device may not be the same, click the top left of the first icon to view the mounted device.
-   * Note that most of partitions are the ext4 partition, windows does not support ext4, you can try in linux, and nowdays sdcard and data are in the same partition in the most of the mobile phones.
-   * If the file system is not supported by the pc-side ,it is proposed in the "select a block device or an image file" to select a mirror file, the kernel will simulate a "removable disk", and can be accessed in the pc side .If want to access the "removable disk" in the phone, you can use the mount function (from the top left of the second icon) mount the image to a blank directory within /data.
-   * Note that the image file is not a compressed file, but in fact any file can be used as a mirror file, the file size is "moving disk" size, pc-side will prompt the format.If you have a image file,you can selecte it directly.If you don't have,just select an arbitrary file with a suitable size, or click the third icon from the top left to create a file with the specified size and select it.
-   * Note that you must select either a block device file (under /dev/ block) or an image file that has been "formatted" when using mount function.And don't directly select the directory under sdcard as target directory ,because /mnt/sdcard or /sdcard etc are now mostly simulated by fuse, is actually located in /data, such as "/data/media/0". So it is recommended to select the target directory under "/data".after success, "/data/media/0" will show the file in the image, and /sdcard will not be show that.
+<html>
+<head>
+</head>
+<body>
+<h1 style="color:#0F0">U disk</h1>
+<b style="color:#009;">block device:</b>
+Representing a disk or partition, usually located in /dev/block or /dev.<br/>
+<b style="color:#009;">image file:</b>
+ a common file with all the original data of  a disk or partition.Usually named as *.img .An image file with a file system can be mounted like normal disk.<br/>
+<b style="color:#009;">data source:</b>
+source of the data in U disk,an image file or a block device is available .<br/>
+<b style="color:#009;">config path:</b>
+path this software relied.Like  /sys/class/android_usb/android0 or  /sys/devices/virtual/android_usb/android0.<br/>
+<b style="color:#009;">readonly:may have no effect for some phone</b>
+<br/>
+<h1 style="color:#0F0">mount</h1>
+<b style="color:#009;">data source:</b>
+source of the data to mount,an image file or a block device is available .<br/>
+<b style="color:#009;">mount point:</b>
+chose a directory to mount.<br/>
+<b style="color:#009;">loop:</b>
+must be checked,when use image file.<br/>
+<b style="color:#009;">file system:</b>
+will be automatically chose if not specified.<br/>
+<b style="color:#009;">eliminate garbled:</b>
+change charset for file names.
+<b style="color:#009;">mask:</b>
+used to set dmask and fmask.<br/>
+<b style="color:#900;"> ** </b>
+if \'mount namespace separation\' in SuperSu is checked,this function may be impeded<br/>
+<h1 style="color:#0F0">create image</h1>
+<b style="color:#009;">format:</b>
+create file system for image file.<br/>
+can be used as a boot disk for PC when select a solved image .<br/>
+</body>
+</html>

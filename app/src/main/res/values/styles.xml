@@ -14,6 +14,10 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="Normal" parent="AppTheme.NoActionBar">
+        <item name="android:panelBackground">@android:color/white</item>
+    </style>
+
     <style name="DialogTransparent" parent="@style/Theme.AppCompat.Light.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowAnimationStyle">@android:style/Animation</item>

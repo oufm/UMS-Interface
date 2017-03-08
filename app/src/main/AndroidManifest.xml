@@ -18,11 +18,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".FrameActivity"
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="sensorPortrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/Normal">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,18 +40,18 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MountInfoActivity"
-            android:theme="@style/Theme.AppCompat.Light.Dialog" />
-        <activity
-            android:name=".MountActivity"
-            android:theme="@style/Theme.AppCompat.Light.Dialog" />
-        <activity
-            android:name=".HelpActivity"
-            android:theme="@style/DialogTransparent" />
-        <activity
-            android:name=".NewImageActivity"
-            android:theme="@style/Theme.AppCompat.Light.Dialog" />
+        <!--<activity-->
+            <!--android:name=".MountInfoActivity"-->
+            <!--android:theme="@style/Theme.AppCompat.Light.Dialog" />-->
+        <!--<activity-->
+            <!--android:name=".MountActivity"-->
+            <!--android:theme="@style/Theme.AppCompat.Light.Dialog" />-->
+        <!--<activity-->
+            <!--android:name=".HelpActivity"-->
+            <!--android:theme="@style/DialogTransparent" />-->
+        <!--<activity-->
+            <!--android:name=".NewImageActivity"-->
+            <!--android:theme="@style/Theme.AppCompat.Light.Dialog" />-->
 
         <receiver
             android:name=".DownLoadReceiver"

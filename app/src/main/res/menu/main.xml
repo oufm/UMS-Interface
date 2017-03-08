@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/action_mount_info"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+    <!--<item android:id="@+id/action_mount_info"
         android:title="mount information"
         android:orderInCategory="100"
         android:icon="@mipmap/ic_mount_info"
@@ -15,20 +15,20 @@
         android:title="create image file"
         android:orderInCategory="100"
         android:icon="@mipmap/ic_image"
-        app:showAsAction="always" />
+        app:showAsAction="always" />-->
     <item android:id="@+id/action_exec"
         android:title="@string/ums_cmd"
         android:orderInCategory="100"
         android:icon="@mipmap/ic_exec"
-        app:showAsAction="ifRoom" />
-    <item android:id="@+id/action_file_history"
-        android:title="@string/ums_show_history"
-        android:orderInCategory="100"
         app:showAsAction="never" />
-    <item android:id="@+id/action_search_config"
-        android:title="@string/ums_search_path"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
+    <!--<item android:id="@+id/action_file_history"-->
+        <!--android:title="@string/ums_show_history"-->
+        <!--android:orderInCategory="100"-->
+        <!--app:showAsAction="never" />-->
+    <!--<item android:id="@+id/action_search_config"-->
+        <!--android:title="@string/ums_search_path"-->
+        <!--android:orderInCategory="100"-->
+        <!--app:showAsAction="never" />-->
     <item android:id="@+id/action_reboot_kernel"
         android:title="@string/ums_reboot_kernel"
         android:orderInCategory="100"
@@ -49,8 +49,8 @@
         android:title="@string/check_update"
         android:orderInCategory="100"
         app:showAsAction="never" />
-    <item android:id="@+id/action_help"
-        android:title="@string/help"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
+    <!--<item android:id="@+id/action_help"-->
+        <!--android:title="@string/help"-->
+        <!--android:orderInCategory="100"-->
+        <!--app:showAsAction="never" />-->
 </menu>

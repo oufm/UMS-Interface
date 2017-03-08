@@ -1,5 +1,7 @@
 package com.sjj.echo.routine;
 
+import com.sjj.echo.umsinterface.FrameActivity;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -9,6 +11,8 @@ import java.io.OutputStreamWriter;
  */
 
 public class ShellUnit {
+
+    public static String BUSYBOX = FrameActivity.APP_DIR+"/bin/busybox ";
 
     public static final int EXEC_ERR = 1010100;
     /**
@@ -71,6 +75,10 @@ public class ShellUnit {
      * execute the command as root*/
     static public String execRoot(String cmd) {
         return exec(cmd,true);
+    }
+
+    static public String execBusybox(String cmd){
+        return execRoot(BUSYBOX +cmd);
     }
 
     static public String exec(final int overtime, String cmd, boolean root)

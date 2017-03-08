@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.sjj.echo.umsinterface.HelpActivity">
+    tools:context="com.sjj.echo.umsinterface.FrameActivity">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -57,10 +57,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="UMS Interface\nversion 1.1.2"
+                    android:id="@+id/help_info"
+                    android:text="UMS Interface\noutofmemo@qq.com"
                     android:gravity="center"
                     android:textSize="25dp"
-                    android:textColor="#000"/>
+                    android:textColor="#0FF"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

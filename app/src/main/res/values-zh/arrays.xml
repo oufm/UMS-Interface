@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tab_titles">
+        <item>U盘</item>
+        <item>挂载</item>
+        <item>已挂载</item>
+        <item>新建镜像</item>
+        <item>帮助</item>
+    </string-array>
+    <string-array name="format">
+        <item>不格式化</item>
+        <item>格式化为vfat</item>
+    </string-array>
+</resources>

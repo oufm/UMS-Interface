@@ -6,24 +6,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.sjj.echo.umsinterface.MainActivity">
+    tools:context="com.sjj.echo.umsinterface.FrameActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_height="wrap_content"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        app:elevation="0dp">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <android.support.design.widget.AppBarLayout
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:theme="@style/AppTheme.AppBarOverlay"
+            app:elevation="0dp">
 
-    </android.support.design.widget.AppBarLayout>
+            <!--<android.support.v7.widget.Toolbar-->
+                <!--android:id="@+id/toolbar"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="?attr/colorPrimary"-->
+                <!--app:popupTheme="@style/AppTheme.PopupOverlay" />-->
+            <android.support.design.widget.TabLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/main_tab_layout"
+                app:tabGravity="fill"
+                app:tabIndicatorColor="#89E1F8"
+                app:tabMode="fixed"
+                app:tabTextAppearance="@style/title_style">
+            </android.support.design.widget.TabLayout>
+        </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main"/>
+        <android.support.v4.view.ViewPager
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/main_viewpager"
+            >
+
+        </android.support.v4.view.ViewPager>
+    </LinearLayout>
+    <!--<include layout="@layout/content_main"/>-->
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -32,6 +53,6 @@
         android:layout_gravity="bottom|end"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="75dp"
-        app:srcCompat="@android:drawable/ic_menu_help" />
+        app:srcCompat="@mipmap/ic_menu_white_36dp" />
 
 </android.support.design.widget.CoordinatorLayout>

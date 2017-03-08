@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tab_titles">
+        <item>U disk</item>
+        <item>mount</item>
+        <item>already mount</item>
+        <item>create image</item>
+        <item>help</item>
+    </string-array>
+    <string-array name="format">
+        <item>don\'t format</item>
+        <item>format as vfat</item>
+    </string-array>
+</resources>
