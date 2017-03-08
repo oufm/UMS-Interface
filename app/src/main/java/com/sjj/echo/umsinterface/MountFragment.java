@@ -296,7 +296,7 @@ public class MountFragment extends Fragment {
         mountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkLoop();
+                //checkLoop();
                 // mount operation
                 boolean _readonly = mReadonlyCheck.isChecked();
                 final boolean _loop = mLoopCheck.isChecked();
@@ -342,12 +342,12 @@ public class MountFragment extends Fragment {
             }
         });
 
-//        mLoopCheck.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                checkLoop();
-//            }
-//        });
+        mLoopCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkLoop();
+            }
+        });
 
         mDevEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -360,6 +360,7 @@ public class MountFragment extends Fragment {
                         mLoopCheck.setChecked(false);
                     else
                         mLoopCheck.setChecked(true);
+                    checkLoop();
                 }
             }
         });

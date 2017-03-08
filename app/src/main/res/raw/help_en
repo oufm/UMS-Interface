@@ -11,7 +11,7 @@ Representing a disk or partition, usually located in /dev/block or /dev.<br/>
 source of the data in U disk,an image file or a block device is available .<br/>
 <b style="color:#009;">config path:</b>
 path this software relied.Like  /sys/class/android_usb/android0 or  /sys/devices/virtual/android_usb/android0.<br/>
-<b style="color:#009;">readonly:may have no effect for some phone</b>
+<b style="color:#009;">readonly:</b>may have no effect for some phone
 <br/>
 <h1 style="color:#0F0">mount</h1>
 <b style="color:#009;">data source:</b>
@@ -27,7 +27,7 @@ change charset for file names.
 <b style="color:#009;">mask:</b>
 used to set dmask and fmask.<br/>
 <b style="color:#900;"> ** </b>
-if \'mount namespace separation\' in SuperSu is checked,this function may be impeded<br/>
+if 'mount namespace separation' in SuperSu is checked,this function may be impeded<br/>
 <h1 style="color:#0F0">create image</h1>
 <b style="color:#009;">format:</b>
 create file system for image file.<br/>

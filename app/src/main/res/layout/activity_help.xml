@@ -61,7 +61,7 @@
                     android:text="UMS Interface\noutofmemo@qq.com"
                     android:gravity="center"
                     android:textSize="25dp"
-                    android:textColor="#0FF"/>
+                    android:textColor="#0aa"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
