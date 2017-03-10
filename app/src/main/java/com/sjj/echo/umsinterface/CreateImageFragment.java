@@ -29,6 +29,8 @@ public class CreateImageFragment extends Fragment {
     private EditText mSizeEdit;
     private Activity mActivity;
     private Spinner mFormat;
+    public String mStderr;
+    private View mView;
 
     public void init(Activity activity){
         mActivity =activity;
@@ -40,10 +42,31 @@ public class CreateImageFragment extends Fragment {
             mDirEdit.setText(dir);
     }
 
+    public boolean creatImage(String _path,int size,boolean format)
+    {
+        String cmd = "dd bs=1m if=/dev/zero ";
+        cmd+="of=\""+_path+"\" ";
+        cmd+="count="+size;
+        if(format)
+            cmd+="&&"+ShellUnit.BUSYBOX+" mkfs.vfat \""+_path+"\"";
+        ShellUnit.execRoot(cmd);
+        //there seems a bug with command "dd" ,it always print the information through stderr,to check whether success "ls ..."
+        mStderr = ShellUnit.stdErr;
+        ShellUnit.execRoot("ls \""+_path+"\"");
+        if(ShellUnit.exitValue==0&&ShellUnit.stdErr==null)
+            return true;
+        else
+            return false;
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if(mView!=null)
+            return mView;
         View rootView = inflater.inflate(R.layout.activity_new_image,container,false);
+        mView = rootView;
 
         mDirEdit = (EditText) rootView.findViewById(R.id.image_dir_edit);
         mNameEdit = (EditText) rootView.findViewById(R.id.image_file_edit);
@@ -77,16 +100,8 @@ public class CreateImageFragment extends Fragment {
                     _path+="/";
                 _path+=mNameEdit.getText().toString();
                 boolean _format = mFormat.getSelectedItemPosition()>0;
-                String cmd = "dd bs=1m if=/dev/zero ";
-                cmd+="of=\""+_path+"\" ";
-                cmd+="count="+size;
-                if(_format)
-                    cmd+="&&"+ShellUnit.BUSYBOX+" mkfs.vfat \""+_path+"\"";
-                ShellUnit.execRoot(cmd);
-                //there seems a bug with command "dd" ,it always print the information through stderr,to check whether success "ls ..."
-                String _stderr = ShellUnit.stdErr;
-                ShellUnit.execRoot("ls \""+_path+"\"");
-                if(ShellUnit.exitValue==0&&ShellUnit.stdErr==null) {
+                boolean _ok = creatImage(_path,size,_format);
+                if(_ok) {
                     //Toast.makeText(NewImageActivity.this, "create image file success!", Toast.LENGTH_SHORT).show();
                     final String final_path = _path;
                     new AlertDialog.Builder(mActivity).setMessage(R.string.new_image_success_tip)
@@ -104,8 +119,8 @@ public class CreateImageFragment extends Fragment {
                 }
                 else {
                     String tip = "create image file fail";
-                    if(_stderr!=null)
-                        tip+=":"+_stderr;
+                    if(mStderr!=null)
+                        tip+=":"+mStderr;
                     Toast.makeText(mActivity, tip, Toast.LENGTH_LONG).show();
                 }
             }

@@ -49,6 +49,14 @@
         android:title="@string/check_update"
         android:orderInCategory="100"
         app:showAsAction="never" />
+    <item android:id="@+id/action_report"
+        android:title="@string/create_report"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <!--<item android:id="@+id/action_quick_config"-->
+        <!--android:title="@string/quick_config"-->
+        <!--android:orderInCategory="100"-->
+        <!--app:showAsAction="never" />-->
     <!--<item android:id="@+id/action_help"-->
         <!--android:title="@string/help"-->
         <!--android:orderInCategory="100"-->

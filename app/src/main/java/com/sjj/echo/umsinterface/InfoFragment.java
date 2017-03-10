@@ -26,6 +26,7 @@ public class InfoFragment extends Fragment {
     ArrayList<String> mInfos = new ArrayList<>();
     ListView mListView;
     Activity mActivity;
+    View mView;
 
     public void init(Activity activity)
     {
@@ -81,7 +82,10 @@ public class InfoFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if(mView!=null)
+            return mView;
         View rootView = inflater.inflate(R.layout.activity_mount,container,false);
+        mView = rootView;
 
         mListView = (ListView) rootView.findViewById(R.id.mount_list);
         setAdapter();

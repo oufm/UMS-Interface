@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="tab_titles">
+        <item>quick start</item>
         <item>U disk</item>
         <item>mount</item>
         <item>already mount</item>

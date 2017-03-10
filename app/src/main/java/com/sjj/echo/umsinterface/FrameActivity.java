@@ -30,7 +30,6 @@ import com.sjj.echo.routine.PermissionUnit;
 import com.sjj.echo.routine.ShellUnit;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -57,9 +56,29 @@ public class FrameActivity extends AppCompatActivity {
     private InfoFragment mInfoFragment;
     private CreateImageFragment mCreateImageFragment;
     private HelpFragment mHelpFragment;
+    private QuickStartFragment mQuickStartFragment;
     private Fragment[] mFragments;
 
     public static String APP_DIR = "/data/data//com.sjj.echo.umsinterface";
+
+
+    private void creatReport()
+    {
+        File _script = new File(APP_DIR+"/ums_device_info.sh");
+        if(!_script.exists()||!_script.isFile())
+        {
+            if(!FileTool.streamToFile(getResources().openRawResource(R.raw.ums_device_info),APP_DIR+"/ums_device_info.sh"))
+                Toast.makeText(this,"create report fail!",Toast.LENGTH_LONG).show();
+        }
+        ShellUnit.execRoot("sh "+APP_DIR+"/ums_device_info.sh");
+        String _targetpath = "/sdcard/ums_device_info.sh";
+        File _report = new File(_targetpath);
+        String _message = getString(R.string.reportfail);
+        if(_report.isFile()&&_report.length()>0)
+            _message = getString(R.string.reportok);
+        new AlertDialog.Builder(FrameActivity.this).setMessage(_message+_targetpath).create().show();
+
+    }
 
     protected void initBusybox()
     {
@@ -73,21 +92,8 @@ public class FrameActivity extends AppCompatActivity {
         File _busybox = new File(APP_DIR+"/bin/busybox");
         if(!_busybox.isFile())
         {
-            byte[] buff = new byte[16*1024];
-            InputStream inputStream = getResources().openRawResource(R.raw.busybox);
-            try {
-                FileOutputStream _outputStream = new FileOutputStream(_busybox);
-                int count;
-                while ((count=inputStream.read(buff))>0)
-                {
-                   _outputStream.write(buff,0,count);
-
-                }
-                _outputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+            if(!FileTool.streamToFile(getResources().openRawResource(R.raw.busybox),APP_DIR+"/bin/busybox"))
                 Toast.makeText(this,"init fail!",Toast.LENGTH_LONG).show();
-            }
         }
         ShellUnit.execRoot("chmod 777 "+APP_DIR+"/bin/busybox");
         if(ShellUnit.stdErr!=null)
@@ -199,9 +205,32 @@ public class FrameActivity extends AppCompatActivity {
         return false;
     }
 
+    public boolean createImage(String _path,int _size,boolean _format)
+    {
+        return mCreateImageFragment.creatImage(_path,_size,_format);
+    }
+
+    public boolean mount(boolean _readonly,boolean _loop,boolean _charset,boolean _mask,String _source,String _point)
+    {
+        return mMountFragment.mount(_readonly,_loop,_charset,_mask,_source,_point);
+    }
+
+    public boolean ums(String _dev,String function)
+    {
+
+        int ret;
+        if(function==null)
+            ret=MassStorageUnit.umsConfig(_dev,false);
+        else
+            ret=MassStorageUnit.umsConfig(_dev,false,function);
+        if(ret !=0||MassStorageUnit.mError!=null||ret== ShellUnit.EXEC_ERR)
+            return false;
+        return true;
+    }
+
     public void doUmsConfig(String dev)
     {
-        mViewPager.setCurrentItem(0);
+        mViewPager.setCurrentItem(1);
         mUmsFragment.doConfigRun(dev);
     }
     //TO DO:
@@ -277,7 +306,9 @@ public class FrameActivity extends AppCompatActivity {
         mCreateImageFragment.init(this);
         mHelpFragment = new HelpFragment();
         mHelpFragment.init(this);
-        mFragments = new Fragment[] {mUmsFragment,mMountFragment,mInfoFragment,mCreateImageFragment,mHelpFragment};
+        mQuickStartFragment = new QuickStartFragment();
+        mQuickStartFragment.init(this);
+        mFragments = new Fragment[] {mQuickStartFragment,mUmsFragment,mMountFragment,mInfoFragment,mCreateImageFragment,mHelpFragment};
         setContentView(R.layout.activity_main);
 
         Toolbar _toolbar = new Toolbar(this);
@@ -353,6 +384,9 @@ public class FrameActivity extends AppCompatActivity {
                     }
                 }
             }).start();
+        }else if(id == R.id.action_report)
+        {
+            creatReport();
         }
         //noinspection SimplifiableIfStatement
         return super.onOptionsItemSelected(item);

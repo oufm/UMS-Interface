@@ -30,14 +30,18 @@ public class HelpFragment extends Fragment {
         mActivity = activity;
     }
 
-
+    View mView;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if(mView!=null)
+            return mView;
         View rootView = inflater.inflate(R.layout.activity_help,container,false);
+        mView = rootView;
 
         TextView helpText = (TextView) rootView.findViewById(R.id.help_string);
         TextView helpInfo = (TextView) rootView.findViewById(R.id.help_info);
+
 
         helpInfo.setOnClickListener(new View.OnClickListener() {
             @Override

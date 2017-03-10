@@ -64,6 +64,7 @@ public class MountFragment extends Fragment {
     static final String KEY_MOUNT_MASK = "KEY_MOUNT_MASK";
     static final String KEY_MOUNT_CHARSET = "KEY_MOUNT_CHARSET";
     SharedPreferences mSharedPreferences;
+    View mView;
 
     public void init(Activity activity)
     {
@@ -119,30 +120,24 @@ public class MountFragment extends Fragment {
         return "0"+_userflag+_groupflag+_otherflag;
     }
 
-    private Boolean isBlockDev()
+    public static Boolean isBlockDev(String _file)
     {
-        //check if the file is a block device
-        String _cmd = "ls -l \""+mDevEdit.getText().toString()+"\"";
+        String _cmd = "ls -l \""+_file+"\"";
         String _output = ShellUnit.execRoot(_cmd);
-        if(_output!=null&&ShellUnit.stdErr==null)
-        {
+        if(_output!=null&&ShellUnit.stdErr==null) {
             boolean isBlock = false;
             if (_output.startsWith("b"))
                 isBlock = true;//block device file
-            else if (_output.startsWith("l"))
-            {//link file
+            else if (_output.startsWith("l")) {//link file
                 String _target = "-> ";
                 int _offset = _output.indexOf(_target);
-                if (_offset > 0)
-                {
+                if (_offset > 0) {
                     _offset += _target.length();
                     int _offsetEnd = _output.indexOf("\n");
-                    if (_offsetEnd > _offset)
-                    {
+                    if (_offsetEnd > _offset) {
                         String _path = _output.substring(_offset, _offsetEnd);
                         String __output = ShellUnit.execRoot("ls -l \"" + _path + "\"");
-                        if (_output != null && ShellUnit.stdErr == null)
-                        {
+                        if (_output != null && ShellUnit.stdErr == null) {
                             if (__output.startsWith("b"))
                                 isBlock = true;
                         }
@@ -151,7 +146,14 @@ public class MountFragment extends Fragment {
             }
             return isBlock;
         }
-        return  null;
+        return null;
+    }
+
+    private Boolean isBlockDev()
+    {
+        return isBlockDev(mDevEdit.getText().toString());
+        //check if the file is a block device
+
     }
 
     /**
@@ -203,10 +205,40 @@ public class MountFragment extends Fragment {
         mSharedPreferences.edit().putBoolean(KEY_MOUNT_CHARSET,mCheckCharset.isChecked()).commit();
     }
 
+    public boolean mount(boolean _readonly,boolean _loop,boolean _charset,boolean _mask,String _source,String _point)
+    {
+        String cmd = "mount ";
+        if(_readonly)
+            cmd +="-o ro";
+        else
+            cmd +="-o rw";
+        if(_charset)
+            cmd +=",iocharset=utf8,codepage=936";
+        if(_mask)
+        {
+            cmd +=",fmask=0,dmask=0";
+        }
+        if(_loop)
+            cmd +=",loop";
+        cmd +=" ";
+        cmd += "\""+ _source+"\" \""+ _point+"\"";
+        ShellUnit.execBusybox(cmd);
+        if(ShellUnit.exitValue==ShellUnit.EXEC_ERR) {
+            return false;
+        }
+        else if(ShellUnit.exitValue!=0||ShellUnit.stdErr!=null)
+            return false;
+        else
+            return true;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if(mView!=null)
+            return mView;
         View rootView = inflater.inflate(R.layout.activity_add_mount_activitry,container,false);
+        mView = rootView;
 
         mCheckGroupExexcute = (CheckBox) rootView.findViewById(R.id.check_group_execute);
         mCheckGroupWrite = (CheckBox) rootView.findViewById(R.id.check_group_write);
@@ -243,7 +275,7 @@ public class MountFragment extends Fragment {
         String _dev = mSharedPreferences.getString(KEY_MOUNT_DEV,null);
         if(_dev!=null)
             mDevEdit.setText(_dev);
-        String _target = mSharedPreferences.getString(KEY_MOUNT_TARGET,null);
+        final String _target = mSharedPreferences.getString(KEY_MOUNT_TARGET,null);
         if(_target!=null)
             mTargetEdit.setText(_target);
         int _type = mSharedPreferences.getInt(KEY_MOUNT_TYPE,0);
@@ -303,6 +335,8 @@ public class MountFragment extends Fragment {
                 boolean _mask = mCheckMask.isChecked();
                 boolean _charset = mCheckCharset.isChecked();
                 String _type = fileSystems[mFilesystemSpinner.getSelectedItemPosition()];
+                if(_type.startsWith(" "))
+                    _type = null;
 
                 String cmd = "mount ";
                 if(_readonly)

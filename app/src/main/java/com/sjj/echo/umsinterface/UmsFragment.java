@@ -39,9 +39,10 @@ public class UmsFragment extends Fragment {
     private Button mConfigSearchBtn;
     private CheckBox mReadonlyCheck;
     private TextView mStatusTxt;
+    View mView;
 //    private View mInfoTxt;
 
-    public final static String KEY_INTENT_CONFIG = "KEY_INTENT_CONFIG";
+//    public final static String KEY_INTENT_CONFIG = "KEY_INTENT_CONFIG";
     public final static String KEY_CONFIG_PATH = "KEY_CONFIG_PATH";
     public final static String KEY_DEVICE_FILE =  "KEY_DEVICE_FILE";
     public final static String KEY_READ_ONLY = "KEY_READ_ONLY";
@@ -187,8 +188,10 @@ public class UmsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if(mView!=null)
+            return mView;
         View rootView = inflater.inflate(R.layout.content_main,container,false);
-
+        mView = rootView;
         mPathBtn = (Button) rootView.findViewById(R.id.config_btn);
         mPathEdit = (EditText) rootView.findViewById(R.id.config_edit);
         mDevBtn = (Button) rootView.findViewById(R.id.source_btn);
@@ -208,7 +211,7 @@ public class UmsFragment extends Fragment {
             mDevEdit.setText(_dev);
         }
 
-        String _configPath = mSharedPreferences.getString(KEY_CONFIG_PATH,null);
+        final String _configPath = mSharedPreferences.getString(KEY_CONFIG_PATH,null);
         if(_configPath!=null&&! _configPath.isEmpty())
         {
             MassStorageUnit.mConfigPath = _configPath;
@@ -225,8 +228,8 @@ public class UmsFragment extends Fragment {
         if(MassStorageUnit.mConfigPath!=null)
             mPathEdit.setText(MassStorageUnit.mConfigPath);
 
-        mReadonly = mSharedPreferences.getBoolean(KEY_READ_ONLY,false);
-        mReadonlyCheck.setChecked(mReadonly);
+        //mReadonly = mSharedPreferences.getBoolean(KEY_READ_ONLY,false);
+        mReadonlyCheck.setChecked(false);
 
         int _historyCount = mSharedPreferences.getInt(KEY_DEVICE_HISTORY_COUNT,0);
         for(int i=0;i<_historyCount;i++)
@@ -237,7 +240,24 @@ public class UmsFragment extends Fragment {
         mGadgetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                doConfig();
+                Boolean _block = MountFragment.isBlockDev(mDevEdit.getText().toString());
+                if(_block!=null&&_block)
+                {
+                    new AlertDialog.Builder(mActivity).setTitle(R.string.warning)
+                            .setMessage(R.string.umsdev).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            UmsFragment.this.doConfig();
+                        }
+                    }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            return;
+                        }
+                    }).create().show();
+                }
+                else
+                    doConfig();
             }
         });
 

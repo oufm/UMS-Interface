@@ -2,6 +2,8 @@ package com.sjj.echo.umsinterface;
 
 import com.sjj.echo.routine.ShellUnit;
 
+import java.io.File;
+
 /**
  * Created by SJJ on 2017/1/1.
  */
@@ -16,23 +18,43 @@ public class MassStorageUnit {
 
     private static String samsungFix(String lun)
     {
-        String output = ShellUnit.execRoot("ls \""+lun+"\"");
-        if(output != null&&output.indexOf("No such file or directory")>=0)
-        {
-            String _output = ShellUnit.execRoot("du /sys  |grep \"/lun\"");
-            if(_output == null||ShellUnit.exitValue!=0)
-                return lun;
-            int startOffset = _output.indexOf("/");
-            if(startOffset<0)
-                return lun;
-            int endOffset = _output.indexOf("/android_usb/android0");
-            if(endOffset>startOffset)
-            {
-                return _output.substring(startOffset,endOffset+4);
-            }
-        }
-        return lun;
+        File _lun = new File(lun);
+        if(_lun.exists()&&_lun.isDirectory())
+            return lun;
+        String _output = ShellUnit.execRoot("du /sys  |grep \"/lun\"");
+        if(_output == null||ShellUnit.exitValue!=0)
+            return null;
+        int startOffset = _output.indexOf("/");
+        if(startOffset<0)
+            return null;
+        int endOffset = _output.indexOf("/lun");
+        if(endOffset<0)
+            return null;
+        endOffset++;
+        endOffset = _output.indexOf("/");
+        if (endOffset<0)
+            return null;
+        return _output.substring(startOffset,endOffset);
 
+    }
+
+    static private boolean pathCheck()
+    {
+        File _config = new File(mConfigPath);
+        File _functions = new File(mConfigPath+"functions");
+        if(!_config.exists()||!_config.isDirectory()||!_functions.exists()||!_functions.isFile())
+        {
+            String _path = searchPath();
+            if(_path!=null)
+                mConfigPath = _path;
+            return false;
+        }
+        return true;
+    }
+
+    static public int umsConfig(String dev,boolean readonly)
+    {
+        return umsConfig(dev,readonly,"mass_storage");
     }
 
     /**
@@ -40,21 +62,36 @@ public class MassStorageUnit {
      * @param dev block device or image file
      * @param readonly  readonly or not
      * */
-    static public int umsConfig(String dev,boolean readonly)
+    static public int umsConfig(String dev,boolean readonly,String function)
     {
-        Boolean ok =true;
         mError = null;
+        if(!pathCheck())
+        {
+            if(!pathCheck())
+            {
+                mError = "can't find write config path!";
+                return -1;
+            }
+
+        }
+        String _lun = mConfigPath+"f_mass_storage/lun";
+        _lun = samsungFix(_lun);
+        if(_lun==null)
+        {
+            mError = "can't find 'lun'!";
+            return -1;
+        }
+        //Boolean ok =true;
         String cmd = "";
         //must disable usb device frist.
         cmd += "echo 0 > " + mConfigPath +"enable\n";
-        cmd += "echo mass_storage > "+mConfigPath+"functions\n";
-        String _lun = mConfigPath+"f_mass_storage/lun";
-        _lun = samsungFix(_lun);
+        cmd += "echo "+function+" > "+mConfigPath+"functions\n";
         cmd += "echo "+dev+" > "+_lun+"/file\n";
-        cmd += "echo "+(readonly?"1":"0")+" > "+mConfigPath+"f_mass_storage/lun/ro\n";
+        if(readonly)
+            cmd += "echo 1 > "+_lun+"/ro\n";
         cmd += "echo 1 > "+mConfigPath+"enable\n";
         //it maybe make no difference without setting sys.usb.config .
-        cmd += "setprop sys.usb.config mass_storage\n";
+        cmd += "setprop sys.usb.config "+function+"\n";
         ShellUnit.execRoot(cmd);
         mError = ShellUnit.stdErr;
         return ShellUnit.exitValue;

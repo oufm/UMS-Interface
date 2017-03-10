@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Array;
@@ -511,4 +512,23 @@ public class FileTool {
         return true;
     }
 
+    static public boolean streamToFile(InputStream inputStream,String _path)
+    {
+
+        byte[] buff = new byte[16*1024];
+        try {
+            FileOutputStream _outputStream = new FileOutputStream(_path);
+            int count;
+            while ((count=inputStream.read(buff))>0)
+            {
+                _outputStream.write(buff,0,count);
+
+            }
+            _outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 }
