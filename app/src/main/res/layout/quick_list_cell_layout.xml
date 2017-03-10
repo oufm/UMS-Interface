@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal">
     <Button
         android:layout_width="wrap_content"
@@ -10,12 +10,13 @@
         android:background="@android:drawable/button_onoff_indicator_on"
         android:gravity="center"
         android:layout_gravity="center_vertical"
+        android:layout_margin="5dp"
         android:text="start"/>
     <TextView
         android:layout_width="0dp"
         android:id="@+id/quick_list_cell_txt"
         android:layout_height="wrap_content"
-        android:textSize="25sp"
+        android:textSize="20sp"
         android:layout_gravity="center_vertical"
         android:ellipsize="marquee"
         android:textColor="@android:color/white"

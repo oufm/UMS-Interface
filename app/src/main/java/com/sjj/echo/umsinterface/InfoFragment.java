@@ -96,7 +96,7 @@ public class InfoFragment extends Fragment {
 
                 new AlertDialog.Builder(mActivity)
                         .setTitle(getString(R.string.mount_info_opera_title))
-                        .setItems(new String[]{getString(R.string.mount_info_opera_umount),getString(R.string.mount_info_opera_config)}, new DialogInterface.OnClickListener() {
+                        .setItems(new String[]{getString(R.string.mount_info_opera_umount),getString(R.string.mount_info_opera_config),getString(R.string.refresh)}, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 if(which == 0)
@@ -146,6 +146,9 @@ public class InfoFragment extends Fragment {
                                     }
                                     else
                                         Toast.makeText(mActivity,"set path fail!",Toast.LENGTH_LONG).show();
+                                }else if(which ==2)
+                                {
+                                    setAdapter();
                                 }
                                 dialog.cancel();
                             }

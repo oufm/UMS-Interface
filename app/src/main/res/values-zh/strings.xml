@@ -75,6 +75,22 @@
     <string name="charset_tip">消除乱码</string>
     <string name="status">状态</string>
     <string name="umsdev">这是一个块设备,请谨慎操作,防止数据丢失!</string>
+    <string name="reportfail">生成设备报告失败</string>
+    <string name="reportok">成功,可将其与遇到的问题一并发送至 \'outofmemo@qq.com\' .位于: </string>
+    <string name="create_report">生成设备报告</string>
+    <string name="quick_config">快捷使用</string>
+    <string name="usb_connection">U盘连接</string>
+    <string name="quick_create">一键启动</string>
+    <string name="image_size">镜像大小</string>
+    <string name="create">创建</string>
+    <string name="history">历史</string>
+    <string name="using">正在使用</string>
+    <string name="local_mount">挂载到</string>
+    <string name="start">使用</string>
+    <string name="close">关闭</string>
+    <string name="end">终止</string>
+    <string name="no_using">未启动</string>
+    <string name="refresh">刷新</string>
     <!--<string name="help_en">*This program allows you to chose a block device or disk image as a 'disk',and communicate with PC through usb mass storage (just as usb disk do).-->
 	<!--* Since the configuration of android phones are different, you should select the correct config path firstly,you can simply press 'SEARCH' button to find the path if available ,or specify it manually-->
     <!--* Root permission is needed, if you want to use mount function, busybox is needed too.-->

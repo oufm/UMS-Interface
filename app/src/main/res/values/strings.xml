@@ -83,11 +83,12 @@
     <string name="create">create</string>
     <string name="history">history</string>
     <string name="using">using</string>
-    <string name="local_mount">local mount</string>
+    <string name="local_mount">mount to</string>
     <string name="start">start</string>
     <string name="close">close</string>
     <string name="end">end</string>
     <string name="no_using">nothing in use</string>
+    <string name="refresh">refresh</string>
     <!--<string name="help_en">*This program allows you to chose a block device or disk image as a 'disk',and communicate with PC through usb mass storage (just as usb disk do).-->
     <!--* Since the configuration of android phones are different, you should select the correct config path firstly,you can simply press 'SEARCH' button to find the path if available ,or specify it manually-->
     <!--* Root permission is needed, if you want to use mount function, busybox is needed too.-->

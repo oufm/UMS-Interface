@@ -2,6 +2,13 @@
 <head>
 </head>
 <body>
+<h1 style="color:#0F0">快捷使用</h1>
+<b style="color:#009;">U盘连接:</b>
+将当前数据源作为U盘,点击'终止'取消 <br/>
+<b style="color:#009;">挂载到:</b>
+自动挂载当前数据源,点击'终止'取消<br/>
+<b style="color:#009;">一键启动:</b>
+点击创建,创建指定大小镜像文件,格式化vfat,并将其挂载,同时作为U盘使用<br/>
 <h1 style="color:#0F0">U盘</h1>
 <b style="color:#009;">块设备:</b>
 代表一个存储器或分区,通常位于/dev/block 或 /dev.<br/>

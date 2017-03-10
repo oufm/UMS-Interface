@@ -17,8 +17,10 @@ import android.widget.Toast;
 
 import com.sjj.echo.routine.ShellUnit;
 
-import java.io.File;
 import java.util.LinkedList;
+
+import static com.sjj.echo.umsinterface.UmsFragment.KEY_DEVICE_HISTORY_BASE;
+import static com.sjj.echo.umsinterface.UmsFragment.KEY_DEVICE_HISTORY_COUNT;
 
 
 /**
@@ -28,8 +30,8 @@ import java.util.LinkedList;
 public class QuickStartFragment extends Fragment {
 
     String mStatusFile;
-    String mStatusMountpoint;
-    boolean mStatusUsb;
+    String mStatusMountpoint = "";
+    boolean mStatusUsb ;
     Boolean mStatusMount;
 
     Activity mActivity;
@@ -40,6 +42,9 @@ public class QuickStartFragment extends Fragment {
     Button mCreateBtn;
     EditText mCreateEdit;
     ListView mHistoryList;
+    TextView mUseFileText;
+    View mUseGroup;
+    private String mImgDir = "/data/ums_mnt";
 
     View mView;
 
@@ -60,12 +65,14 @@ public class QuickStartFragment extends Fragment {
         mStatusFile = null;
         MassStorageUnit.refreshStatus();
         String _path = MassStorageUnit.mStatusFile;
+        if(_path.length()==0)
+            return;
         if (_path == null)
             return;
         if (ShellUnit.execRoot("ls "+_path).length()==0)
             return;
         mStatusFile = _path;
-        mStatusMount = null;
+        //mStatusMount = null;
         if (MassStorageUnit.mStatusFunction.equals("mass_storage") && MassStorageUnit.mStatusEnable.equals("1"))
             mStatusUsb = true;
         else
@@ -73,7 +80,7 @@ public class QuickStartFragment extends Fragment {
         String _output =ShellUnit.execRoot("mount|grep '" + _path + "'");
         if (_output.length() > 0) {
             mStatusMount = true;
-            mStatusMountpoint = "";
+            //mStatusMountpoint = "";
             int _begin = _output.indexOf(" /");
             int _end = _output.indexOf(" type");
             if(_begin>0&&_end>0&&_end>_begin)
@@ -90,6 +97,7 @@ public class QuickStartFragment extends Fragment {
         if(mStatusFile!=null) {
             String[] _strs =mStatusFile.split("/");
             mUseText.setText(getString(R.string.using) + " " + _strs[_strs.length-1]);
+            mUseFileText.setText(mStatusFile);
             if(mStatusUsb)
                 mUsbBtn.setText(getString(R.string.end));
             else
@@ -111,6 +119,7 @@ public class QuickStartFragment extends Fragment {
         }else
         {
             mUseText.setText(getString(R.string.no_using));
+            mUseFileText.setText(mStatusFile);
             mMountText.setText("");
             mUsbBtn.setText(getString(R.string.start));
             mMountBtn.setText(getString(R.string.start));
@@ -134,6 +143,22 @@ public class QuickStartFragment extends Fragment {
         {
             mHistory.add(mSharedPreferences.getString(KEY_QUICK_HISTORY_BASE +i,""));
         }
+
+        _historyCount = mSharedPreferences.getInt(KEY_DEVICE_HISTORY_COUNT,0);
+        for(int i=0;i<_historyCount;i++)
+        {
+            String _path = mSharedPreferences.getString(KEY_DEVICE_HISTORY_BASE +i,"");
+            for(String str:mHistory)
+            {
+                if(str.equals(_path))
+                {
+                    mHistory.remove(str);//removed element must break!
+                    break;
+                }
+            }
+            mHistory.add(_path);
+        }
+
     }
 
     private String getFilename()
@@ -145,27 +170,52 @@ public class QuickStartFragment extends Fragment {
         return "/sdcard/ums_img/"+num+".img";
     }
 
+    private void setImgDir()
+    {
+        String _target = "UMS_SDCARD_REAL_PATH";
+        String _output=ShellUnit.execRoot("touch /sdcard/"+_target+" &&find /data/media/ -name "+_target);
+        if(ShellUnit.stdErr!=null)
+        {
+            Toast.makeText(mActivity,"search sdcard path fail:"+ShellUnit.stdErr,Toast.LENGTH_LONG).show();
+        }
+        String _path =  _output.replace(_target,"ums_mnt");
+        if(!_path.equals(_target))
+            mImgDir = _path;
+
+    }
+
     private String getMountPoint()
     {
-        ShellUnit.execRoot("mkdir /data/ums_mnt;chomd 777 /data/ums_mnt");
+        ShellUnit.execRoot("mkdir "+mImgDir+";chomd 777 /data/ums_mnt");
         int num=0;
-        while(ShellUnit.execBusybox("mount|grep /data/ums_mnt/mnt"+num).length()>0)
+        while(ShellUnit.execBusybox("mount|grep "+mImgDir+"/mnt"+num).length()>0)
             num++;
-        ShellUnit.execRoot("mkdir /data/ums_mnt/mnt"+num+";chmod 777 /data/ums_mnt/mnt"+num);
-        return "/data/ums_mnt/mnt"+num;
+        ShellUnit.execRoot("mkdir "+mImgDir+"/mnt"+num+";chmod 777 "+mImgDir+"/mnt"+num);
+        return mImgDir+"/mnt"+num;
     }
 
     public void useImage(String _path)
     {
-        File file = new File(_path);
-        if(!file.isFile())
+        ShellUnit.execRoot("ls \""+_path+"\"");
+        if(ShellUnit.stdErr!=null)
         {
             Toast.makeText(mActivity,"file not exit!",Toast.LENGTH_LONG).show();
+            for(String str:mHistory)
+            {
+                if(str.equals(_path))
+                {
+                    mHistory.remove(str);
+                    break;
+                }
+            }
             return;
         }
         FrameActivity _activity = (FrameActivity) mActivity;
         String mountpoint = getMountPoint();
-        boolean ok_mount = _activity.mount(false,true,true,true,_path,mountpoint);
+        Boolean _block = MountFragment.isBlockDev(_path);
+        if(_block == null)
+            _block =true;
+        boolean ok_mount = _activity.mount(false,_block,_block,_block,_path,mountpoint);
         boolean ok_ums = _activity.ums(_path,null);
         String tip = "";
         if(ok_mount)
@@ -177,7 +227,8 @@ public class QuickStartFragment extends Fragment {
         else
             tip+="usb fail!";
         Toast.makeText(mActivity,tip,Toast.LENGTH_LONG).show();
-        savehistory(_path);
+        if(ok_mount||ok_ums)
+            savehistory(_path);
         mStatusMount = ok_mount;
         mStatusMountpoint = mountpoint;
         mStatusFile = _path;
@@ -220,7 +271,8 @@ public class QuickStartFragment extends Fragment {
         else
             tip+="create image fail!";
         Toast.makeText(mActivity,tip,Toast.LENGTH_LONG).show();
-        savehistory(file);
+        if(ok_create||ok_mount||ok_ums)
+            savehistory(file);
         mStatusMount = ok_mount;
         mStatusFile = file;
         mStatusMountpoint = mountpoint;
@@ -267,11 +319,19 @@ public class QuickStartFragment extends Fragment {
         mCreateBtn = (Button) rootView.findViewById(R.id.quick_create_btn);
         mCreateEdit = (EditText) rootView.findViewById(R.id.quick_create_size);
         mHistoryList = (ListView) rootView.findViewById(R.id.quick_history_list);
+        mUseFileText = (TextView) rootView.findViewById(R.id.quick_use_detail);
+        mUseGroup = rootView.findViewById(R.id.quick_use_group);
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mActivity);
+        setImgDir();
         setupList();
-
         updateUIStatus(true);
 
+        mUseGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateUIStatus(true);
+            }
+        });
         mCreateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -299,7 +359,10 @@ public class QuickStartFragment extends Fragment {
 
                 }else
                 {
-                    if(((FrameActivity)mActivity).mount(false,true,true,true,mStatusFile,getMountPoint())) {
+                    Boolean _block = MountFragment.isBlockDev(mStatusFile);
+                    if(_block == null)
+                        _block =true;
+                    if(((FrameActivity)mActivity).mount(false,_block,_block,_block,mStatusFile,getMountPoint())) {
                         mStatusMount = true;
                         QuickStartFragment.this.updateUIStatus(false);
                     }
@@ -317,7 +380,7 @@ public class QuickStartFragment extends Fragment {
                 if(mStatusFile==null)
                     return;
                 if(mStatusUsb) {
-                    if (((FrameActivity) mActivity).ums("","mtp"))
+                    if (((FrameActivity) mActivity).ums("","mtp,ffs"))
                     {
                         mStatusUsb = false;
                     }
@@ -334,6 +397,7 @@ public class QuickStartFragment extends Fragment {
                     else
                         Toast.makeText(mActivity,"fail:"+ShellUnit.stdErr,Toast.LENGTH_LONG).show();
                 }
+                updateUIStatus(false);
             }
         });
 

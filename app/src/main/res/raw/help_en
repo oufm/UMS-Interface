@@ -2,6 +2,13 @@
 <head>
 </head>
 <body>
+<h1 style="color:#0F0">one key satrt</h1>
+<b style="color:#009;">usb connection:</b>
+set current data source as U disk<br/>
+<b style="color:#009;">mount to:</b>
+mount current data source<br/>
+<b style="color:#009;">quick create:</b>
+create a image with the given size,format as vfat,mount it,and use as U disk<br/>
 <h1 style="color:#0F0">U disk</h1>
 <b style="color:#009;">block device:</b>
 Representing a disk or partition, usually located in /dev/block or /dev.<br/>
