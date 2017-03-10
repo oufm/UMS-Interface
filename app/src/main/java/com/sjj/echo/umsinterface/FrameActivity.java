@@ -59,7 +59,7 @@ public class FrameActivity extends AppCompatActivity {
     private QuickStartFragment mQuickStartFragment;
     private Fragment[] mFragments;
 
-    public static String APP_DIR = "/data/data//com.sjj.echo.umsinterface";
+    public static String APP_DIR = "/data/data/com.sjj.echo.umsinterface";
 
 
     private void creatReport()
@@ -72,11 +72,13 @@ public class FrameActivity extends AppCompatActivity {
         }
         ShellUnit.execRoot("sh "+APP_DIR+"/ums_device_info.sh");
         String _targetpath = "/sdcard/ums_device_info.sh";
-        File _report = new File(_targetpath);
+        //File _report = new File(_targetpath);
         String _message = getString(R.string.reportfail);
-        if(_report.isFile()&&_report.length()>0)
-            _message = getString(R.string.reportok);
-        new AlertDialog.Builder(FrameActivity.this).setMessage(_message+_targetpath).create().show();
+        //if(_report.isFile()&&_report.length()>0)
+        ShellUnit.execRoot("ls /sdcard/ums_device_info.log");
+        if(ShellUnit.stdErr==null)
+            _message = getString(R.string.reportok)+" \n/sdcard/ums_device_info.log";
+        new AlertDialog.Builder(FrameActivity.this).setMessage(_message).create().show();
 
     }
 

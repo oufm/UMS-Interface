@@ -62,14 +62,14 @@ public class QuickStartFragment extends Fragment {
     }
 
     private void getStatus() {
-        mStatusFile = null;
+        //mStatusFile = null;
         MassStorageUnit.refreshStatus();
         String _path = MassStorageUnit.mStatusFile;
         if(_path.length()==0)
             return;
         if (_path == null)
             return;
-        if (ShellUnit.execRoot("ls "+_path).length()==0)
+        if (ShellUnit.execRoot("ls \""+_path+"\"").length()==0)
             return;
         mStatusFile = _path;
         //mStatusMount = null;
@@ -95,6 +95,8 @@ public class QuickStartFragment extends Fragment {
         if(detect)
             getStatus();
         if(mStatusFile!=null) {
+            mUsbBtn.setVisibility(View.VISIBLE);
+            mMountBtn.setVisibility(View.VISIBLE);
             String[] _strs =mStatusFile.split("/");
             mUseText.setText(getString(R.string.using) + " " + _strs[_strs.length-1]);
             mUseFileText.setText(mStatusFile);
@@ -105,9 +107,10 @@ public class QuickStartFragment extends Fragment {
             if(mStatusMount==null)
             {
                 mMountText.setText(getString(R.string.local_mount));
-                mMountBtn.setVisibility(View.INVISIBLE);
+                mMountBtn.setText(getString(R.string.start));
+                //mMountBtn.setVisibility(View.INVISIBLE);
             }else {
-                mMountBtn.setVisibility(View.VISIBLE);
+                //mMountBtn.setVisibility(View.VISIBLE);
                 if (mStatusMount) {
                     mMountText.setText(getString(R.string.local_mount) + " " + mStatusMountpoint);
                     mMountBtn.setText(getString(R.string.end));
@@ -118,11 +121,14 @@ public class QuickStartFragment extends Fragment {
             }
         }else
         {
+
             mUseText.setText(getString(R.string.no_using));
             mUseFileText.setText(mStatusFile);
             mMountText.setText("");
-            mUsbBtn.setText(getString(R.string.start));
-            mMountBtn.setText(getString(R.string.start));
+            //mUsbBtn.setText(getString(R.string.start));
+            //mMountBtn.setText(getString(R.string.start));
+            mUsbBtn.setVisibility(View.INVISIBLE);
+            mMountBtn.setVisibility(View.INVISIBLE);
             mMountText.setText(R.string.local_mount);
         }
 
@@ -178,9 +184,10 @@ public class QuickStartFragment extends Fragment {
         {
             Toast.makeText(mActivity,"search sdcard path fail:"+ShellUnit.stdErr,Toast.LENGTH_LONG).show();
         }
-        String _path =  _output.replace(_target,"ums_mnt");
-        if(!_path.equals(_target))
-            mImgDir = _path;
+        int _offset = _output.indexOf(_target);
+        if(_offset<=0)
+            return;
+        mImgDir = _output.substring(0,_offset)+"ums_mnt";
 
     }
 
@@ -215,7 +222,7 @@ public class QuickStartFragment extends Fragment {
         Boolean _block = MountFragment.isBlockDev(_path);
         if(_block == null)
             _block =true;
-        boolean ok_mount = _activity.mount(false,_block,_block,_block,_path,mountpoint);
+        boolean ok_mount = _activity.mount(false,!_block,!_block,!_block,_path,mountpoint);
         boolean ok_ums = _activity.ums(_path,null);
         String tip = "";
         if(ok_mount)
@@ -344,7 +351,7 @@ public class QuickStartFragment extends Fragment {
             public void onClick(View v) {
                 if(mStatusFile==null)
                     return;
-                if(QuickStartFragment.this.mStatusMount) {
+                if(QuickStartFragment.this.mStatusMount!=null&&QuickStartFragment.this.mStatusMount) {
                     if(QuickStartFragment.this.mStatusMountpoint!=null) {
                         ShellUnit.execBusybox("umount \"" + QuickStartFragment.this.mStatusMountpoint + "\"");
                         if(ShellUnit.stdErr!=null)
@@ -361,9 +368,11 @@ public class QuickStartFragment extends Fragment {
                 {
                     Boolean _block = MountFragment.isBlockDev(mStatusFile);
                     if(_block == null)
-                        _block =true;
-                    if(((FrameActivity)mActivity).mount(false,_block,_block,_block,mStatusFile,getMountPoint())) {
+                        _block =false;
+                    String _mountpoint = getMountPoint();
+                    if(((FrameActivity)mActivity).mount(false,!_block,!_block,!_block,mStatusFile,_mountpoint)) {
                         mStatusMount = true;
+                        mStatusMountpoint = _mountpoint;
                         QuickStartFragment.this.updateUIStatus(false);
                     }
                     else

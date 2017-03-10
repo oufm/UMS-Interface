@@ -216,7 +216,7 @@ public class MountFragment extends Fragment {
             cmd +=",iocharset=utf8,codepage=936";
         if(_mask)
         {
-            cmd +=",fmask=0,dmask=0";
+            cmd +=",fmask=0000,dmask=0000";
         }
         if(_loop)
             cmd +=",loop";
@@ -353,7 +353,7 @@ public class MountFragment extends Fragment {
                 if(_loop)
                     cmd +=",loop";
                 cmd +=" ";
-                if(!_type.startsWith(" "))
+                if(_type!=null)
                 {
                     cmd +="-t "+_type+" ";
                 }
