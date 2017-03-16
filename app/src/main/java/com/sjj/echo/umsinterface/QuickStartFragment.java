@@ -1,7 +1,9 @@
 package com.sjj.echo.umsinterface;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -9,12 +11,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sjj.echo.explorer.ExplorerActivity;
 import com.sjj.echo.routine.ShellUnit;
 
 import java.util.LinkedList;
@@ -43,10 +48,13 @@ public class QuickStartFragment extends Fragment {
     EditText mCreateEdit;
     ListView mHistoryList;
     TextView mUseFileText;
+    TextView mUsbText;
     View mUseGroup;
+    View mStatusView;
+    View mRefreshIcon;
     private String mImgDir = "/data/ums_mnt";
 
-    View mView;
+    View mSavedView;
 
     static String KEY_QUICK_HISTORY_COUNT = "KEY_QUICK_HISTORY_COUNT";
     static String KEY_QUICK_HISTORY_BASE = "KEY_QUICK_HISTORY_BASE";
@@ -61,6 +69,56 @@ public class QuickStartFragment extends Fragment {
         mActivity = activity;
     }
 
+    private void getMount(String _dev,boolean _loop)
+    {
+        mStatusMount = null;
+        if(_dev==null)
+            _dev = mStatusFile;
+        String _output =ShellUnit.execBusybox("mount|grep '" + _dev + "'");
+        if(ShellUnit.stdErr!=null)
+        {
+            Toast.makeText(mActivity,"fail:"+ShellUnit.stdErr,Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (_output.length() > 0) {
+            mStatusMount = true;
+            int _begin = _output.indexOf(" /");
+            int _end = _output.indexOf(" type");
+            if(_begin>0&&_end>0&&_end>_begin)
+            {
+                _begin++;
+                mStatusMountpoint = _output.substring(_begin,_end);
+            }
+        }
+        else if(_loop)
+        {
+            String _lo = ShellUnit.execBusybox("losetup|grep '"+ mStatusFile + "'");
+            if(ShellUnit.stdErr!=null)
+            {
+                Toast.makeText(mActivity,"fail:"+ShellUnit.stdErr,Toast.LENGTH_LONG).show();
+                return;
+            }
+            if(_lo.length()>0)
+            {
+                int _end = _lo.indexOf(":");
+                if(_end<=0)
+                    return;
+                getMount(_lo.substring(0,_end),false);
+//                int _begin = _lo.indexOf(" /");
+//                if(_begin<=0)
+//                    return;
+//                int _end = _lo.indexOf("\n");
+//                if(_end<0)
+//                    _end = _lo.length()-1;
+//                if(_end<_begin)
+//                    return;
+//                _begin++;
+//                getMount(_lo.substring(_begin,_end),false);
+            }
+
+        }
+    }
+
     private void getStatus() {
         //mStatusFile = null;
         MassStorageUnit.refreshStatus();
@@ -72,26 +130,28 @@ public class QuickStartFragment extends Fragment {
         if (ShellUnit.execRoot("ls \""+_path+"\"").length()==0)
             return;
         mStatusFile = _path;
-        //mStatusMount = null;
         if (MassStorageUnit.mStatusFunction.equals("mass_storage") && MassStorageUnit.mStatusEnable.equals("1"))
             mStatusUsb = true;
         else
             mStatusUsb = false;
-        String _output =ShellUnit.execRoot("mount|grep '" + _path + "'");
-        if (_output.length() > 0) {
-            mStatusMount = true;
-            //mStatusMountpoint = "";
-            int _begin = _output.indexOf(" /");
-            int _end = _output.indexOf(" type");
-            if(_begin>0&&_end>0&&_end>_begin)
-            {
-                mStatusMountpoint = _output.substring(_begin,_end);
-            }
-        }
+        getMount(null,true);
+//        String _output =ShellUnit.execRoot("mount|grep '" + _path + "'");
+//        if (_output.length() > 0) {
+//            mStatusMount = true;
+//            //mStatusMountpoint = "";
+//            int _begin = _output.indexOf(" /");
+//            int _end = _output.indexOf(" type");
+//            if(_begin>0&&_end>0&&_end>_begin)
+//            {
+//                mStatusMountpoint = _output.substring(_begin,_end);
+//            }
+//        }
     }
 
     private void updateUIStatus(boolean detect)
     {
+        Animation _anim = AnimationUtils.loadAnimation(mActivity,R.anim.circle_rotate);
+        mRefreshIcon.startAnimation(_anim);
         if(detect)
             getStatus();
         if(mStatusFile!=null) {
@@ -100,37 +160,32 @@ public class QuickStartFragment extends Fragment {
             String[] _strs =mStatusFile.split("/");
             mUseText.setText(getString(R.string.using) + " " + _strs[_strs.length-1]);
             mUseFileText.setText(mStatusFile);
-            if(mStatusUsb)
-                mUsbBtn.setText(getString(R.string.end));
-            else
-                mUsbBtn.setText(getString(R.string.start));
-            if(mStatusMount==null)
+            if(mStatusUsb) {
+                mUsbText.setText(R.string.usb_connection);
+                mUsbBtn.setText(R.string.close);
+            }
+            else {
+                mUsbText.setText(R.string.quick_no_usb);
+                mUsbBtn.setText(R.string.launch);
+            }
+            if(mStatusMount==null||!mStatusMount)
             {
-                mMountText.setText(getString(R.string.local_mount));
-                mMountBtn.setText(getString(R.string.start));
-                //mMountBtn.setVisibility(View.INVISIBLE);
+                mMountText.setText(R.string.quick_no_mount);
+                mMountBtn.setText(R.string.mount);
             }else {
-                //mMountBtn.setVisibility(View.VISIBLE);
-                if (mStatusMount) {
-                    mMountText.setText(getString(R.string.local_mount) + " " + mStatusMountpoint);
-                    mMountBtn.setText(getString(R.string.end));
-                } else {
-                    mMountText.setText(getString(R.string.local_mount));
-                    mMountBtn.setText(getString(R.string.start));
-                }
+                mMountText.setText(getString(R.string.local_mount) + " " + mStatusMountpoint);
+                mMountBtn.setText(R.string.umount);
             }
         }else
         {
-
             mUseText.setText(getString(R.string.no_using));
             mUseFileText.setText(mStatusFile);
-            mMountText.setText("");
-            //mUsbBtn.setText(getString(R.string.start));
-            //mMountBtn.setText(getString(R.string.start));
             mUsbBtn.setVisibility(View.INVISIBLE);
             mMountBtn.setVisibility(View.INVISIBLE);
-            mMountText.setText(R.string.local_mount);
+            mUseText.setText(R.string.quick_no_usb);
+            mMountText.setText(R.string.quick_no_mount);
         }
+        _anim.cancel();
 
     }
 
@@ -179,7 +234,7 @@ public class QuickStartFragment extends Fragment {
     private void setImgDir()
     {
         String _target = "UMS_SDCARD_REAL_PATH";
-        String _output=ShellUnit.execRoot("touch /sdcard/"+_target+" &&find /data/media/ -name "+_target);
+        String _output=ShellUnit.execBusybox("touch /sdcard/"+_target+" &&find /data/media/ -name "+_target);
         if(ShellUnit.stdErr!=null)
         {
             Toast.makeText(mActivity,"search sdcard path fail:"+ShellUnit.stdErr,Toast.LENGTH_LONG).show();
@@ -206,12 +261,12 @@ public class QuickStartFragment extends Fragment {
         ShellUnit.execRoot("ls \""+_path+"\"");
         if(ShellUnit.stdErr!=null)
         {
-            Toast.makeText(mActivity,"file not exit!",Toast.LENGTH_LONG).show();
+            Toast.makeText(mActivity,R.string.image_no_find,Toast.LENGTH_LONG).show();
             for(String str:mHistory)
             {
                 if(str.equals(_path))
                 {
-                    mHistory.remove(str);
+                    saveHistory(_path,false);
                     break;
                 }
             }
@@ -235,7 +290,7 @@ public class QuickStartFragment extends Fragment {
             tip+="usb fail!";
         Toast.makeText(mActivity,tip,Toast.LENGTH_LONG).show();
         if(ok_mount||ok_ums)
-            savehistory(_path);
+            saveHistory(_path);
         mStatusMount = ok_mount;
         mStatusMountpoint = mountpoint;
         mStatusFile = _path;
@@ -261,8 +316,8 @@ public class QuickStartFragment extends Fragment {
             Toast.makeText(mActivity,"file:"+ShellUnit.stdErr,Toast.LENGTH_LONG).show();
             return;
         }
-        String mountpoint = getMountPoint();
-        boolean ok_mount = _activity.mount(false,true,true,true,file,mountpoint);
+        String _mountPoint = getMountPoint();
+        boolean ok_mount = _activity.mount(false,true,true,true,file,_mountPoint);
         boolean ok_ums = _activity.ums(file,null);
         String tip ="";
         if(ok_mount)
@@ -279,16 +334,21 @@ public class QuickStartFragment extends Fragment {
             tip+="create image fail!";
         Toast.makeText(mActivity,tip,Toast.LENGTH_LONG).show();
         if(ok_create||ok_mount||ok_ums)
-            savehistory(file);
+            saveHistory(file);
         mStatusMount = ok_mount;
         mStatusFile = file;
-        mStatusMountpoint = mountpoint;
+        mStatusMountpoint = _mountPoint;
         mStatusUsb = ok_ums;
         updateUIStatus(false);
-        ShellUnit.execRoot("chmod 777 " + file);
+        ShellUnit.execBusybox("chmod 777 " + file);
     }
 
-    private void savehistory(String _path)
+    private void saveHistory(String _path)
+    {
+        saveHistory(_path,true);
+    }
+
+    private void saveHistory(String _path,boolean save)
     {
         for(String str: mHistory)
         {
@@ -298,7 +358,8 @@ public class QuickStartFragment extends Fragment {
                 break;
             }
         }
-        mHistory.addFirst(_path);
+        if(save)
+            mHistory.addFirst(_path);
         if(mHistory.size()>MAX_HISTORY)
             mHistory.removeLast();
 
@@ -315,10 +376,10 @@ public class QuickStartFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if(mView!=null)
-            return mView;
+        if(mSavedView !=null)
+            return mSavedView;
         View rootView = inflater.inflate(R.layout.quick_start_layout,container,false);
-        mView = rootView;
+        mSavedView = rootView;
         mUsbBtn = (Button) rootView.findViewById(R.id.quick_usb_btn);
         mMountBtn = (Button) rootView.findViewById(R.id.quick_mount_btn);
         mMountText = (TextView) rootView.findViewById(R.id.quick_mount_txt);
@@ -327,12 +388,33 @@ public class QuickStartFragment extends Fragment {
         mCreateEdit = (EditText) rootView.findViewById(R.id.quick_create_size);
         mHistoryList = (ListView) rootView.findViewById(R.id.quick_history_list);
         mUseFileText = (TextView) rootView.findViewById(R.id.quick_use_detail);
+        mUsbText = (TextView) rootView.findViewById(R.id.quick_usb_text);
         mUseGroup = rootView.findViewById(R.id.quick_use_group);
+        mRefreshIcon = rootView.findViewById(R.id.refresh_icon);
+        mStatusView = rootView.findViewById(R.id.quick_status);
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mActivity);
-        setImgDir();
-        setupList();
-        updateUIStatus(true);
-
+        rootView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setImgDir();
+                setupList();
+                updateUIStatus(true);
+            }
+        },300);
+        mStatusView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mStatusMountpoint!=null&&mStatusMountpoint.length()>0) {
+                    Intent intent = new Intent(mActivity, ExplorerActivity.class);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    if(mStatusMountpoint!=null&&mStatusMountpoint.length()>0)
+                        intent.setDataAndType(Uri.parse(mStatusMountpoint),"directory/*");
+                    else
+                        intent.setDataAndType(Uri.parse("/"),"directory/*");
+                    mActivity.startActivity(intent);
+                }
+            }
+        });
         mUseGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

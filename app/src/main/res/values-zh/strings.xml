@@ -79,7 +79,7 @@
     <string name="reportok">成功,可将其与遇到的问题一并发送至 \'outofmemo@qq.com\' .位于: </string>
     <string name="create_report">生成设备报告</string>
     <string name="quick_config">快捷使用</string>
-    <string name="usb_connection">U盘连接</string>
+    <string name="usb_connection">U盘已使用</string>
     <string name="quick_create">一键启动</string>
     <string name="image_size">镜像大小</string>
     <string name="create">创建</string>
@@ -91,6 +91,12 @@
     <string name="end">终止</string>
     <string name="no_using">未启动</string>
     <string name="refresh">刷新</string>
+    <string name="quick_no_mount">未挂载</string>
+    <string name="quick_no_usb">U盘未使用</string>
+    <string name="image_no_find">文件不存在</string>
+    <string name="launch">启动</string>
+    <string name="mount">挂载</string>
+    <string name="umount">卸载</string>
     <!--<string name="help_en">*This program allows you to chose a block device or disk image as a 'disk',and communicate with PC through usb mass storage (just as usb disk do).-->
 	<!--* Since the configuration of android phones are different, you should select the correct config path firstly,you can simply press 'SEARCH' button to find the path if available ,or specify it manually-->
     <!--* Root permission is needed, if you want to use mount function, busybox is needed too.-->

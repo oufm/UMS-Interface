@@ -77,7 +77,7 @@
     <string name="reportok">Done ,you can send it with your problems to \'outofmemo@qq.com\' .It\'s located in</string>
     <string name="create_report">create device report</string>
     <string name="quick_config">one key start</string>
-    <string name="usb_connection">usb conncetion</string>
+    <string name="usb_connection">usb used</string>
     <string name="quick_create">quick create</string>
     <string name="image_size">image size</string>
     <string name="create">create</string>
@@ -89,6 +89,12 @@
     <string name="end">end</string>
     <string name="no_using">nothing in use</string>
     <string name="refresh">refresh</string>
+    <string name="quick_no_mount">no mounted</string>
+    <string name="quick_no_usb">usb no used</string>
+    <string name="image_no_find">file not exist</string>
+    <string name="launch">launch</string>
+    <string name="mount">mount</string>
+    <string name="umount">umount</string>
     <!--<string name="help_en">*This program allows you to chose a block device or disk image as a 'disk',and communicate with PC through usb mass storage (just as usb disk do).-->
     <!--* Since the configuration of android phones are different, you should select the correct config path firstly,you can simply press 'SEARCH' button to find the path if available ,or specify it manually-->
     <!--* Root permission is needed, if you want to use mount function, busybox is needed too.-->

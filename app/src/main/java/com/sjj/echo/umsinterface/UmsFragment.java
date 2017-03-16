@@ -86,7 +86,7 @@ public class UmsFragment extends Fragment {
         if(_path!=null) {
             mPathEdit.setText(_path);
             MassStorageUnit.mConfigPath = _path;
-            Toast.makeText(mActivity,"search config path success!",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(mActivity,"search config path success!",Toast.LENGTH_SHORT).show();
         }
         else
             Toast.makeText(mActivity,"search config path fail!",Toast.LENGTH_LONG).show();
@@ -222,7 +222,7 @@ public class UmsFragment extends Fragment {
                 public void run() {
                     setConfigPath();
                 }
-            },2000);
+            },1000);
 
         }
         if(MassStorageUnit.mConfigPath!=null)

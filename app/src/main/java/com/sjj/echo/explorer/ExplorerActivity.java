@@ -65,6 +65,10 @@ public class ExplorerActivity extends AppCompatActivity
     protected SharedPreferences mSharedPreferences;
     private boolean mCloseSelectAfterAction = true;
     public boolean mDirectoryRequest;
+    public boolean mRequest;
+    protected  String mRequestDir;
+    private View explorerExit;
+    private View explorerSelect;
 
     static final String KEY_EXPLORER_HOME_PATH ="KEY_EXPLORER_HOME_PATH";
     static final String KEY_EXPLORER_TAB_COUNT ="KEY_EXPLORER_TAB_COUNT";
@@ -97,15 +101,20 @@ public class ExplorerActivity extends AppCompatActivity
 
         setContentView(R.layout.explorer_main);
 
-        FloatingActionButton explorerExit = (FloatingActionButton) findViewById(R.id.explorer_exit);
-        FloatingActionButton explorerSelect = (FloatingActionButton) findViewById(R.id.explorer_select);
+        explorerExit = findViewById(R.id.explorer_exit);
+        explorerSelect = findViewById(R.id.explorer_select);
         Intent intent =  getIntent();
-        if(intent.getType().startsWith("directory")) {
+        mRequest = intent.getType()!=null;
+        if(mRequest&&intent.getType().startsWith("directory")) {
             mDirectoryRequest = true;
             explorerSelect.setVisibility(View.VISIBLE);
         }
         else
             mDirectoryRequest = false;
+        if(intent.getData()!=null)
+            mRequestDir = intent.getDataString();
+        if(mRequestDir!=null)
+            explorerSelect.setVisibility(View.INVISIBLE);
         explorerExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,7 +127,6 @@ public class ExplorerActivity extends AppCompatActivity
                 returnActivity(null);
             }
         });
-
         mToolbar = (Toolbar) findViewById(R.id.explorer_toolbar);
         setSupportActionBar(mToolbar);
         mFabNew = (FloatingActionButton) findViewById(R.id.explorer_fab_new);
@@ -133,6 +141,11 @@ public class ExplorerActivity extends AppCompatActivity
         });
         mBtnCancel = (FloatingActionButton) findViewById(R.id.explorer_fab_paste_cancel);
         mBtnPaste = (FloatingActionButton) findViewById(R.id.explorer_fab_paste);
+        if(!mRequest)
+        {
+            explorerExit.setVisibility(View.INVISIBLE);
+            explorerSelect.setVisibility(View.INVISIBLE);
+        }
 //
 //        drawer.setDrawerListener(toggle);
 //        toggle.syncState();
@@ -146,15 +159,20 @@ public class ExplorerActivity extends AppCompatActivity
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mHomeDir = mSharedPreferences.getString(KEY_EXPLORER_HOME_PATH,mHomeDir);
         int tabCount = mSharedPreferences.getInt(KEY_EXPLORER_TAB_COUNT,0);
+        if(tabCount==0&&mRequestDir!=null)
+            tabCount = 1;
         String[] initDirs = new String[tabCount];
         for(int i=0;i<tabCount;i++)
         {
             initDirs[i] = mSharedPreferences.getString(KEY_EXPLORER_TAB_BASE+i,"/");
         }
+        if(mRequestDir!=null)
+            initDirs[0] = mRequestDir;
         mFilePageAdapter = new FilePageAdapter(getSupportFragmentManager(),this, mViewPager,initDirs);
         mViewPager.setAdapter(mFilePageAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
-        mViewPager.setCurrentItem(mSharedPreferences.getInt(KEY_EXPLORER_TAB_SELECT,0));
+        if(!mRequest)
+            mViewPager.setCurrentItem(mSharedPreferences.getInt(KEY_EXPLORER_TAB_SELECT,0));
         autoShowBar();
 
         mBtnCancel.setOnClickListener(new View.OnClickListener() {
@@ -359,6 +377,11 @@ public class ExplorerActivity extends AppCompatActivity
         mFabNew.setVisibility(View.INVISIBLE);
         mBtnCancel.setVisibility(View.VISIBLE);
         mBtnPaste.setVisibility(View.VISIBLE);
+        if(mRequest)
+        {
+            explorerExit.setVisibility(View.INVISIBLE);
+            explorerSelect.setVisibility(View.INVISIBLE);
+        }
         String curString = getCurPath();
         mClipBaseDir = new String(curString);
         List<String> selets = getCurFileAdapter().getSelect();
@@ -392,6 +415,12 @@ public class ExplorerActivity extends AppCompatActivity
         mFabNew.setVisibility(View.VISIBLE);
         mBtnCancel.setVisibility(View.INVISIBLE);
         mBtnPaste.setVisibility(View.INVISIBLE);
+        if(mRequest)
+        {
+            explorerExit.setVisibility(View.VISIBLE);
+            if(mDirectoryRequest&&mRequestDir==null)
+                explorerSelect.setVisibility(View.VISIBLE);
+        }
     }
 
     //setup the menu actions

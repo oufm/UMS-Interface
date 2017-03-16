@@ -70,7 +70,7 @@ public class FrameActivity extends AppCompatActivity {
             if(!FileTool.streamToFile(getResources().openRawResource(R.raw.ums_device_info),APP_DIR+"/ums_device_info.sh"))
                 Toast.makeText(this,"create report fail!",Toast.LENGTH_LONG).show();
         }
-        ShellUnit.execRoot("sh "+APP_DIR+"/ums_device_info.sh");
+        ShellUnit.execBusybox("sh "+APP_DIR+"/ums_device_info.sh");
         String _targetpath = "/sdcard/ums_device_info.sh";
         //File _report = new File(_targetpath);
         String _message = getString(R.string.reportfail);
@@ -97,7 +97,7 @@ public class FrameActivity extends AppCompatActivity {
             if(!FileTool.streamToFile(getResources().openRawResource(R.raw.busybox),APP_DIR+"/bin/busybox"))
                 Toast.makeText(this,"init fail!",Toast.LENGTH_LONG).show();
         }
-        ShellUnit.execRoot("chmod 777 "+APP_DIR+"/bin/busybox");
+        ShellUnit.execBusybox("chmod 777 "+APP_DIR+"/bin/busybox");
         if(ShellUnit.stdErr!=null)
             Toast.makeText(this,"init fail!",Toast.LENGTH_LONG).show();
     }
@@ -158,7 +158,10 @@ public class FrameActivity extends AppCompatActivity {
             final int _newVersion = __newVersion;
             int _versionCode = 0;
             try {
-                _versionCode = getPackageManager().getPackageInfo(this.getPackageName(), PackageManager.GET_CONFIGURATIONS).versionCode;
+                String _packageName = this.getPackageName();
+                if(_packageName==null)
+                    return false;
+                _versionCode = getPackageManager().getPackageInfo(_packageName, PackageManager.GET_CONFIGURATIONS).versionCode;
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
@@ -209,7 +212,7 @@ public class FrameActivity extends AppCompatActivity {
 
     public boolean createImage(String _path,int _size,boolean _format)
     {
-        return mCreateImageFragment.creatImage(_path,_size,_format);
+        return mCreateImageFragment.createImage(_path,_size,_format);
     }
 
     public boolean mount(boolean _readonly,boolean _loop,boolean _charset,boolean _mask,String _source,String _point)

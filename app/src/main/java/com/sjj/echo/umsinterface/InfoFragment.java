@@ -37,7 +37,7 @@ public class InfoFragment extends Fragment {
     private void setAdapter()
     {
         mInfos.clear();
-        String output = ShellUnit.execRoot("mount");
+        String output = ShellUnit.execBusybox("mount");
         if(output==null||ShellUnit.exitValue!=0)
         {
             Toast.makeText(mActivity,"get mount information fail!",Toast.LENGTH_LONG).show();
@@ -116,7 +116,7 @@ public class InfoFragment extends Fragment {
                                                         if(offsetEnd > 0)
                                                         {
                                                             String mountPath = (String) itemSelect.subSequence(offset,offsetEnd);
-                                                            ShellUnit.execRoot("umount "+ mountPath);
+                                                            ShellUnit.execBusybox("umount "+ mountPath);
                                                             if(ShellUnit.exitValue==0&&ShellUnit.stdErr==null)
                                                             {
                                                                 Toast.makeText(mActivity,"umount success!",Toast.LENGTH_SHORT).show();

@@ -42,14 +42,14 @@ public class CreateImageFragment extends Fragment {
             mDirEdit.setText(dir);
     }
 
-    public boolean creatImage(String _path,int size,boolean format)
+    public boolean createImage(String _path, int size, boolean format)
     {
-        String cmd = "dd bs=1m if=/dev/zero ";
+        String cmd = "dd bs=1048576 if=/dev/zero ";
         cmd+="of=\""+_path+"\" ";
         cmd+="count="+size;
         if(format)
             cmd+="&&"+ShellUnit.BUSYBOX+" mkfs.vfat \""+_path+"\"";
-        ShellUnit.execRoot(cmd);
+        ShellUnit.execBusybox(cmd);
         //there seems a bug with command "dd" ,it always print the information through stderr,to check whether success "ls ..."
         mStderr = ShellUnit.stdErr;
         ShellUnit.execRoot("ls \""+_path+"\"");
@@ -100,7 +100,7 @@ public class CreateImageFragment extends Fragment {
                     _path+="/";
                 _path+=mNameEdit.getText().toString();
                 boolean _format = mFormat.getSelectedItemPosition()>0;
-                boolean _ok = creatImage(_path,size,_format);
+                boolean _ok = createImage(_path,size,_format);
                 if(_ok) {
                     //Toast.makeText(NewImageActivity.this, "create image file success!", Toast.LENGTH_SHORT).show();
                     final String final_path = _path;
