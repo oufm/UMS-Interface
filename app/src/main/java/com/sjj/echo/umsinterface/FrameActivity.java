@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.sjj.echo.routine.FileTool;
+import com.sjj.echo.routine.LogUnit;
 import com.sjj.echo.routine.PermissionUnit;
 import com.sjj.echo.routine.ShellUnit;
 
@@ -36,6 +37,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
 import java.util.Locale;
+
+import static com.sjj.echo.umsinterface.R.raw.ums_device_info;
 
 /**
  * Created by SJJ on 2017/3/8.
@@ -60,31 +63,40 @@ public class FrameActivity extends AppCompatActivity {
     private Fragment[] mFragments;
 
     public static String APP_DIR = "/data/data/com.sjj.echo.umsinterface";
-
-
-    private void creatReport()
+    public static LogUnit sLog = new LogUnit(APP_DIR+"/ums.log");
+    public static void logInfo(String _str)
     {
-        File _script = new File(APP_DIR+"/ums_device_info.sh");
-        if(!_script.exists()||!_script.isFile())
-        {
-            if(!FileTool.streamToFile(getResources().openRawResource(R.raw.ums_device_info),APP_DIR+"/ums_device_info.sh"))
-                Toast.makeText(this,"create report fail!",Toast.LENGTH_LONG).show();
-        }
-        ShellUnit.execBusybox("sh "+APP_DIR+"/ums_device_info.sh");
-        String _targetpath = "/sdcard/ums_device_info.sh";
-        //File _report = new File(_targetpath);
-        String _message = getString(R.string.reportfail);
-        //if(_report.isFile()&&_report.length()>0)
-        ShellUnit.execRoot("ls /sdcard/ums_device_info.log");
-        if(ShellUnit.stdErr==null)
-            _message = getString(R.string.reportok)+" \n/sdcard/ums_device_info.log";
-        new AlertDialog.Builder(FrameActivity.this).setMessage(_message).create().show();
+        sLog.logWrite("INFO",_str);
+    }
 
+    private void createReport()
+    {
+       // if(!_script.exists()||!_script.isFile())
+        //{
+        ShellUnit.execRoot("rm "+APP_DIR+"/ums_device_info.sh");
+        if(!FileTool.streamToFile(getResources().openRawResource(ums_device_info),APP_DIR+"/ums_device_info.sh"))
+            Toast.makeText(this,"create report fail!",Toast.LENGTH_LONG).show();
+        //}
+        ShellUnit.execBusybox("sh "+APP_DIR+"/ums_device_info.sh");
+
+        String _reportName = "ums_device_info.log";
+        String _logName = "ums.log";
+        String _targetPath = "/sdcard/ums_log.tar.gz";
+        String _message = getString(R.string.reportfail);
+        ShellUnit.execRoot("ls "+APP_DIR+"/"+_reportName);
+        if(ShellUnit.stdErr==null) {
+            ShellUnit.execRoot("rm "+_targetPath);
+            ShellUnit.execBusybox("tar -czf "+_targetPath+" -C "+APP_DIR+" "+_reportName+" "+_logName);
+            if(ShellUnit.stdErr==null)
+                _message = getString(R.string.reportok) + " \n"+_targetPath;
+            ShellUnit.execRoot("rm "+APP_DIR+"/"+_reportName);
+        }
+        new AlertDialog.Builder(FrameActivity.this).setMessage(_message).setPositiveButton(R.string.ok,null).create().show();
     }
 
     protected void initBusybox()
     {
-
+        logInfo("initBusybox");
         File _bin = new File(APP_DIR+"/bin");
         if(!_bin.isDirectory()&&!_bin.mkdir())
         {
@@ -212,6 +224,7 @@ public class FrameActivity extends AppCompatActivity {
 
     public boolean createImage(String _path,int _size,boolean _format)
     {
+
         return mCreateImageFragment.createImage(_path,_size,_format);
     }
 
@@ -223,6 +236,7 @@ public class FrameActivity extends AppCompatActivity {
     public boolean ums(String _dev,String function)
     {
 
+        logInfo("ums(dev="+_dev+",function="+function+")");
         int ret;
         if(function==null)
             ret=MassStorageUnit.umsConfig(_dev,false);
@@ -235,6 +249,7 @@ public class FrameActivity extends AppCompatActivity {
 
     public void doUmsConfig(String dev)
     {
+        logInfo("doUmsConfig(dev="+dev+")");
         mViewPager.setCurrentItem(1);
         mUmsFragment.doConfigRun(dev);
     }
@@ -342,8 +357,8 @@ public class FrameActivity extends AppCompatActivity {
         if(id == R.id.action_exec)
         {
             final EditText editText = new EditText(this);
-            new AlertDialog.Builder(this).setTitle("execute shell command")
-                    .setView(editText).setNegativeButton("execute", new DialogInterface.OnClickListener() {
+            new AlertDialog.Builder(this).setTitle(R.string.ums_cmd)
+                    .setView(editText).setNegativeButton(R.string.execute, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     String _output = ShellUnit.execRoot(editText.getText().toString());
@@ -391,7 +406,16 @@ public class FrameActivity extends AppCompatActivity {
             }).start();
         }else if(id == R.id.action_report)
         {
-            creatReport();
+            final AlertDialog _dialog=new AlertDialog.Builder(FrameActivity.this).setMessage(R.string.log_wait).create();
+            _dialog.show();
+            mViewPager.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    createReport();
+                    _dialog.cancel();
+                }
+            },300);
+
         }
         //noinspection SimplifiableIfStatement
         return super.onOptionsItemSelected(item);

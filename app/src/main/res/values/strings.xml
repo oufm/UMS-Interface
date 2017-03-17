@@ -74,8 +74,8 @@
     <string name="status">status</string>
     <string name="umsdev">It\'s a block device please  operate carefully !</string>
     <string name="reportfail">fail to create report</string>
-    <string name="reportok">Done ,you can send it with your problems to \'outofmemo@qq.com\' .It\'s located in</string>
-    <string name="create_report">create device report</string>
+    <string name="reportok">Done ,you can send it with your problems. It\'s located in</string>
+    <string name="create_report">export log</string>
     <string name="quick_config">one key start</string>
     <string name="usb_connection">usb used</string>
     <string name="quick_create">quick create</string>
@@ -95,6 +95,24 @@
     <string name="launch">launch</string>
     <string name="mount">mount</string>
     <string name="umount">umount</string>
+    <string name="quick_searching">Getting status...</string>
+    <string name="request_permission">request permission</string>
+    <string name="permission_info">please agree the permission request</string>
+    <string name="sort_mode">please choose a sort mode</string>
+    <string name="muti_item">Multiple items</string>
+    <string name="delete_warning">Sure to delete seleted items?</string>
+    <string name="rename">rename</string>
+    <string name="folder">folder</string>
+    <string name="file">file</string>
+    <string name="parent_dir">parent directory</string>
+    <string name="send">send</string>
+    <string name="name">name</string>
+    <string name="root_label">root label</string>
+    <string name="internal_storage_label">internal storage label</string>
+    <string name="external_storage_label">external storage label</string>
+    <string name="fail">fail</string>
+    <string name="success">success</string>
+    <string name="log_wait">Creating report, please wait...</string>
     <!--<string name="help_en">*This program allows you to chose a block device or disk image as a 'disk',and communicate with PC through usb mass storage (just as usb disk do).-->
     <!--* Since the configuration of android phones are different, you should select the correct config path firstly,you can simply press 'SEARCH' button to find the path if available ,or specify it manually-->
     <!--* Root permission is needed, if you want to use mount function, busybox is needed too.-->

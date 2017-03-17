@@ -216,8 +216,8 @@ public class ExplorerActivity extends AppCompatActivity
         }
         if(permissionGet == false)
         {
-            new AlertDialog.Builder(this).setTitle("请求权限").setMessage("请在 \"设置\"-\"权限\" 中允许相关授权")
-                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            new AlertDialog.Builder(this).setTitle(R.string.request_permission).setMessage(R.string.permission_info)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             //ExplorerActivity.this.getPermission();
@@ -436,8 +436,8 @@ public class ExplorerActivity extends AppCompatActivity
             return true;
         }else if(id == R.id.action_sort)
         {
-            String[] sortModes = {"名称","日期","大小","类型","名称(降序)","日期(降序)","大小(降序)"};
-            new AlertDialog.Builder(ExplorerActivity.this).setTitle("选择排序模式")
+            String[] sortModes = getResources().getStringArray(R.array.sort_modes);
+            new AlertDialog.Builder(ExplorerActivity.this).setTitle(R.string.sort_mode)
                     .setSingleChoiceItems(sortModes,0, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -505,9 +505,9 @@ public class ExplorerActivity extends AppCompatActivity
             if(count == 1)
                 title = selects.get(0);
             else
-                title = "多个项目";
-            new AlertDialog.Builder(ExplorerActivity.this).setTitle(title).setMessage("确定删除所选项目?")
-                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                title = getString(R.string.muti_item);
+            new AlertDialog.Builder(ExplorerActivity.this).setTitle(title).setMessage(R.string.delete_warning)
+                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             String curPath = getCurFileList().getCurPath();
@@ -517,7 +517,7 @@ public class ExplorerActivity extends AppCompatActivity
                             }
                             getCurFragment().refresh(false);
                         }
-                    }).setNegativeButton("取消",null).create().show();
+                    }).setNegativeButton(R.string.no,null).create().show();
             return true;
         }else if(id == R.id.select_menu_rename)
         {
@@ -527,8 +527,8 @@ public class ExplorerActivity extends AppCompatActivity
             final String oldName = selects.get(0);
             final EditText editText = (EditText)view.findViewById(R.id.new_file_name);
             editText.setText(oldName);
-            new AlertDialog.Builder(ExplorerActivity.this).setTitle("文件夹").setView(view)
-                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            new AlertDialog.Builder(ExplorerActivity.this).setTitle(R.string.rename).setView(view)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
@@ -536,7 +536,7 @@ public class ExplorerActivity extends AppCompatActivity
                             FileTool.reName(curPath+oldName,curPath+name);
                             getCurFragment().refresh(false);
                         }
-                    }).setNegativeButton("取消",null).create().show();
+                    }).setNegativeButton(R.string.cancel,null).create().show();
             return true;
         }else if(id == R.id.select_menu_select_all)
         {
@@ -594,20 +594,20 @@ public class ExplorerActivity extends AppCompatActivity
     {
 
         View view = getLayoutInflater().inflate(R.layout.explorer_dlg_new,null);
-        final AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle("新建.....").setView(view).create();
+        final AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle(getString(R.string.create)+".....").setView(view).create();
         view.findViewById(R.id.new_dlg_btn_dir).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final View view = ExplorerActivity.this.getLayoutInflater().inflate(R.layout.explorer_new_file_dir_layout,null);
-                new AlertDialog.Builder(ExplorerActivity.this).setTitle("文件夹").setView(view)
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                new AlertDialog.Builder(ExplorerActivity.this).setTitle(R.string.folder).setView(view)
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 String name = ((EditText)view.findViewById(R.id.new_file_name)).getText().toString();
                                 FileTool.newDir(getCurFileList().getCurPath()+name);
                                 getCurFragment().refresh(false);
                             }
-                        }).setNegativeButton("取消",null).create().show();
+                        }).setNegativeButton(R.string.cancel,null).create().show();
                 alertDialog.cancel();
             }
         });
@@ -616,15 +616,15 @@ public class ExplorerActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final View view = ExplorerActivity.this.getLayoutInflater().inflate(R.layout.explorer_new_file_dir_layout,null);
-                new AlertDialog.Builder(ExplorerActivity.this).setTitle("文件").setView(view)
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                new AlertDialog.Builder(ExplorerActivity.this).setTitle(R.string.file).setView(view)
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 String name = ((EditText)view.findViewById(R.id.new_file_name)).getText().toString();
                                 FileTool.newFile(getCurFileList().getCurPath()+name);
                                 getCurFragment().refresh(false);
                             }
-                        }).setNegativeButton("取消",null).create().show();
+                        }).setNegativeButton(R.string.cancel,null).create().show();
                 alertDialog.cancel();
             }
         });

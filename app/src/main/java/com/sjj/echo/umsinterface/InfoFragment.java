@@ -64,7 +64,7 @@ public class InfoFragment extends Fragment {
 
             if(line!=null)
             {
-                int endOffset = line.indexOf(",");
+                int endOffset = line.indexOf("(");
                 if(endOffset>0)
                 {
                     mInfos.add(line.substring(0,endOffset));
@@ -119,13 +119,13 @@ public class InfoFragment extends Fragment {
                                                             ShellUnit.execBusybox("umount "+ mountPath);
                                                             if(ShellUnit.exitValue==0&&ShellUnit.stdErr==null)
                                                             {
-                                                                Toast.makeText(mActivity,"umount success!",Toast.LENGTH_SHORT).show();
+                                                                Toast.makeText(mActivity,getString(R.string.umount)+" "+getString(R.string.success),Toast.LENGTH_SHORT).show();
                                                                 setAdapter();
                                                                 return;
                                                             }
                                                         }
                                                     }
-                                                    Toast.makeText(mActivity,"umount fail:"+ShellUnit.stdErr,Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(mActivity,getString(R.string.umount)+" "+getString(R.string.fail)+":"+ShellUnit.stdErr,Toast.LENGTH_LONG).show();
 
                                                 }
                                             })

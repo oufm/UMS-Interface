@@ -2,6 +2,7 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:textColor="#000"
-    android:layout_height="40dp">
+    android:gravity="center_vertical"
+    android:layout_height="35dp">
 
 </TextView>

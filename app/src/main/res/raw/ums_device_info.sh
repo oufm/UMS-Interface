@@ -2,11 +2,10 @@
 
 echo "" > /sdcard/ums_device_info.log
 BUSYBOX='/data/data/com.sjj.echo.umsinterface/bin/busybox '
-
-function log_exec()
-{
-	echo "@~@:"$1 >> /sdcard/ums_device_info.log
-	$($1 >>/sdcard/ums_device_info.log 2>>/sdcard/ums_device_info.log)
+TARGET=/data/data/com.sjj.echo.umsinterface/ums_device_info.log
+log_exec(){
+	echo '>>>'$1 >> $TARGET
+	$($1 >>$TARGET 2>>$TARGET)
 }
 
 

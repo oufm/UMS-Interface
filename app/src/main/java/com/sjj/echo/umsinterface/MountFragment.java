@@ -24,6 +24,8 @@ import android.widget.Toast;
 import com.sjj.echo.explorer.ExplorerActivity;
 import com.sjj.echo.routine.ShellUnit;
 
+import static com.sjj.echo.umsinterface.FrameActivity.logInfo;
+
 /**
  * Created by SJJ on 2017/3/8.
  */
@@ -207,16 +209,40 @@ public class MountFragment extends Fragment {
 
     public boolean mount(boolean _readonly,boolean _loop,boolean _charset,boolean _mask,String _source,String _point)
     {
+        String _iocharset = null;
+        String _codepage = null;
+        String _maskStr = null;
+        if(_charset)
+        {
+            _iocharset = "utf8";
+            _codepage = "936";
+        }
+        if(_mask)
+            _maskStr = "0000";
+
+        return mount(_readonly,_loop,_iocharset,_codepage,_maskStr,_source,_point,null);
+    }
+
+    public boolean mount(boolean _readonly,boolean _loop,String _iocharset,String _codepage,String _mask,String _source,String _point,String _type)
+    {
+        logInfo("mount(readonly="+_readonly+",loop="+_loop+",iocharset="+ (_iocharset==null?"null":_iocharset)
+                +",codepage="+ (_codepage==null?"null":_codepage)+",mask="+(_mask==null?"null":_mask)
+                +",source="+_source+",mountpoint="+_point+",type="+ (_type==null?"null":_type)+")");
         String cmd = "mount ";
+        cmd +=" ";
+        if(_type!=null)
+        {
+            cmd +="-t "+_type+" ";
+        }
         if(_readonly)
             cmd +="-o ro";
         else
             cmd +="-o rw";
-        if(_charset)
-            cmd +=",iocharset=utf8,codepage=936";
-        if(_mask)
+        if(_iocharset!=null&&_codepage!=null)
+            cmd +=",iocharset="+_iocharset+",codepage="+_codepage;
+        if(_mask!=null)
         {
-            cmd +=",fmask=0000,dmask=0000";
+            cmd +=",fmask="+_mask+",dmask="+_mask;
         }
         if(_loop)
             cmd +=",loop";
@@ -263,8 +289,9 @@ public class MountFragment extends Fragment {
         mTargetEdit = (EditText) rootView.findViewById(R.id.mount_target_edit);
         mReadonlyCheck = (CheckBox) rootView.findViewById(R.id.mount_readonly);
         mLoopCheck = (CheckBox) rootView.findViewById(R.id.mount_loop);
-        Button mountBtn = (Button) rootView.findViewById(R.id.mount_btn);
+        final Button mountBtn = (Button) rootView.findViewById(R.id.mount_btn);
         mFilesystemSpinner = (Spinner) rootView.findViewById(R.id.mount_file_system_spinner);
+
 
         final String[] fileSystems = {" "+getString(R.string.filesystem),"minix","ext","ext2","ext3","ext4","Reiserfs","XFS"
                 ,"JFS","xia","msdos","umsdos","vfat","ntfs","proc","nfs","iso9660"
@@ -330,49 +357,40 @@ public class MountFragment extends Fragment {
             public void onClick(View v) {
                 //checkLoop();
                 // mount operation
-                boolean _readonly = mReadonlyCheck.isChecked();
-                final boolean _loop = mLoopCheck.isChecked();
-                boolean _mask = mCheckMask.isChecked();
-                boolean _charset = mCheckCharset.isChecked();
-                String _type = fileSystems[mFilesystemSpinner.getSelectedItemPosition()];
-                if(_type.startsWith(" "))
-                    _type = null;
+                mTargetEdit.requestFocus();
+                mountBtn.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        boolean _readonly = mReadonlyCheck.isChecked();
+                        final boolean _loop = mLoopCheck.isChecked();
+                        boolean _mask = mCheckMask.isChecked();
+                        boolean _charset = mCheckCharset.isChecked();
+                        String _type = fileSystems[mFilesystemSpinner.getSelectedItemPosition()];
+                        if(_type.startsWith(" "))
+                            _type = null;
+                        String _iocharset = null;
+                        String _codepage = null;
+                        String _maskStr = null;
+                        if(_charset)
+                        {
+                            _iocharset = mIocharset.getText().toString();
+                            _codepage = mCodepage.getText().toString();
+                        }
+                        if(_mask)
+                            _maskStr = getmask();
+                        if(!mount(_readonly,_loop,_iocharset,_codepage,_maskStr,mDevEdit.getText().toString()
+                                ,mTargetEdit.getText().toString(),_type))
+                        {
+                            Toast.makeText(mActivity,getString(R.string.mount)+" "+getString(R.string.fail)+":"+ShellUnit.stdErr,Toast.LENGTH_LONG).show();
+                        }else
+                        {
+                            Toast.makeText(mActivity,getString(R.string.mount)+" "+getString(R.string.success),Toast.LENGTH_LONG).show();
+                        }
 
-                String cmd = "mount ";
-                if(_readonly)
-                    cmd +="-o ro";
-                else
-                    cmd +="-o rw";
-                if(_charset)
-                    cmd +=",iocharset="+mIocharset.getText().toString()+",codepage="+mCodepage.getText().toString();
-                if(_mask)
-                {
-                    String uMask = getmask();
-                    cmd +=",fmask="+uMask+",dmask="+uMask;
-                }
-                if(_loop)
-                    cmd +=",loop";
-                cmd +=" ";
-                if(_type!=null)
-                {
-                    cmd +="-t "+_type+" ";
-                }
-                cmd += "\""+ mDevEdit.getText().toString()+"\" \""+ mTargetEdit.getText().toString()+"\"";
-               // String busyboxCmd = "busybox "+cmd;
-               // ShellUnit.execRoot(busyboxCmd);
-                ShellUnit.execBusybox(cmd);
-                if(ShellUnit.exitValue==ShellUnit.EXEC_ERR) {
-                    ShellUnit.execRoot(cmd);
-                    if(ShellUnit.exitValue!=0||ShellUnit.stdErr!=null)
-                        Toast.makeText(mActivity, "execute fail,check busybox and root permission", Toast.LENGTH_LONG).show();
-                    else
-                        Toast.makeText(mActivity,"mount success!",Toast.LENGTH_SHORT).show();
-                }
-                else if(ShellUnit.exitValue!=0||ShellUnit.stdErr!=null)
-                    Toast.makeText(mActivity,"mount fail:"+ShellUnit.stdErr,Toast.LENGTH_LONG).show();
-                else
-                    Toast.makeText(mActivity,"mount success!",Toast.LENGTH_LONG).show();
-                saveStatus();
+                        saveStatus();
+                    }
+                }, 500);
+
             }
         });
 
@@ -387,15 +405,21 @@ public class MountFragment extends Fragment {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 //checkLoop();
-                Boolean _isBlock = isBlockDev();
-                if(_isBlock!=null)
-                {
-                    if(_isBlock)
-                        mLoopCheck.setChecked(false);
-                    else
-                        mLoopCheck.setChecked(true);
-                    checkLoop();
-                }
+                mDevEdit.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Boolean _isBlock = isBlockDev();
+                        if(_isBlock!=null)
+                        {
+                            if(_isBlock)
+                                mLoopCheck.setChecked(false);
+                            else
+                                mLoopCheck.setChecked(true);
+                            //checkLoop();
+                        }
+                    }
+                }, 200);
+
             }
         });
         mFilesystemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

@@ -76,8 +76,8 @@
     <string name="status">状态</string>
     <string name="umsdev">这是一个块设备,请谨慎操作,防止数据丢失!</string>
     <string name="reportfail">生成设备报告失败</string>
-    <string name="reportok">成功,可将其与遇到的问题一并发送至 \'outofmemo@qq.com\' .位于: </string>
-    <string name="create_report">生成设备报告</string>
+    <string name="reportok">成功,可将其与遇到的问题一并发送.位于: </string>
+    <string name="create_report">导出日志</string>
     <string name="quick_config">快捷使用</string>
     <string name="usb_connection">U盘已使用</string>
     <string name="quick_create">一键启动</string>
@@ -97,6 +97,24 @@
     <string name="launch">启动</string>
     <string name="mount">挂载</string>
     <string name="umount">卸载</string>
+    <string name="quick_searching">正在获取状态...</string>
+    <string name="request_permission">请求权限</string>
+    <string name="permission_info">请在 设置-权限 中允许相关授权</string>
+    <string name="sort_mode">选择排序方式</string>
+    <string name="muti_item">多个项目</string>
+    <string name="delete_warning">确定删除所选项目?</string>
+    <string name="rename">重命名</string>
+    <string name="folder">文件夹</string>
+    <string name="file">文件</string>
+    <string name="parent_dir">上级目录</string>
+    <string name="send">发送</string>
+    <string name="name">名称</string>
+    <string name="root_label">根标签</string>
+    <string name="internal_storage_label">内部存储标签</string>
+    <string name="external_storage_label">外部存储标签</string>
+    <string name="fail">失败</string>
+    <string name="success">成功</string>
+    <string name="log_wait">正在导出,请稍等...</string>
     <!--<string name="help_en">*This program allows you to chose a block device or disk image as a 'disk',and communicate with PC through usb mass storage (just as usb disk do).-->
 	<!--* Since the configuration of android phones are different, you should select the correct config path firstly,you can simply press 'SEARCH' button to find the path if available ,or specify it manually-->
     <!--* Root permission is needed, if you want to use mount function, busybox is needed too.-->

@@ -260,6 +260,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:text="@string/mount_mount_tip"
+            android:background="@drawable/status_select"
             android:id="@+id/mount_btn"/>
         <android.support.v4.widget.Space
             android:layout_width="match_parent"

@@ -24,7 +24,7 @@
             android:layout_weight="1"
             android:textColor="#ff000000"
             android:gravity="center_vertical"
-            android:text="文件夹"/>
+            android:text="@string/folder"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -46,7 +46,7 @@
             android:textColor="#ff000000"
             android:gravity="center_vertical"
             android:layout_weight="1"
-            android:text="文件"/>
+            android:text="@string/file"/>
     </LinearLayout>
     <LinearLayout
             android:layout_width="match_parent"
@@ -67,7 +67,7 @@
                 android:layout_weight="1"
                 android:textColor="#ff000000"
                 android:gravity="center_vertical"
-                android:text="根标签"/>
+                android:text="@string/root_label"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -89,7 +89,7 @@
             android:layout_weight="1"
             android:textColor="#ff000000"
             android:gravity="center_vertical"
-            android:text="内置存储标签"/>
+            android:text="@string/internal_storage_label"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -111,6 +111,6 @@
             android:layout_weight="1"
             android:textColor="#ff000000"
             android:gravity="center_vertical"
-            android:text="外置存储标签"/>
+            android:text="@string/external_storage_label"/>
     </LinearLayout>
 </LinearLayout>

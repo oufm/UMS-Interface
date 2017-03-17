@@ -7,7 +7,7 @@
         android:layout_margin="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="名称"/>
+        android:text="@string/name"/>
     <EditText
         android:layout_margin="10dp"
         android:layout_width="match_parent"

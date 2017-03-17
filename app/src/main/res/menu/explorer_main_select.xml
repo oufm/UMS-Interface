@@ -8,7 +8,7 @@
         app:showAsAction="never"
         android:orderInCategory="100"
         android:id="@+id/select_menu_rename"
-        android:title="重命名" />
+        android:title="@string/rename" />
     <!--<item-->
         <!---->
         <!--app:showAsAction="never"-->
@@ -30,7 +30,7 @@
         app:showAsAction="never"
         android:orderInCategory="100"
         android:id="@+id/select_menu_send"
-        android:title="发送"/>
+        android:title="@string/send"/>
     <!--<item-->
         <!--app:showAsAction="never"-->
         <!--android:orderInCategory="100"-->

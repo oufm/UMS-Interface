@@ -7,6 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
+        android:id="@+id/quick_status"
         android:orientation="horizontal">
         <ImageView
             android:layout_marginTop="18dp"
@@ -18,7 +19,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/quick_status"
             android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
@@ -33,7 +33,7 @@
                     android:textColor="@android:color/white"
                     android:singleLine="true"
                     android:ellipsize="marquee"
-                    android:text="@string/using"
+                    android:text="@string/quick_searching"
                     android:textSize="25sp" />
                 <ImageView
                     android:id="@+id/refresh_icon"
@@ -99,7 +99,7 @@
                     android:textColor="@android:color/white"
                     android:ellipsize="marquee"
                     android:layout_weight="1"
-                    android:text="@string/local_mount"/>
+                    android:text="@string/quick_no_mount"/>
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"

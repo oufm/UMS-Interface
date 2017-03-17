@@ -12,4 +12,13 @@
         <item>don\'t format</item>
         <item>format as vfat</item>
     </string-array>
+    <string-array name="sort_modes">
+        <item>name</item>
+        <item>time</item>
+        <item>size</item>
+        <item>type</item>
+        <item>name(descending)</item>
+        <item>time(descending)</item>
+        <item>size(descending)</item>
+    </string-array>
 </resources>

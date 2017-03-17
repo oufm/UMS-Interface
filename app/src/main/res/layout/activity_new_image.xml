@@ -125,6 +125,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="60dp"
+            android:background="@drawable/status_select"
             android:text="@string/image_create"
             android:id="@+id/image_create"/>
         <android.support.v4.widget.Space

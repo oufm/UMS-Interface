@@ -32,6 +32,7 @@
         <activity
             android:name="com.sjj.echo.explorer.ExplorerActivity"
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

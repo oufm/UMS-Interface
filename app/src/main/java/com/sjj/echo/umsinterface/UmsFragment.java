@@ -23,6 +23,8 @@ import com.sjj.echo.routine.ShellUnit;
 
 import java.util.LinkedList;
 
+import static com.sjj.echo.umsinterface.FrameActivity.logInfo;
+
 /**
  * Created by SJJ on 2017/3/8.
  */
@@ -82,11 +84,12 @@ public class UmsFragment extends Fragment {
      * */
     protected void setConfigPath()
     {
+        logInfo("ums setConfigPath()");
         String _path = MassStorageUnit.searchPath();
         if(_path!=null) {
             mPathEdit.setText(_path);
             MassStorageUnit.mConfigPath = _path;
-            //Toast.makeText(mActivity,"search config path success!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity,"search config path success!",Toast.LENGTH_SHORT).show();
         }
         else
             Toast.makeText(mActivity,"search config path fail!",Toast.LENGTH_LONG).show();
@@ -132,6 +135,7 @@ public class UmsFragment extends Fragment {
      * */
     protected void refreshStatus()
     {
+        logInfo("ums refreshStatus()");
         int ret = MassStorageUnit.refreshStatus(mPathEdit.getText().toString());
         if(ret== ShellUnit.EXEC_ERR)
             Toast.makeText(mActivity,"please check root permission",Toast.LENGTH_LONG).show();
@@ -139,7 +143,7 @@ public class UmsFragment extends Fragment {
             Toast.makeText(mActivity,MassStorageUnit.mError,Toast.LENGTH_LONG).show();
         else
         {
-            Toast.makeText(mActivity,"status update ok!",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(mActivity,"status update ok!",Toast.LENGTH_SHORT).show();
             String info = "(click to refresh)\n";
             info += "gadget status: "+ (MassStorageUnit.mStatusEnable.equals("1")?"enabled":"disabled")+"\n";
             info += "gadget functions: "+ MassStorageUnit.mStatusFunction + "\n" ;
@@ -154,13 +158,16 @@ public class UmsFragment extends Fragment {
      * */
     protected void doConfig()
     {
-        int ret = MassStorageUnit.umsConfig(mPathEdit.getText().toString(),mDevEdit.getText().toString(),mReadonly);
+        String _configPath =  mPathEdit.getText().toString();
+        String _devPath = mDevEdit.getText().toString();
+        logInfo("ums doConfig(configPath="+_configPath+",devPath="+_devPath+",readonly="+mReadonly);
+        int ret = MassStorageUnit.umsConfig(_configPath,_devPath,mReadonly);
         if(ret== ShellUnit.EXEC_ERR)
-            Toast.makeText(mActivity,"please check root permission",Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity,"please check root permission",Toast.LENGTH_LONG).show();
         else if(ret !=0||MassStorageUnit.mError!=null)
-            Toast.makeText(mActivity,MassStorageUnit.mError,Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity,"UMS"+getString(R.string.fail)+MassStorageUnit.mError,Toast.LENGTH_LONG).show();
         else {
-            Toast.makeText(mActivity, "config success!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, "UMS"+getString(R.string.success), Toast.LENGTH_SHORT).show();
             saveStatus();
         }
         refreshStatus();

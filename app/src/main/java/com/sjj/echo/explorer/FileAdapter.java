@@ -121,7 +121,7 @@ public class FileAdapter extends BaseAdapter {
         if(!mIsRoot)
         {
             if(0 == position)
-                return getView("..","上层目录",true,false,convertView,parent);
+                return getView("..",mActivity.getString(R.string.parent_dir),true,false,convertView,parent);
             position --;
         }
         FileItem item = mItems.get(position);

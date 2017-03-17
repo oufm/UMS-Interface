@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.sjj.echo.explorer.ExplorerActivity;
 import com.sjj.echo.routine.ShellUnit;
 
+import static com.sjj.echo.umsinterface.FrameActivity.logInfo;
+
 /**
  * Created by SJJ on 2017/3/8.
  */
@@ -44,6 +46,7 @@ public class CreateImageFragment extends Fragment {
 
     public boolean createImage(String _path, int size, boolean format)
     {
+        logInfo("createImage(path="+_path+",size="+size+",format="+format+")");
         String cmd = "dd bs=1048576 if=/dev/zero ";
         cmd+="of=\""+_path+"\" ";
         cmd+="count="+size;

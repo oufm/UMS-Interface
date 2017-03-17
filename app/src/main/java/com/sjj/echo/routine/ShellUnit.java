@@ -28,11 +28,11 @@ public class ShellUnit {
      * @param root should be execute as root
      *@param cmd command
      * */
-    static public String exec(String cmd,boolean root)
+    static private String exec(String cmd,boolean root)
     {
         String outString = "";
         try {
-            char[] buff = new char[1024*10];
+            char[] buff = new char[1024*30];
             Process process;
             if(root)
                 process = Runtime.getRuntime().exec("su");
@@ -49,13 +49,13 @@ public class ShellUnit {
             int __count = stdout.read(buff);
             if(__count>0)
             {
-                outString = new String(buff);
+                outString = new String(buff,0,__count);
             }
             //}
             stdErr = null;
             int count = new InputStreamReader(process.getErrorStream()).read(buff);
             if(count > 0)
-                stdErr = new String(buff);
+                stdErr = new String(buff,0,count);
         } catch (IOException e) {
             // TODO 自动生成的 catch 块
             e.printStackTrace();
@@ -74,18 +74,28 @@ public class ShellUnit {
     /**
      * execute the command as root*/
     static public String execRoot(String cmd) {
+        FrameActivity.sLog.logWrite("IN",cmd);
+        String _out = exec(cmd,true);
+        if(_out.length()>0)
+            FrameActivity.sLog.logWrite("OUT",_out);
+        if(stdErr!=null)
+            FrameActivity.sLog.logWrite("ERR",stdErr);
+        return _out;
+    }
+
+    static public String execNoLog(String cmd) {
         return exec(cmd,true);
     }
 
     static public String execBusybox(String cmd){
         return execRoot(BUSYBOX +cmd);
     }
-
+/*
     static public String exec(final int overtime, String cmd, boolean root)
     {
         String outString = "";
         try {
-            char[] buff = new char[1024*10];
+            char[] buff = new char[1024*30];
             String _shell = null;
             if(root)
                 _shell = "su";
@@ -121,13 +131,13 @@ public class ShellUnit {
             int __count = stdout.read(buff);
             if(__count>0)
             {
-                outString = new String(buff);
+                outString = new String(buff,0,__count);
             }
             //}
             stdErr = null;
             int count = new InputStreamReader(process.getErrorStream()).read(buff);
             if(count > 0)
-                stdErr = new String(buff);
+                stdErr = new String(buff,0,__count);
         } catch (IOException e) {
             // TODO 自动生成的 catch 块
             e.printStackTrace();
@@ -147,5 +157,6 @@ public class ShellUnit {
     static public String execRoot(int overtime,String cmd) {
         return exec(overtime,cmd,true);
     }
+*/
 
 }

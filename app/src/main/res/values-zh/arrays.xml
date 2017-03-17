@@ -12,4 +12,13 @@
         <item>不格式化</item>
         <item>格式化为vfat</item>
     </string-array>
+    <string-array name="sort_modes">
+        <item>名称</item>
+        <item>日期</item>
+        <item>大小</item>
+        <item>类型</item>
+        <item>名称(降序)</item>
+        <item>日期(降序)</item>
+        <item>大小(降序)</item>
+    </string-array>
 </resources>

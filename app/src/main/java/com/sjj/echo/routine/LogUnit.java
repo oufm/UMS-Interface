@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * Created by SJJ on 2017/3/17.
@@ -12,10 +14,11 @@ import java.util.Date;
 
 public class LogUnit {
     private String mPath;
-    private Thread mThread;
-    private StringBuffer mBuffer = new StringBuffer();
+    //private Thread mThread;
+    private Queue<String> mBuffer = new LinkedList<>();
     private File mFile;
     private static int sMaxLogSize = 4*1024*1024;
+    //private static int sBufferCount = 5;
     private FileOutputStream mOutputStream;
     private void checkSize()
     {
@@ -23,19 +26,20 @@ public class LogUnit {
         if(_size>sMaxLogSize)
         {
             String _newName = mPath+"1";
-            ShellUnit.execBusybox("dd bs=1 if="+mPath+" of="+_newName+" count="+sMaxLogSize/2+" skip="+sMaxLogSize/2);
+            ShellUnit.execNoLog(ShellUnit.BUSYBOX+" dd bs=1 if="+mPath+" of="+_newName+" count="+sMaxLogSize/2+" skip="+(_size-sMaxLogSize/2));
             try {
-                if(ShellUnit.stdErr!=null)
-                {
-                    mOutputStream.close();
-                    mOutputStream = null;
-                    return;
-                }
+//                if(ShellUnit.stdErr!=null)
+//                {
+//                    mOutputStream.close();
+//                    mOutputStream = null;
+//                    return;
+//                }
                 mOutputStream.close();
+                mOutputStream.flush();
                 mOutputStream=null;
-                ShellUnit.execRoot("rm "+mPath);
-                ShellUnit.execRoot("mv "+_newName+" "+mPath);
-                mOutputStream = new FileOutputStream(mPath);
+                ShellUnit.execNoLog("busybox mv -f "+_newName+" "+mPath);
+                ShellUnit.execNoLog("chmod 777 "+mPath);
+                mOutputStream = new FileOutputStream(mPath,true);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -43,54 +47,55 @@ public class LogUnit {
     }
     public void logWrite(String tag,String log)
     {
-        String _head = String.format("\n[%5s]>>",tag);
+        if(mOutputStream==null)
+            return;
+        String _str = String.format("\n[%5s]>>%s",tag,log);
         synchronized(mBuffer){
-            mBuffer.append(_head);
-            mBuffer.append(log);
+           mBuffer.add(_str);
+            mBuffer.notify();
         }
     }
     public LogUnit(String _path)
     {
         mPath = _path;
         mFile = new File(_path);
-        if(!mFile.isFile())
-            return;
         try {
-            mOutputStream = new FileOutputStream(mPath);
+            if(!mFile.isFile())
+                if(!mFile.createNewFile())
+                    return;
+
+            mOutputStream = new FileOutputStream(mPath,true);
             mOutputStream.write(("\n ~~~~~"+ new Date().toString()+"~~~~").getBytes());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        final FileOutputStream finalOutputStream = mOutputStream;
-        mThread = new Thread(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
-                synchronized(mBuffer)
-                {
-                    while(true) {
-                        if(mOutputStream==null)
-                            return;
-                        checkSize();
-                        try {
-                            if (mBuffer.length() == 0)
+                byte[] _buf;
+                while(true) {
+                    if(mOutputStream==null)
+                        return;
+                    checkSize();
+                    try {
+                        synchronized(mBuffer) {
+                            if (mBuffer.size() == 0)
                                 mBuffer.wait();
-                            finalOutputStream.write(mBuffer.toString().getBytes());
-                            mBuffer.setLength(0);
-                            mBuffer.wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                            _buf = mBuffer.poll().getBytes();
                         }
+                        mOutputStream.write(_buf);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
 
                 }
 
             }
-        });
+        }).start();
 
     }
 }

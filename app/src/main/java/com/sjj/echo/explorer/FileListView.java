@@ -358,10 +358,10 @@ public class FileListView extends ListView implements View.OnKeyListener {
     protected void openFile(String path)
     {
         ExplorerActivity activity = (ExplorerActivity)mActivity;
-        if(activity.mDirectoryRequest)
-            FileTool.callActivity(path, mActivity);
-        else
+        if(activity.mRequest&&!activity.mDirectoryRequest)
             activity.returnActivity(path);
+        else
+            FileTool.callActivity(path, mActivity);
 
     }
 
