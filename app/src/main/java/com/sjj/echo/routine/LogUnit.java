@@ -17,7 +17,7 @@ public class LogUnit {
     //private Thread mThread;
     private Queue<String> mBuffer = new LinkedList<>();
     private File mFile;
-    private static int sMaxLogSize = 4*1024*1024;
+    private static int sMaxLogSize = 2*1024*1024;
     //private static int sBufferCount = 5;
     private FileOutputStream mOutputStream;
     private void checkSize()
