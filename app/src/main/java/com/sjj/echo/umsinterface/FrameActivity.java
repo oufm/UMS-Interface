@@ -109,7 +109,7 @@ public class FrameActivity extends AppCompatActivity {
             if(!FileTool.streamToFile(getResources().openRawResource(R.raw.busybox),APP_DIR+"/bin/busybox"))
                 Toast.makeText(this,"init fail!",Toast.LENGTH_LONG).show();
         }
-        ShellUnit.execBusybox("chmod 777 "+APP_DIR+"/bin/busybox");
+        ShellUnit.execRoot("chmod 777 "+APP_DIR+"/bin/busybox");
         if(ShellUnit.stdErr!=null)
             Toast.makeText(this,"init fail!",Toast.LENGTH_LONG).show();
     }
