@@ -115,21 +115,33 @@ public class FileTool {
     /**
      * launch the suitable activity according to the file name
      * */
-    static public void callActivity(String path, Context context) {
+    static public void callActivity(String path, Context context)
+    {
+        callActivity(path,context,false,null);
+    }
+
+    static public void callActivity(String path, Context context,boolean ignoreDefault,String type) {
         String extString = getExtension(path);
         int count = sMediaTypes.length;
-        for(int i=0;i<count;i++)
-        {
-            if(extString.compareToIgnoreCase(sMediaTypes[i][0])==0)
-            {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.parse("file://"+path), sMediaTypes[i][1]);
-                //this flag must be set.
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
-                context.startActivity(intent);
-                return;
+        String _type = "*/*";
+        if(ignoreDefault&&type!=null)
+            _type = type;
+        else {
+            for (int i = 0; i < count; i++) {
+                if (extString.compareToIgnoreCase(sMediaTypes[i][0]) == 0) {
+                    _type = sMediaTypes[i][1];
+                    break;
+                }
             }
         }
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.parse("file://"+path), _type);
+        //this flag must be set.
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+        if(ignoreDefault)
+            context.startActivity(Intent.createChooser(intent, ""));
+        else
+            context.startActivity(intent);
 
     }
 

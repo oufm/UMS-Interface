@@ -238,11 +238,16 @@ public class QuickStartFragment extends Fragment {
     {
         logInfo("quick_start setImgDir");
         String _target = "UMS_SDCARD_REAL_PATH";
-        String _output=ShellUnit.execBusybox("touch /sdcard/"+_target+" &&find /data/media/ -name "+_target);
-        if(ShellUnit.stdErr!=null)
+        ShellUnit.execBusybox("touch /sdcard/"+_target);
+        String _output=ShellUnit.execBusybox("find /data/media/ -name "+_target);
+        if(ShellUnit.stdErr!=null||_output.length()<=1)
         {
-            Toast.makeText(mActivity,"search sdcard path fail:"+ShellUnit.stdErr,Toast.LENGTH_LONG).show();
+            _output=ShellUnit.execBusybox("find /mnt/media_rw/ -name "+_target);
         }
+//        if(ShellUnit.stdErr!=null)
+//        {
+//            Toast.makeText(mActivity,"search sdcard path fail:"+ShellUnit.stdErr,Toast.LENGTH_LONG).show();
+//        }
         int _offset = _output.indexOf(_target);
         if(_offset<=0)
             return;
@@ -253,7 +258,7 @@ public class QuickStartFragment extends Fragment {
     private String getMountPoint()
     {
         logInfo("quick_start getMountPoint");
-        ShellUnit.execRoot("mkdir "+mImgDir+";chomd 777 /data/ums_mnt");
+        ShellUnit.execRoot("mkdir "+mImgDir+";chmod 777 '"+mImgDir+"'");
         int num=0;
         while(ShellUnit.execBusybox("mount|"+ShellUnit.BUSYBOX+"grep "+mImgDir+"/mnt"+num).length()>0)
             num++;
@@ -413,19 +418,33 @@ public class QuickStartFragment extends Fragment {
                 updateUIStatus(true);
             }
         },200);
-        rootView.postDelayed(new Runnable() {
+//        rootView.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                setImgDir();
+//            }
+//        },300);
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 setImgDir();
             }
-        },300);
+        }).start();
         mStatusView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(mStatusMountpoint!=null&&mStatusMountpoint.length()>0) {
+                    String _path = mStatusMountpoint;
+                    if(_path.startsWith("/data/media")||_path.startsWith("/mnt/media_rw"))
+                    {
+                        if(_path.startsWith(mImgDir))
+                        {
+                            _path = _path.replace(mImgDir,"/sdcard/ums_mnt");
+                        }
+                    }
                     Intent intent = new Intent(mActivity, ExplorerActivity.class);
                     intent.addCategory(Intent.CATEGORY_OPENABLE);
-                    intent.setDataAndType(Uri.parse(mStatusMountpoint),"directory/*");
+                    intent.setDataAndType(Uri.parse(_path),"directory/*");
                     mActivity.startActivity(intent);
                 }
             }

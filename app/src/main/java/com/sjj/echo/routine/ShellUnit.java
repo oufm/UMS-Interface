@@ -61,13 +61,15 @@ public class ShellUnit {
             e.printStackTrace();
             stdErr = "by exec:IOException,process.exec fail";
             exitValue = EXEC_ERR;
-            return null;
+            //return null;
+            return "";
         } catch (InterruptedException e) {
             // TODO 自动生成的 catch 块
             e.printStackTrace();
             stdErr = "by exec:InterruptedException,process.waitFor fail";
             exitValue = EXEC_ERR;
-            return null;
+            //return null;
+            return "";
         }
         return outString;
     }
@@ -76,7 +78,7 @@ public class ShellUnit {
     static public String execRoot(String cmd) {
         FrameActivity.sLog.logWrite("IN",cmd);
         String _out = exec(cmd,true);
-        if(_out.length()>0)
+        if(_out!=null&&_out.length()>0)
             FrameActivity.sLog.logWrite("OUT",_out);
         if(stdErr!=null)
             FrameActivity.sLog.logWrite("ERR",stdErr);

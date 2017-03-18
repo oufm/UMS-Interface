@@ -9,6 +9,11 @@
         android:orderInCategory="100"
         android:id="@+id/select_menu_rename"
         android:title="@string/rename" />
+    <item
+        app:showAsAction="never"
+        android:orderInCategory="100"
+        android:id="@+id/select_menu_open_as"
+        android:title="@string/open_as" />
     <!--<item-->
         <!---->
         <!--app:showAsAction="never"-->

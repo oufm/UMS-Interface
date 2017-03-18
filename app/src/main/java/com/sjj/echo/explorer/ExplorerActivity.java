@@ -25,7 +25,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -568,6 +571,47 @@ public class ExplorerActivity extends AppCompatActivity
             startActivity(intent);
             //getCurFragment().mFileList.exitSelect();
             return true;
+        }else if(id==R.id.select_menu_open_as)
+        {
+            //View openView =  getLayoutInflater().inflate(R.layout.explorer_open_as,null);
+            //ListView openList = (ListView) openView.findViewById(R.id.open_as_list);
+            ListView openList = new ListView(this);
+            openList.setAdapter(new ArrayAdapter<String>(this,R.layout.explorer_open_as,getResources().getStringArray(R.array.open_as)));
+            final String curPath = getCurPath();
+            final List<String> selects = getCurFileAdapter().getSelect();
+            final AlertDialog dialog = new AlertDialog.Builder(this).setTitle(R.string.open_as).setView(openList).create();
+            openList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    String _type ="*/*";
+                    switch (position)
+                    {
+                        case 0:
+                            _type = "text/*";
+                            break;
+                        case 1:
+                            _type = "audio/*";
+                            break;
+                        case 2:
+                            _type = "video/*";
+                            break;
+                        case 3:
+                            _type = "image/*";
+                            break;
+                        case 4:
+                            _type = "*/*";
+                            break;
+                    }
+                    FileTool.callActivity(curPath+selects.get(0),ExplorerActivity.this,true,_type);
+                    dialog.cancel();
+                }
+            });
+            dialog.show();
+            return true;
+        }else  if(id==R.id.explorer_exit)
+        {
+            this.finish();
+            return true;
         }
         return false;
     }
@@ -740,7 +784,7 @@ public class ExplorerActivity extends AppCompatActivity
         {
             //when multi item select some menu item should be unavailable ,just remove them
             if(mMenu !=null) {
-                int[] ids = {R.id.select_menu_rename/*,R.id.select_menu_set_premission,R.id.select_menu_property,
+                int[] ids = {R.id.select_menu_rename,R.id.select_menu_open_as/*,R.id.select_menu_set_premission,R.id.select_menu_property,
                         R.id.select_menu_open_as_text,R.id.select_menu_set_owner,R.id.select_menu_home_shortcut,R.id.select_menu_link*/};
                 int count = ids.length;
                 for (int i = 0; i < count; i++) {

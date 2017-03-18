@@ -17,14 +17,16 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.sjj.echo.explorer.ExplorerActivity;
 import com.sjj.echo.routine.FileTool;
 import com.sjj.echo.routine.LogUnit;
 import com.sjj.echo.routine.PermissionUnit;
@@ -44,7 +46,7 @@ import static com.sjj.echo.umsinterface.R.raw.ums_device_info;
  * Created by SJJ on 2017/3/8.
  */
 
-public class FrameActivity extends AppCompatActivity {
+public class FrameActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener  {
 
     private ViewPager mViewPager;
     static public String sLang;
@@ -235,7 +237,6 @@ public class FrameActivity extends AppCompatActivity {
 
     public boolean ums(String _dev,String function)
     {
-
         logInfo("ums(dev="+_dev+",function="+function+")");
         int ret;
         if(function==null)
@@ -286,6 +287,7 @@ public class FrameActivity extends AppCompatActivity {
     }
 
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -331,13 +333,18 @@ public class FrameActivity extends AppCompatActivity {
         mFragments = new Fragment[] {mQuickStartFragment,mUmsFragment,mMountFragment,mInfoFragment,mCreateImageFragment,mHelpFragment};
         setContentView(R.layout.activity_main);
 
-        Toolbar _toolbar = new Toolbar(this);
-        setSupportActionBar(_toolbar);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        //Toolbar _toolbar = new Toolbar(this);
+        //setSupportActionBar(_toolbar);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FrameActivity.this.openOptionsMenu();
+                //FrameActivity.this.openOptionsMenu();
+                PopupMenu popup = new PopupMenu(FrameActivity.this, fab);
+                MenuInflater inflater = popup.getMenuInflater();
+                inflater.inflate(R.menu.main, popup.getMenu());
+                popup.setOnMenuItemClickListener(FrameActivity.this);
+                popup.show();
             }
         });
         String[] _titles = getResources().getStringArray(R.array.tab_titles);
@@ -348,12 +355,9 @@ public class FrameActivity extends AppCompatActivity {
         _tabLayout.setupWithViewPager(mViewPager);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+
+    private boolean onMenu(int id)
+    {
         if(id == R.id.action_exec)
         {
             final EditText editText = new EditText(this);
@@ -416,9 +420,23 @@ public class FrameActivity extends AppCompatActivity {
                 }
             },300);
 
-        }
+        }else if(id == R.id.open_explorer)
+        {
+            Intent intent = new Intent(this, ExplorerActivity.class);
+            startActivity(intent);
+        }else
+            return false;
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        return onMenu(item.getItemId());
         //noinspection SimplifiableIfStatement
-        return super.onOptionsItemSelected(item);
+        //return super.onOptionsItemSelected(item);
     }
     private void reboot(final String cmd)
     {
@@ -432,4 +450,8 @@ public class FrameActivity extends AppCompatActivity {
                 }).setNegativeButton(R.string.no,null).create().show();
     }
 
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        return onMenu(item.getItemId());
+    }
 }

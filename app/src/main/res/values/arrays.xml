@@ -21,4 +21,11 @@
         <item>time(descending)</item>
         <item>size(descending)</item>
     </string-array>
+    <string-array name="open_as">
+        <item>text</item>
+        <item>audio</item>
+        <item>video</item>
+        <item>image</item>
+        <item>other</item>
+    </string-array>
 </resources>
