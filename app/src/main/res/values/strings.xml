@@ -40,7 +40,7 @@
     <string name="mount_title">mount</string>
     <string name="mount_info_title">click the item to continue</string>
     <string name="mount_info_opera_title">chose an operation:</string>
-    <string name="mount_info_opera_umount" >unmount it</string>
+    <string name="mount_info_opera_umount">unmount it</string>
     <string name="mount_info_opera_config">set it as mass storage device</string>
     <string name="mount_info_umount_warning">Are you really sure to unmount it? Android may crash ,if the system need it.</string>
     <string name="new_image_title">new image file</string>
@@ -116,6 +116,8 @@
     <string name="open_as">open as</string>
     <string name="open_explorer">open explorer</string>
     <string name="exit">exit</string>
+    <string name="ums_explorer">UExplorer</string>
+    <string name="see">see</string>
     <!--<string name="text">text</string>-->
     <!--<string name="audio">audio</string>-->
     <!--<string name="video">video</string>-->

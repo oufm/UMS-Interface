@@ -90,7 +90,7 @@ public class ExplorerActivity extends AppCompatActivity
         {
             intent.setData(Uri.parse("file://" + getCurPath()));
         }
-        else
+        else if(path!=null)
         {
             intent.setData(Uri.parse("file://"+path));
         }
@@ -107,17 +107,34 @@ public class ExplorerActivity extends AppCompatActivity
         explorerExit = findViewById(R.id.explorer_exit);
         explorerSelect = findViewById(R.id.explorer_select);
         Intent intent =  getIntent();
-        mRequest = intent.getType()!=null;
-        if(mRequest&&intent.getType().startsWith("directory")) {
+        String type = intent.getType();
+        String action = intent.getAction();
+        mRequest = (intent.getType()!=null)||(action!=null&&action.compareTo("android.intent.action.VIEW")==0);
+        if(mRequest&&type!=null&&(type.indexOf("directory")>=0||type.indexOf("folder")>=0)) {
             mDirectoryRequest = true;
             explorerSelect.setVisibility(View.VISIBLE);
         }
         else
             mDirectoryRequest = false;
-        if(intent.getData()!=null)
+        if(intent.getData()!=null) {
             mRequestDir = intent.getDataString();
-        if(mRequestDir!=null)
+            String _prefix = "file://";
+            if(mRequestDir.startsWith(_prefix))
+                mRequestDir = mRequestDir.substring(_prefix.length(),mRequestDir.length());
+            if(mRequestDir.length()==0)
+                mRequestDir = "/";
+        }
+//        if(mRequestDir!=null)
+//            explorerSelect.setVisibility(View.INVISIBLE);
+        if(mRequest&&mDirectoryRequest)
+            explorerSelect.setVisibility(View.VISIBLE);
+        else
             explorerSelect.setVisibility(View.INVISIBLE);
+        if(mRequest)
+            explorerExit.setVisibility(View.VISIBLE);
+        else
+            explorerExit.setVisibility(View.INVISIBLE);
+
         explorerExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,11 +161,11 @@ public class ExplorerActivity extends AppCompatActivity
         });
         mBtnCancel = (FloatingActionButton) findViewById(R.id.explorer_fab_paste_cancel);
         mBtnPaste = (FloatingActionButton) findViewById(R.id.explorer_fab_paste);
-        if(!mRequest)
-        {
-            explorerExit.setVisibility(View.INVISIBLE);
-            explorerSelect.setVisibility(View.INVISIBLE);
-        }
+//        if(!mRequest)
+//        {
+//            explorerExit.setVisibility(View.INVISIBLE);
+//            explorerSelect.setVisibility(View.INVISIBLE);
+//        }
 //
 //        drawer.setDrawerListener(toggle);
 //        toggle.syncState();

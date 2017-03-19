@@ -125,7 +125,8 @@ public class FileAdapter extends BaseAdapter {
             position --;
         }
         FileItem item = mItems.get(position);
-        return  getView(item.mName,item.mTime +" "+getEasySize(item.mSize)+" "+item.mPrem +" "+item.mLink,
+        return  getView(item.mName,item.mTime +" "+getEasySize(item.mSize)+" "+item.mPrem
+                +(item.mLink.length()>0?" >":" ")+item.mLink,
                 item.mIsDir,item.mSelected,convertView,parent);
     }
     /**change the content of the list .

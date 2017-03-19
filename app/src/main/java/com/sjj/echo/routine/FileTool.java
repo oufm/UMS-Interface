@@ -264,33 +264,35 @@ public class FileTool {
         for(int i=0;i<count;i++)
         {
             boolean isDir = false;
-            String premString;
+            String permString;
             File tFile = allFile[i];
+            if(!tFile.exists()||(!tFile.isFile()&&!tFile.isDirectory()))
+                return openDirRoot(path);
             if(tFile.isDirectory())
             {
-                premString = "d";
+                permString = "d";
                 isDir = true;
             }
             else {
-                premString = "-";
+                permString = "-";
             }
             if(tFile.canRead())
             {
-                premString+="r";
+                permString+="r";
             }
             else {
-                premString+="-";
+                permString+="-";
             }
             if(tFile.canWrite())
             {
-                premString+="w";
+                permString+="w";
             }else {
-                premString+="-";
+                permString+="-";
             }
-            premString+="-";
-            String timeString = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss ").format(new Date(tFile.lastModified()));
+            permString+="-";
+            String timeString = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date(tFile.lastModified()));
             long size = tFile.length();
-            list.add(new FileItem(tFile.getName(),timeString,size,premString,null,isDir));
+            list.add(new FileItem(tFile.getName(),timeString,size,permString,null,isDir));
         }
         return list;
 
@@ -304,13 +306,14 @@ public class FileTool {
         //Log.d("@echo off","openDirRoot|path="+path);
         if(!path.endsWith("/"))//以'/'结尾,可以作为判断,如果真的不是目录,自然出错
             path+="/";
-        String resultString = FileTool.execRoot("ls -al "+path);
+        String resultString = FileTool.execRoot("ls -al \""+path+"\"");
         if(resultString == null||stdErr!=null||exitValue!=0) {
             return null;
         }
         List<FileItem> list = new ArrayList<>();
         Pattern linePattern = Pattern.compile("(\\n|^).+");//匹配每行
         Matcher lineMatcher = linePattern.matcher(resultString);
+        int maxLinkCheckNum = 7;//每次打开文件夹,检查软链是否为目录的最大次数,过大会引起ANR
         while(lineMatcher.find())
         {
             String lineString = lineMatcher.group();
@@ -327,6 +330,27 @@ public class FileTool {
             String sizeString = "";
             long size = 0;
             boolean dir = premString.startsWith("d");
+            Pattern namePattern = Pattern.compile(".+");
+            Matcher nameMatcher = namePattern.matcher(lineString);
+            if(!nameMatcher.find(timeMatcher.end()+1)) break;
+            String nameString = nameMatcher.group();
+            int offset = nameString.indexOf(" -> ");
+            String linkString = "";
+            if(offset>0)
+            {
+                linkString = nameString.substring(offset+4,nameString.length());
+                nameString = nameString.substring(0, offset);
+            }
+            if(premString.startsWith("l")&&maxLinkCheckNum>0)
+            {
+                maxLinkCheckNum--;
+                String _sl = FileTool.execRoot("ls -ld \""+path+nameString+"/\"");
+                if(_sl != null&&stdErr==null&&exitValue==0)
+                {
+                    dir = _sl.startsWith("d");
+                }
+
+            }
             if(!dir)
             {
                 Pattern sizePattern = Pattern.compile("\\d+");
@@ -340,17 +364,7 @@ public class FileTool {
                     }
                 }
             }
-            Pattern namePattern = Pattern.compile(".+");
-            Matcher nameMatcher = namePattern.matcher(lineString);
-            if(!nameMatcher.find(timeMatcher.end()+1)) break;
-            String nameString = nameMatcher.group();
-            int offset = nameString.indexOf(" -> ");
-            String linkString = "";
-            if(offset>0)
-            {
-                linkString = nameString.substring(offset+4,nameString.length());
-                nameString = nameString.substring(0, offset);
-            }
+
             list.add(new FileItem(nameString,timeString,size,premString,linkString,dir));
         }
 

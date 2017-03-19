@@ -71,6 +71,37 @@ public class FrameActivity extends AppCompatActivity implements PopupMenu.OnMenu
         sLog.logWrite("INFO",_str);
     }
 
+
+    private void addShortcut()
+    {
+        Intent addShortcutIntent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
+
+        // 不允许重复创建
+        addShortcutIntent.putExtra("duplicate", false);// 经测试不是根据快捷方式的名字判断重复的
+        // 应该是根据快链的Intent来判断是否重复的,即Intent.EXTRA_SHORTCUT_INTENT字段的value
+        // 但是名称不同时，虽然有的手机系统会显示Toast提示重复，仍然会建立快链
+        // 屏幕上没有空间时会提示
+        // 注意：重复创建的行为MIUI和三星手机上不太一样，小米上似乎不能重复创建快捷方式
+
+        // 名字
+        addShortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, getString(R.string.ums_explorer));
+        // 图标
+        addShortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
+                Intent.ShortcutIconResource.fromContext(this,
+                        R.mipmap.ic_explorer_launcher));
+
+        // 设置关联程序
+        Intent launcherIntent = new Intent(Intent.ACTION_MAIN);
+        launcherIntent.setClass(this, ExplorerActivity.class);
+        launcherIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+
+        addShortcutIntent
+                .putExtra(Intent.EXTRA_SHORTCUT_INTENT, launcherIntent);
+
+        // 发送广播
+        sendBroadcast(addShortcutIntent);
+    }
+
     private void createReport()
     {
        // if(!_script.exists()||!_script.isFile())
@@ -93,7 +124,16 @@ public class FrameActivity extends AppCompatActivity implements PopupMenu.OnMenu
                 _message = getString(R.string.reportok) + " \n"+_targetPath;
             ShellUnit.execRoot("rm "+APP_DIR+"/"+_reportName);
         }
-        new AlertDialog.Builder(FrameActivity.this).setMessage(_message).setPositiveButton(R.string.ok,null).create().show();
+        new AlertDialog.Builder(FrameActivity.this).setMessage(_message).setPositiveButton(R.string.ok,null)
+                .setNeutralButton(R.string.see, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(FrameActivity.this, ExplorerActivity.class);
+                        intent.addCategory(Intent.CATEGORY_OPENABLE);
+                        intent.setDataAndType(Uri.parse("/sdcard"),"directory/*");
+                        FrameActivity.this.startActivity(intent);
+                    }
+                }).create().show();
     }
 
     protected void initBusybox()
@@ -108,6 +148,7 @@ public class FrameActivity extends AppCompatActivity implements PopupMenu.OnMenu
         File _busybox = new File(APP_DIR+"/bin/busybox");
         if(!_busybox.isFile())
         {
+            addShortcut();
             if(!FileTool.streamToFile(getResources().openRawResource(R.raw.busybox),APP_DIR+"/bin/busybox"))
                 Toast.makeText(this,"init fail!",Toast.LENGTH_LONG).show();
         }
