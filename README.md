@@ -32,4 +32,4 @@
  * [boot disk image(PE),password: er8y](http://pan.baidu.com/s/1gfa9GbD)
  
 ## tutorial
-![](https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/screenshots/usage.jpg)
+ * [安卓4.4以上版本将手机作为U盘使用](http://jingyan.baidu.com/article/a3f121e4be8e7ffc9052bb19.html)
