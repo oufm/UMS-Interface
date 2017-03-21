@@ -9,12 +9,24 @@ import java.io.File;
  */
 
 public class MassStorageUnit {
-    static public String mConfigPath = "/sys/devices/virtual/android_usb/android0/";
+    static private String mConfigPath = "/sys/devices/virtual/android_usb/android0/";
+    static public String mLunPath = "/sys/devices/virtual/android_usb/android0/f_mass_storage/lun";
     static public String mError = null;
-    static public String mStatusEnable;
-    static public String mStatusFile;
-    static public String mStatusFunction;
-    static public String mStatusReadonly;
+    static public String mStatusEnable = "unknown";
+    static public String mStatusFile = "unknown";
+    static public String mStatusFunction = "unknown";
+    static public String mStatusReadonly = "unknown";
+    static public boolean mReady = false;
+
+    static {
+        configCheck();
+    }
+
+    public static void setConfigPath(String path)
+    {
+        mConfigPath = path;
+        configCheck();
+    }
 
     private static String samsungFix(String lun)
     {
@@ -22,7 +34,7 @@ public class MassStorageUnit {
         if(_lun.exists()&&_lun.isDirectory())
             return lun;
         String _output = ShellUnit.execBusybox("du /sys  |"+ShellUnit.BUSYBOX+"grep \"/lun\"");
-        if(_output == null||ShellUnit.exitValue!=0)
+        if(_output == null||_output.length()==0)
             return null;
         int startOffset = _output.indexOf("/");
         if(startOffset<0)
@@ -53,9 +65,37 @@ public class MassStorageUnit {
         return true;
     }
 
-    static public int umsConfig(String dev,boolean readonly)
+    /**
+     * config usb mass storage
+     * @param dev block device or image file
+     * @param readonly  readonly or not
+     * */
+    static public boolean umsConfig(String dev,boolean readonly)
     {
         return umsConfig(dev,readonly,"mass_storage");
+    }
+
+
+    static private void configCheck()
+    {
+        mError = null;
+        mReady = false;
+        if(!pathCheck())
+        {
+            if(!pathCheck())
+            {
+                mError = "can't find write config path!";
+                return;
+            }
+        }
+        mLunPath = mConfigPath+"f_mass_storage/lun";
+        mLunPath = samsungFix(mLunPath);
+        if(mLunPath==null)
+        {
+            mError = "can't find 'lun'!";
+            return;
+        }
+        mReady = true;
     }
 
     /**
@@ -63,50 +103,38 @@ public class MassStorageUnit {
      * @param dev block device or image file
      * @param readonly  readonly or not
      * */
-    static public int umsConfig(String dev,boolean readonly,String function)
+    static public boolean umsConfig(String dev,boolean readonly,String function)
     {
         mError = null;
-        if(!pathCheck())
+        if(!mReady)
         {
-            if(!pathCheck())
-            {
-                mError = "can't find write config path!";
-                return -1;
-            }
-
+            mError = "MassStorageUnit is not ready!";
+            return false;
         }
-        String _lun = mConfigPath+"f_mass_storage/lun";
-        _lun = samsungFix(_lun);
-        if(_lun==null)
-        {
-            mError = "can't find 'lun'!";
-            return -1;
-        }
-        //Boolean ok =true;
         String cmd = "";
         //must disable usb device frist.
         cmd += "echo 0 > " + mConfigPath +"enable\n";
         cmd += "echo "+function+" > "+mConfigPath+"functions\n";
-        cmd += "echo "+dev+" > "+_lun+"/file\n";
+        cmd += "echo "+dev+" > "+mLunPath+"/file\n";
         if(readonly)
-            cmd += "echo 1 > "+_lun+"/ro\n";
+            cmd += "echo 1 > "+mLunPath+"/ro\n";
         cmd += "echo 1 > "+mConfigPath+"enable\n";
         //it maybe make no difference without setting sys.usb.config .
         cmd += "setprop sys.usb.config "+function+"\n";
         ShellUnit.execRoot(cmd);
         mError = ShellUnit.stdErr;
-        return ShellUnit.exitValue;
+        return true;
     }
 
     /**
      * search the config path.
      * @return the config path ,null if no find
      * */
-    static public String searchPath()
+    static private String searchPath()
     {
         final String target = "/android_usb/android0";
         String output = ShellUnit.execBusybox("du /sys  |"+ShellUnit.BUSYBOX+"grep "+target);
-        if(output == null||ShellUnit.exitValue!=0)
+        if(output == null||output.length()==0)
             return null;
         int startOffset = output.indexOf("/");
         if(startOffset<0)
@@ -123,22 +151,30 @@ public class MassStorageUnit {
      * read the usb mass storage to the member variables
      * @return exit value of the 'su'
      * */
-    static public int refreshStatus()
+    static public boolean refreshStatus()
     {
-        int exitValue = 0;
+        mError = null;
+        if(!mReady)
+        {
+            mError = "MassStorageUnit is not ready!";
+            return false;
+        }
         mStatusEnable = ShellUnit.execRoot("cat \""+mConfigPath+"enable"+"\"");
-        if(ShellUnit.exitValue!=0)
-            exitValue = ShellUnit.exitValue;
+        if(ShellUnit.stdErr!=null) {
+            mError = ShellUnit.stdErr;
+            return false;
+        }
         mStatusFunction = ShellUnit.execRoot("cat \""+mConfigPath+"functions"+"\"");
-        if(ShellUnit.exitValue!=0)
-            exitValue = ShellUnit.exitValue;
-        mStatusFile = ShellUnit.execRoot("cat \""+mConfigPath+"f_mass_storage/lun/file"+"\"");
-        if(ShellUnit.exitValue!=0)
-            exitValue = ShellUnit.exitValue;
-        mStatusReadonly = ShellUnit.execRoot("cat \""+mConfigPath+"f_mass_storage/lun/ro"+"\"");
-        if(ShellUnit.exitValue!=0)
-            exitValue = ShellUnit.exitValue;
-        mError = ShellUnit.stdErr;
+        if(ShellUnit.stdErr!=null) {
+            mError = ShellUnit.stdErr;
+            return false;
+        }
+        mStatusFile = ShellUnit.execRoot("cat \""+mLunPath+"/file"+"\"");
+        if(ShellUnit.stdErr!=null) {
+            mError = ShellUnit.stdErr;
+            return false;
+        }
+        mStatusReadonly = ShellUnit.execRoot("cat \""+mLunPath+"/ro"+"\"");
         int offset;
         if(mStatusEnable==null)
             mStatusEnable = "unknown";
@@ -169,31 +205,25 @@ public class MassStorageUnit {
             if(offset>0&&offset<=mStatusReadonly.length())
                 mStatusReadonly = mStatusReadonly.substring(0,offset);
         }
-
-        return exitValue;
+        return true;
     }
 
-    /**
-     * config usb mass storage
-     * @param configPath the base directory for configuration
-     * @param dev block device or image file
-     * @param readonly  readonly or not
-     * */
-    static public int umsConfig(String configPath,String dev,boolean readonly)
-    {
-        mConfigPath = configPath;
-        return umsConfig(dev,readonly);
-    }
 
-    /**
-     * read the usb mass storage to the member variables
-     * @param configPath the base directory for configuration
-     * @return exit value of the 'su'
-     * */
-    static public int refreshStatus(String configPath)
-    {
-        mConfigPath = configPath;
-        return refreshStatus();
-    }
+//    static public boolean umsConfig(String configPath,String dev,boolean readonly)
+//    {
+//        mConfigPath = configPath;
+//        return umsConfig(dev,readonly);
+//    }
+
+//    /**
+//     * read the usb mass storage to the member variables
+//     * @param configPath the base directory for configuration
+//     * @return exit value of the 'su'
+//     * */
+//    static public boolean refreshStatus(String configPath)
+//    {
+//        mConfigPath = configPath;
+//        return refreshStatus();
+//    }
 
 }

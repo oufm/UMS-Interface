@@ -14,12 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sjj.echo.explorer.ExplorerActivity;
-import com.sjj.echo.routine.ShellUnit;
 
 import java.util.LinkedList;
 
@@ -38,9 +38,11 @@ public class UmsFragment extends Fragment {
     private Button mDevBtn;
     private Button mGadgetBtn;
     private Button mDevHistoryBtn;
-    private Button mConfigSearchBtn;
+    //private Button mConfigSearchBtn;
     private CheckBox mReadonlyCheck;
     private TextView mStatusTxt;
+    private CheckBox mConfigCheck;
+    private View mConfigView;
     View mView;
 //    private View mInfoTxt;
 
@@ -54,7 +56,7 @@ public class UmsFragment extends Fragment {
     public final static int MAX_HISTORY = 20;
     protected SharedPreferences mSharedPreferences;
 
-    protected boolean mReadonly = false;
+    //protected boolean mReadonly = false;
     protected LinkedList<String> mDevHistory = new LinkedList<>();
 
     public void init(Activity activity)
@@ -79,21 +81,21 @@ public class UmsFragment extends Fragment {
                     }
                 }).create().show();
     }
-    /**
-     * search the config path ,set it if success.
-     * */
-    protected void setConfigPath()
-    {
-        logInfo("ums setConfigPath()");
-        String _path = MassStorageUnit.searchPath();
-        if(_path!=null) {
-            mPathEdit.setText(_path);
-            MassStorageUnit.mConfigPath = _path;
-            Toast.makeText(mActivity,"search config path success!",Toast.LENGTH_SHORT).show();
-        }
-        else
-            Toast.makeText(mActivity,"search config path fail!",Toast.LENGTH_LONG).show();
-    }
+//    /**
+//     * search the config path ,set it if success.
+//     * */
+//    protected void setConfigPath()
+//    {
+//        logInfo("ums setConfigPath()");
+//        String _path = MassStorageUnit.searchPath();
+//        if(_path!=null) {
+//            mPathEdit.setText(_path);
+//            MassStorageUnit.mConfigPath = _path;
+//            //Toast.makeText(mActivity,"search config path success!",Toast.LENGTH_SHORT).show();
+//        }
+//        else
+//            Toast.makeText(mActivity,"search config path fail!",Toast.LENGTH_LONG).show();
+//    }
 
     /**
      * update the selection information and save it
@@ -102,10 +104,10 @@ public class UmsFragment extends Fragment {
     {
         String _dev = mDevEdit.getText().toString();
         mSharedPreferences.edit().putString(KEY_DEVICE_FILE,_dev).commit();
-        mReadonly = mReadonlyCheck.isChecked();
-        mSharedPreferences.edit().putBoolean(KEY_READ_ONLY,mReadonly).commit();
-        MassStorageUnit.mConfigPath = mPathEdit.getText().toString();
-        mSharedPreferences.edit().putString(KEY_CONFIG_PATH,MassStorageUnit.mConfigPath).commit();
+        boolean _readonly = mReadonlyCheck.isChecked();
+        mSharedPreferences.edit().putBoolean(KEY_READ_ONLY,_readonly).commit();
+        //MassStorageUnit.mConfigPath = mPathEdit.getText().toString();
+        mSharedPreferences.edit().putString(KEY_CONFIG_PATH,mPathEdit.getText().toString()).commit();
         //boolean _exist = false;
         for(String str: mDevHistory)
         {
@@ -136,10 +138,7 @@ public class UmsFragment extends Fragment {
     protected void refreshStatus()
     {
         logInfo("ums refreshStatus()");
-        int ret = MassStorageUnit.refreshStatus(mPathEdit.getText().toString());
-        if(ret== ShellUnit.EXEC_ERR)
-            Toast.makeText(mActivity,"please check root permission",Toast.LENGTH_LONG).show();
-        else if(ret !=0&&MassStorageUnit.mError!=null)
+        if(!MassStorageUnit.refreshStatus())
             Toast.makeText(mActivity,MassStorageUnit.mError,Toast.LENGTH_LONG).show();
         else
         {
@@ -156,18 +155,16 @@ public class UmsFragment extends Fragment {
     /**
      * config the usb gadget
      * */
-    protected void doConfig()
+    protected void umsRun()
     {
-        String _configPath =  mPathEdit.getText().toString();
+        //String _configPath =  mPathEdit.getText().toString();
         String _devPath = mDevEdit.getText().toString();
-        logInfo("ums doConfig(configPath="+_configPath+",devPath="+_devPath+",readonly="+mReadonly);
-        int ret = MassStorageUnit.umsConfig(_configPath,_devPath,mReadonly);
-        if(ret== ShellUnit.EXEC_ERR)
-            Toast.makeText(mActivity,"please check root permission",Toast.LENGTH_LONG).show();
-        else if(ret !=0||MassStorageUnit.mError!=null)
-            Toast.makeText(mActivity,"UMS"+getString(R.string.fail)+MassStorageUnit.mError,Toast.LENGTH_LONG).show();
+        boolean _readonly = mReadonlyCheck.isChecked();
+        logInfo("ums umsRun(devPath="+_devPath+",readonly="+_readonly);
+        if(!MassStorageUnit.umsConfig(_devPath,_readonly))
+            Toast.makeText(mActivity,"UMS"+" "+getString(R.string.fail)+":"+MassStorageUnit.mError,Toast.LENGTH_LONG).show();
         else {
-            Toast.makeText(mActivity, "UMS"+getString(R.string.success), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, "UMS"+" "+getString(R.string.success), Toast.LENGTH_SHORT).show();
             saveStatus();
         }
         refreshStatus();
@@ -177,7 +174,7 @@ public class UmsFragment extends Fragment {
     {
         if(device!=null)
             mDevEdit.setText(device);
-        doConfig();
+        umsRun();
     }
 
     public void doConfig(String device,String config)
@@ -186,7 +183,7 @@ public class UmsFragment extends Fragment {
             mDevEdit.setText(device);
         if(config!=null) {
             mPathEdit.setText(config);
-            MassStorageUnit.mConfigPath = config;
+            MassStorageUnit.setConfigPath(config);
         }
     }
 
@@ -208,7 +205,9 @@ public class UmsFragment extends Fragment {
         mStatusTxt = (TextView) rootView.findViewById(R.id.status);
 //        mInfoTxt = rootView.findViewById(R.id.about);
         mDevHistoryBtn = (Button) rootView.findViewById(R.id.source_history_btn);
-        mConfigSearchBtn = (Button) rootView.findViewById(R.id.config_search_btn);
+        //mConfigSearchBtn = (Button) rootView.findViewById(R.id.config_search_btn);
+        mConfigCheck = (CheckBox) rootView.findViewById(R.id.ums_config_check);
+        mConfigView = rootView.findViewById(R.id.ums_config_group);
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mActivity);
 
@@ -221,19 +220,24 @@ public class UmsFragment extends Fragment {
         final String _configPath = mSharedPreferences.getString(KEY_CONFIG_PATH,null);
         if(_configPath!=null&&! _configPath.isEmpty())
         {
-            MassStorageUnit.mConfigPath = _configPath;
-        }else
-        {
-            mDevEdit.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    setConfigPath();
-                }
-            },1000);
-
+            mPathEdit.setText(_configPath);
         }
-        if(MassStorageUnit.mConfigPath!=null)
-            mPathEdit.setText(MassStorageUnit.mConfigPath);
+        else
+        {
+            mPathEdit.setText("/sys/devices/virtual/android_usb/android0/");
+        }
+//        else
+//        {
+//            mDevEdit.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    setConfigPath();
+//                }
+//            },1000);
+//
+//        }
+//        if(MassStorageUnit.mConfigPath!=null)
+//            mPathEdit.setText(MassStorageUnit.mConfigPath);
 
         //mReadonly = mSharedPreferences.getBoolean(KEY_READ_ONLY,false);
         mReadonlyCheck.setChecked(false);
@@ -243,6 +247,16 @@ public class UmsFragment extends Fragment {
         {
             mDevHistory.add(mSharedPreferences.getString(KEY_DEVICE_HISTORY_BASE +i,""));
         }
+
+        mConfigCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked)
+                    mConfigView.setVisibility(View.VISIBLE);
+                else
+                    mConfigView.setVisibility(View.INVISIBLE);
+            }
+        });
 
         mGadgetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -254,7 +268,7 @@ public class UmsFragment extends Fragment {
                             .setMessage(R.string.umsdev).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            UmsFragment.this.doConfig();
+                            UmsFragment.this.umsRun();
                         }
                     }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                         @Override
@@ -264,14 +278,14 @@ public class UmsFragment extends Fragment {
                     }).create().show();
                 }
                 else
-                    doConfig();
+                    umsRun();
             }
         });
 
         mPathEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                MassStorageUnit.mConfigPath = mDevEdit.getText().toString();
+                MassStorageUnit.setConfigPath(mDevEdit.getText().toString());
             }
         });
 
@@ -319,13 +333,13 @@ public class UmsFragment extends Fragment {
             }
         });
 
-        mConfigSearchBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setConfigPath();
-
-            }
-        });
+//        mConfigSearchBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//               MassStorageUnit.setConfigPath(mPathEdit.getText().toString());
+//
+//            }
+//        });
         mPathEdit.postDelayed(new Runnable() {
             @Override
             public void run() {

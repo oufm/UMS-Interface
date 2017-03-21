@@ -5,14 +5,14 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>
     <string name="ums_device_tip">data source(a block device or an image file)</string>
-    <string name="ums_config_path_tip">config path</string>
+    <string name="ums_config_path_tip">customize config path</string>
     <string name="ums_edit_hint">input or click the button to select</string>
     <string name="ums_select_btn_tip">select</string>
     <string name="ums_history_btn_tip">history</string>
     <string name="ums_search_btn_tip">search</string>
     <string name="ums_readonly_check_tip">readonly</string>
     <string name="ums_config_btn_tip">config usb gadget</string>
-    <string name="mount_target_edit_tip">mount point (directory where to mount)</string>
+    <string name="mount_target_edit_tip">mount point (no /sdcard/...)</string>
     <string name="mount_loop_check_tip">loop</string>
     <string name="mount_mount_tip">mount</string>
     <string name="explorer_sort_way">sort way</string>
@@ -68,7 +68,7 @@
     <string name="user">user</string>
     <string name="group">group</string>
     <string name="other">other</string>
-    <string name="permission_tip"><![CDATA[dmask & fmask (needed by vfat file system)]]></string>
+    <string name="permission_tip"><![CDATA[dmask & fmask (needed by vfat)]]></string>
     <string name="mount_namespace_tip">if \'mount namespace separation\' in SuperSu is checked,this function may be impeded</string>
     <string name="charset_tip">eliminate garbled</string>
     <string name="status">status</string>
@@ -118,6 +118,8 @@
     <string name="exit">exit</string>
     <string name="ums_explorer">UExplorer</string>
     <string name="see">see</string>
+    <string name="init_fail">init fail !</string>
+    <string name="alloc">alloc</string>
     <!--<string name="text">text</string>-->
     <!--<string name="audio">audio</string>-->
     <!--<string name="video">video</string>-->

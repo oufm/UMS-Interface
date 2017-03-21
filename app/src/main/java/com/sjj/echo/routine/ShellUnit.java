@@ -1,10 +1,13 @@
 package com.sjj.echo.routine;
 
-import com.sjj.echo.umsinterface.FrameActivity;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+
+import static com.sjj.echo.umsinterface.FrameActivity.APP_DIR;
 
 /**
  * Created by SJJ on 2017/1/1.
@@ -12,88 +15,191 @@ import java.io.OutputStreamWriter;
 
 public class ShellUnit {
 
-    public static String BUSYBOX = FrameActivity.APP_DIR+"/bin/busybox ";
+    public static String BUSYBOX = APP_DIR+"/bin/busybox ";
+    public static LogUnit sLog = LogUnit.getDefaultLog();
+    private static Process sProcess;
+    private static OutputStreamWriter sInStream;
+    private static InputStreamReader sOutStream;
+    private static InputStreamReader sErrStream;
+    private static int sTaskID = 0;
+    public static boolean sSuReady = false;
+    public static boolean sBusyboxReady = false;
 
-    public static final int EXEC_ERR = 1010100;
+
     /**
      * last error output for root,null if success
      * */
     static public String stdErr;
+
+    static {
+        sLog.logWrite("INIT","init ShellUnit");
+        try {
+            ProcessBuilder pb = new ProcessBuilder("su");
+            //pb.redirectErrorStream(true);
+            sProcess = pb.start();
+            //sProcess = Runtime.getRuntime().exec("su");//don't do it in this way,will block
+            sInStream = new OutputStreamWriter(sProcess.getOutputStream());
+            sOutStream = new InputStreamReader(sProcess.getInputStream());
+            sErrStream = new InputStreamReader(sProcess.getErrorStream());
+            sSuReady =true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            stdErr = "init LogUnit fail:"+e.toString();
+        }
+    }
+
+    /**
+     * must be called firstly.
+     * */
+    public static boolean initBusybox(InputStream inputStream)
+    {
+        if(!sSuReady)
+        {
+            stdErr = "su is not ready";
+            return false;
+        }
+        stdErr = "init busybox fail";
+        sLog.logWrite("INIT","init Busybox");
+        File _bin = new File(APP_DIR+"/bin");
+        if(!_bin.isDirectory()&&!_bin.mkdir())
+        {
+            return false;
+        }
+        File _busybox = new File(APP_DIR+"/bin/busybox");
+        if(!_busybox.isFile())
+        {
+            if(!FileTool.streamToFile(inputStream,APP_DIR+"/bin/busybox"))
+                return false;
+        }
+        ShellUnit.execRoot("chmod 777 "+APP_DIR+"/bin/busybox");
+        if(ShellUnit.stdErr!=null)
+            return false;
+        sBusyboxReady =true;
+        stdErr = null;
+        return true;
+    }
+
+//    public static final int EXEC_ERR = 1010100;
     /**
      * last exit code for root
      * */
-    static public int exitValue;
-    /**
-     * execute the command through shell
-     * @param root should be execute as root
-     *@param cmd command
-     * */
-    static private String exec(String cmd,boolean root)
+//    static public int exitValue;
+//    /**
+//     * execute the command through shell
+//     * @param root should be execute as root
+//     *@param cmd command
+//     * */
+//    static private String execSU(String cmd,boolean root)
+//    {
+//        String outString = "";
+//        try {
+//            char[] buff = new char[1024*30];
+//            Process process;
+//            if(root)
+//                process = Runtime.getRuntime().execSU("su");
+//            else
+//                process = Runtime.getRuntime().execSU("sh");
+//            OutputStreamWriter stdinStream = new OutputStreamWriter(process.getOutputStream());
+//            InputStreamReader stdoutStream = new InputStreamReader(process.getInputStream());
+//            stdinStream.write(cmd+"\n");
+//            stdinStream.write("exit\n");
+//            stdinStream.flush();
+//            process.waitFor();
+//            int __count = stdoutStream.read(buff);
+//            if(__count>0)
+//            {
+//                outString = new String(buff,0,__count);
+//            }
+//            //}
+//            stdErr = null;
+//            int count = new InputStreamReader(process.getErrorStream()).read(buff);
+//            if(count > 0)
+//                stdErr = new String(buff,0,count);
+//        } catch (IOException e) {
+//            // TODO 自动生成的 catch 块
+//            e.printStackTrace();
+//            stdErr = "by execSU:IOException,process.execSU fail";
+//            //return null;
+//            return "";
+//        } catch (InterruptedException e) {
+//            // TODO 自动生成的 catch 块
+//            e.printStackTrace();
+//            stdErr = "by execSU:InterruptedException,process.waitFor fail";
+//            //return null;
+//            return "";
+//        }
+//        return outString;
+//    }
+
+    static synchronized private String execSU(String cmd)//remember synchronized
     {
-        String outString = "";
-        try {
-            char[] buff = new char[1024*30];
-            Process process;
-            if(root)
-                process = Runtime.getRuntime().exec("su");
-            else
-                process = Runtime.getRuntime().exec("sh");
-            OutputStreamWriter stdin = new OutputStreamWriter(process.getOutputStream());
-            InputStreamReader stdout = new InputStreamReader(process.getInputStream());
-            stdin.write(cmd+"\n");
-            stdin.write("exit\n");
-            stdin.flush();
-            exitValue = process.waitFor();
-            //if(exitValue==0)
-            //{
-            int __count = stdout.read(buff);
-            if(__count>0)
-            {
-                outString = new String(buff,0,__count);
-            }
-            //}
-            stdErr = null;
-            int count = new InputStreamReader(process.getErrorStream()).read(buff);
-            if(count > 0)
-                stdErr = new String(buff,0,count);
-        } catch (IOException e) {
-            // TODO 自动生成的 catch 块
-            e.printStackTrace();
-            stdErr = "by exec:IOException,process.exec fail";
-            exitValue = EXEC_ERR;
-            //return null;
-            return "";
-        } catch (InterruptedException e) {
-            // TODO 自动生成的 catch 块
-            e.printStackTrace();
-            stdErr = "by exec:InterruptedException,process.waitFor fail";
-            exitValue = EXEC_ERR;
-            //return null;
+        char[] buff = new char[1024*30];
+        StringBuffer strBuff = new StringBuffer();
+        stdErr = null;
+        if(!sSuReady)
+        {
+            stdErr = "su is not ready";
             return "";
         }
-        return outString;
+        String finishflag = "~~~ums_task_"+sTaskID+"_finished~~~";
+        sTaskID++;
+        int flagLength = finishflag.length();
+        String task = cmd+"\necho "+finishflag+"\n";//remember '\n'
+        try {
+            int count ;
+            sInStream.write(task);
+            sInStream.flush();
+            while (true) {
+                count = sOutStream.read(buff);//remember check ready,or block.
+                if (count > 0) {
+                    strBuff.append(buff, 0, count);
+                    int searchBegin = strBuff.length() - count - flagLength;
+                    if(searchBegin<0)
+                        searchBegin = 0;
+                    if(strBuff.indexOf(finishflag,searchBegin)>=0)
+                        break;
+                }
+            }
+            if(sErrStream.ready()) {
+                count = sErrStream.read(buff);
+                if (count > 0) {
+                    stdErr = new String(buff, 0, count);
+                }
+            }
+            strBuff.delete(strBuff.length()-flagLength-1,strBuff.length());
+            return strBuff.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            stdErr = "exec SU fail:"+e.toString();
+            return "";
+        }
     }
     /**
      * execute the command as root*/
     static public String execRoot(String cmd) {
-        FrameActivity.sLog.logWrite("IN",cmd);
-        String _out = exec(cmd,true);
+        sLog.logWrite("IN",cmd);
+        String _out = execSU(cmd);
         if(_out!=null&&_out.length()>0)
-            FrameActivity.sLog.logWrite("OUT",_out);
+            sLog.logWrite("OUT",_out);
         if(stdErr!=null)
-            FrameActivity.sLog.logWrite("ERR",stdErr);
+            sLog.logWrite("ERR",stdErr);
         return _out;
     }
 
     static public String execNoLog(String cmd) {
-        return exec(cmd,true);
+        return execSU(cmd);
     }
 
     static public String execBusybox(String cmd){
+        if(!sBusyboxReady)
+        {
+            stdErr = "busybox is not ready";
+            return "";
+        }
         return execRoot(BUSYBOX +cmd);
     }
 /*
-    static public String exec(final int overtime, String cmd, boolean root)
+    static public String execSU(final int overtime, String cmd, boolean root)
     {
         String outString = "";
         try {
@@ -103,7 +209,7 @@ public class ShellUnit {
                 _shell = "su";
             else
                 _shell = "sh";
-            final Process process = Runtime.getRuntime().exec(_shell);
+            final Process process = Runtime.getRuntime().execSU(_shell);
             OutputStreamWriter stdin = new OutputStreamWriter(process.getOutputStream());
             InputStreamReader stdout = new InputStreamReader(process.getInputStream());
             stdin.write(cmd+"\n");
@@ -143,13 +249,13 @@ public class ShellUnit {
         } catch (IOException e) {
             // TODO 自动生成的 catch 块
             e.printStackTrace();
-            stdErr = "by exec:IOException,process.exec fail";
+            stdErr = "by execSU:IOException,process.execSU fail";
             exitValue = EXEC_ERR;
             return null;
         } catch (InterruptedException e) {
             // TODO 自动生成的 catch 块
             e.printStackTrace();
-            stdErr = "by exec:InterruptedException,process.waitFor fail";
+            stdErr = "by execSU:InterruptedException,process.waitFor fail";
             exitValue = EXEC_ERR;
             return null;
         }
@@ -157,7 +263,7 @@ public class ShellUnit {
     }
 
     static public String execRoot(int overtime,String cmd) {
-        return exec(overtime,cmd,true);
+        return execSU(overtime,cmd,true);
     }
 */
 

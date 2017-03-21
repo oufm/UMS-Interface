@@ -166,10 +166,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:textSize="25sp"
+                    android:textSize="20sp"
                     android:layout_weight="1"
                     android:textColor="@android:color/white"
-                    android:text="M"/>
+                    android:text="MB"/>
 
 
             </LinearLayout>

@@ -27,7 +27,7 @@
             />
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="60dp"
             android:orientation="horizontal"
             android:paddingLeft="3dp"
             android:gravity="center"
@@ -68,32 +68,48 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:gravity="bottom"
-            android:text="@string/mount_target_edit_tip"
-            />
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:orientation="horizontal"
-            android:paddingLeft="3dp"
-            android:gravity="right"
-            >
-            <EditText
-                android:id="@+id/mount_target_edit"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <LinearLayout
                 android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:layout_weight="1"
-                android:hint="@string/ums_edit_hint"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                />
+                android:layout_gravity="center_vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:text="@string/mount_target_edit_tip"
+                    />
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="55dp"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:paddingLeft="3dp"-->
+            <!--android:gravity="right"-->
+            <!--&gt;-->
+                <EditText
+                    android:id="@+id/mount_target_edit"
+                    android:layout_width="match_parent"
+                    android:hint="@string/ums_edit_hint"
+                    android:layout_height="55dp"
+                    />
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center">
+                android:layout_gravity="center_vertical|right">
+                <Button
+                    android:id="@+id/mount_alloc"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:text="@string/alloc"/>
                 <Button
                     android:id="@+id/mount_target_btn"
                     android:layout_width="80dp"
@@ -101,15 +117,10 @@
                     android:gravity="center"
                     android:layout_gravity="center"
                     android:text="@string/ums_select_btn_tip"/>
-                <!--<Button-->
-                    <!--android:id="@+id/config_search_btn"-->
-                    <!--android:layout_width="80dp"-->
-                    <!--android:layout_height="40dp"-->
-                    <!--android:gravity="center"-->
-                    <!--android:layout_gravity="center"-->
-                    <!--android:text="search"/>-->
+
             </LinearLayout>
         </LinearLayout>
+        <!--</LinearLayout>-->
         <android.support.v4.widget.Space
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -211,7 +222,7 @@
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="false"
+                android:checked="true"
                 android:id="@+id/check_mask"
                 />
         </LinearLayout>
@@ -265,6 +276,6 @@
         <android.support.v4.widget.Space
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3"/>
+            android:layout_weight="1"/>
     </LinearLayout>
 </RelativeLayout>

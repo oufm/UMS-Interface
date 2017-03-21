@@ -18,8 +18,16 @@ public class LogUnit {
     private Queue<String> mBuffer = new LinkedList<>();
     private File mFile;
     private static int sMaxLogSize = 2*1024*1024;
-    //private static int sBufferCount = 5;
     private FileOutputStream mOutputStream;
+    private static String sDefaultPath = "/data/data/com.sjj.echo.umsinterface/ums.log";
+    private static LogUnit sDefaultLog;
+    static {
+        sDefaultLog = new LogUnit(sDefaultPath);
+    }
+    public static LogUnit getDefaultLog()
+    {
+        return sDefaultLog;
+    }
     private void checkSize()
     {
         long _size = mFile.length();

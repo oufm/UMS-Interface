@@ -29,7 +29,7 @@ public class FilePageAdapter extends FragmentStatePagerAdapterFix {
         if(initDirs!=null&&initDirs.length>0)
             mInitDirs = initDirs;
         else
-            mInitDirs =new String[] {"/dev/block/","/sdcard/","/sys/","/data/"};
+            mInitDirs =new String[] {"/sdcard/","/dev/block/","/sys/","/data/"};
         //mInitDirs = _initDirs;
         int count = mInitDirs.length;
         for(int i=0;i<count;i++)

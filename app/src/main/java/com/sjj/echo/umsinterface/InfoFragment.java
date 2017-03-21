@@ -38,9 +38,10 @@ public class InfoFragment extends Fragment {
     {
         mInfos.clear();
         String output = ShellUnit.execBusybox("mount");
-        if(output==null||ShellUnit.exitValue!=0)
+        if(output==null||output.length()==0)
         {
             Toast.makeText(mActivity,"get mount information fail!",Toast.LENGTH_LONG).show();
+            output = "";
         }
         int lineOffset = 0;
         boolean lastLine = false;
@@ -78,6 +79,27 @@ public class InfoFragment extends Fragment {
         mListView.setAdapter(new ArrayAdapter<String>(mActivity,R.layout.mount_list_layout,mInfos.toArray(_tmp)));
     }
 
+    private void umount(String itemSelect)
+    {
+        int offset = itemSelect.indexOf(" /");
+        if(offset > 0)
+        {
+            offset++;
+            int offsetEnd = itemSelect.indexOf(" ",offset);
+            if(offsetEnd > 0)
+            {
+                String mountPath = (String) itemSelect.subSequence(offset,offsetEnd);
+                ShellUnit.execBusybox("umount "+ mountPath);
+                if(ShellUnit.stdErr==null)
+                {
+                    Toast.makeText(mActivity,getString(R.string.umount)+" "+getString(R.string.success),Toast.LENGTH_SHORT).show();
+                    setAdapter();
+                    return;
+                }
+            }
+        }
+        Toast.makeText(mActivity,getString(R.string.umount)+" "+getString(R.string.fail)+":"+ShellUnit.stdErr,Toast.LENGTH_LONG).show();
+    }
 
     @Nullable
     @Override
@@ -103,33 +125,19 @@ public class InfoFragment extends Fragment {
                                 {
                                     //umount operation
                                     //ask to confirm first
-                                    new AlertDialog.Builder(mActivity).setTitle(getString(R.string.warning))
-                                            .setMessage(getString(R.string.mount_info_umount_warning))
-                                            .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    int offset = itemSelect.indexOf(" /");
-                                                    if(offset > 0)
-                                                    {
-                                                        offset++;
-                                                        int offsetEnd = itemSelect.indexOf(" ",offset);
-                                                        if(offsetEnd > 0)
-                                                        {
-                                                            String mountPath = (String) itemSelect.subSequence(offset,offsetEnd);
-                                                            ShellUnit.execBusybox("umount "+ mountPath);
-                                                            if(ShellUnit.exitValue==0&&ShellUnit.stdErr==null)
-                                                            {
-                                                                Toast.makeText(mActivity,getString(R.string.umount)+" "+getString(R.string.success),Toast.LENGTH_SHORT).show();
-                                                                setAdapter();
-                                                                return;
-                                                            }
-                                                        }
+                                    if(itemSelect.indexOf("loop")>=0)
+                                        umount(itemSelect);
+                                    else {
+                                        new AlertDialog.Builder(mActivity).setTitle(getString(R.string.warning))
+                                                .setMessage(getString(R.string.mount_info_umount_warning))
+                                                .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        umount(itemSelect);
                                                     }
-                                                    Toast.makeText(mActivity,getString(R.string.umount)+" "+getString(R.string.fail)+":"+ShellUnit.stdErr,Toast.LENGTH_LONG).show();
-
-                                                }
-                                            })
-                                            .setNegativeButton(getString(R.string.no),null).create().show();
+                                                })
+                                                .setNegativeButton(getString(R.string.no), null).create().show();
+                                    }
                                 }else if(which == 1)
                                 {
                                     //select as device operation
@@ -137,7 +145,7 @@ public class InfoFragment extends Fragment {
                                     if(offsetEnd>0)
                                     {
                                         String _path = itemSelect.substring(0,offsetEnd);
-                                        ((FrameActivity)mActivity).doUmsConfig(_path);
+                                        ((FrameActivity)mActivity).umsRun(_path);
 //                                        Intent intent = mActivity.getIntent();
 //                                        intent.putExtra(UmsFragment.KEY_INTENT_CONFIG,true);
 //                                        intent.setData(Uri.parse("file://"+_path));
@@ -145,7 +153,7 @@ public class InfoFragment extends Fragment {
                                         //TO DO :swith to UMS TAB
                                     }
                                     else
-                                        Toast.makeText(mActivity,"set path fail!",Toast.LENGTH_LONG).show();
+                                        Toast.makeText(mActivity,"fail:can't find path",Toast.LENGTH_LONG).show();
                                 }else if(which ==2)
                                 {
                                     setAdapter();

@@ -56,7 +56,7 @@ public class CreateImageFragment extends Fragment {
         //there seems a bug with command "dd" ,it always print the information through stderr,to check whether success "ls ..."
         mStderr = ShellUnit.stdErr;
         ShellUnit.execRoot("ls \""+_path+"\"");
-        if(ShellUnit.exitValue==0&&ShellUnit.stdErr==null)
+        if(ShellUnit.stdErr==null)
             return true;
         else
             return false;
@@ -76,8 +76,20 @@ public class CreateImageFragment extends Fragment {
         mSizeEdit = (EditText) rootView.findViewById(R.id.image_size_edit);
         Button _dirBtn = (Button) rootView.findViewById(R.id.image_dir_btn);
         Button _newBtn = (Button) rootView.findViewById(R.id.image_create);
+        Button _allocBtn = (Button) rootView.findViewById(R.id.image_allocate);
         mFormat = (Spinner) rootView.findViewById(R.id.image_format);
-
+        mFormat.setSelection(1);
+        _allocBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String _path = ((FrameActivity)mActivity).getImagePath();
+                int _offset = _path.lastIndexOf("/");
+                String _dir = _path.substring(0,_offset);
+                String _name = _path.substring(_offset+1,_path.length());
+                mDirEdit.setText(_dir);
+                mNameEdit.setText(_name);
+            }
+        });
         _dirBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,7 +123,7 @@ public class CreateImageFragment extends Fragment {
                             .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    ((FrameActivity)mActivity).doUmsConfig(final_path);
+                                    ((FrameActivity)mActivity).umsRun(final_path);
 //                                    Intent intent = mActivity.getIntent();
 //                                    intent.putExtra(UmsFragment.KEY_INTENT_CONFIG,true);
 //                                    intent.setData(Uri.parse("file://"+ final_path));

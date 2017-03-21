@@ -24,6 +24,7 @@ import com.sjj.echo.routine.ShellUnit;
 
 import java.util.LinkedList;
 
+import static com.sjj.echo.routine.ShellUnit.execRoot;
 import static com.sjj.echo.umsinterface.FrameActivity.logInfo;
 import static com.sjj.echo.umsinterface.UmsFragment.KEY_DEVICE_HISTORY_BASE;
 import static com.sjj.echo.umsinterface.UmsFragment.KEY_DEVICE_HISTORY_COUNT;
@@ -68,6 +69,21 @@ public class QuickStartFragment extends Fragment {
     public void init(Activity activity)
     {
         mActivity = activity;
+    }
+
+    static public boolean sameDir(String dir1,String dir2)
+    {
+        String targetName = "/UMS_CHECK_DIR";
+        String val = Math.random()+"";
+        execRoot("echo '"+val+"' > '"+dir1+targetName+"'");
+        execRoot("chmod 777 "+"'"+dir1+targetName+"'");
+        String output = execRoot("cat "+"'"+dir2+targetName+"'");
+        execRoot("rm "+"'"+dir1+targetName+"'");
+        if(output.compareTo(val)==0)
+            return true;
+        else
+            return false;
+
     }
 
     private void getMount(String _dev,boolean _loop)
@@ -124,13 +140,14 @@ public class QuickStartFragment extends Fragment {
         //mStatusFile = null;
         MassStorageUnit.refreshStatus();
         String _path = MassStorageUnit.mStatusFile;
-        if(_path.length()==0)
-            return;
         if (_path == null)
             return;
-        if (ShellUnit.execRoot("ls \""+_path+"\"").length()==0)
+        if(_path.length()==0)
             return;
-        mStatusFile = _path;
+        if (execRoot("ls \""+_path+"\"").length()==0)
+            return;
+        if(mStatusFile==null||!sameDir(mStatusFile,_path))
+            mStatusFile = _path;
         if (MassStorageUnit.mStatusFunction.equals("mass_storage") && MassStorageUnit.mStatusEnable.equals("1"))
             mStatusUsb = true;
         else
@@ -224,12 +241,12 @@ public class QuickStartFragment extends Fragment {
 
     }
 
-    private String getFilename()
+    public String getFilename()
     {
         logInfo("quick_start getFilename");
-        ShellUnit.execRoot("mkdir /sdcard/ums_img;chomd 777 /sdcard/ums_img");
+        execRoot("mkdir /sdcard/ums_img;chomd 777 /sdcard/ums_img");
         int num=0;
-        while (ShellUnit.execRoot("ls /sdcard/ums_img/"+num+".img").length()>0)
+        while (execRoot("ls /sdcard/ums_img/"+num+".img").length()>0)
             num++;
         return "/sdcard/ums_img/"+num+".img";
     }
@@ -244,6 +261,7 @@ public class QuickStartFragment extends Fragment {
         {
             _output=ShellUnit.execBusybox("find /mnt/media_rw/ -name "+_target);
         }
+        execRoot("rm /sdcard/"+_target);
 //        if(ShellUnit.stdErr!=null)
 //        {
 //            Toast.makeText(mActivity,"search sdcard path fail:"+ShellUnit.stdErr,Toast.LENGTH_LONG).show();
@@ -255,21 +273,21 @@ public class QuickStartFragment extends Fragment {
 
     }
 
-    private String getMountPoint()
+    public String getMountPoint()
     {
         logInfo("quick_start getMountPoint");
-        ShellUnit.execRoot("mkdir "+mImgDir+";chmod 777 '"+mImgDir+"'");
+        execRoot("mkdir "+mImgDir+";chmod 777 '"+mImgDir+"'");
         int num=0;
         while(ShellUnit.execBusybox("mount|"+ShellUnit.BUSYBOX+"grep "+mImgDir+"/mnt"+num).length()>0)
             num++;
-        ShellUnit.execRoot("mkdir "+mImgDir+"/mnt"+num+";chmod 777 "+mImgDir+"/mnt"+num);
+        execRoot("mkdir "+mImgDir+"/mnt"+num+";chmod 777 "+mImgDir+"/mnt"+num);
         return mImgDir+"/mnt"+num;
     }
 
     public void useImage(String _path)
     {
         logInfo("quick_start useImage path="+_path);
-        ShellUnit.execRoot("ls \""+_path+"\"");
+        execRoot("ls \""+_path+"\"");
         if(ShellUnit.stdErr!=null)
         {
             Toast.makeText(mActivity,R.string.image_no_find,Toast.LENGTH_LONG).show();
@@ -288,8 +306,12 @@ public class QuickStartFragment extends Fragment {
         Boolean _block = MountFragment.isBlockDev(_path);
         if(_block == null)
             _block =true;
-        boolean ok_mount = _activity.mount(false,!_block,!_block,!_block,_path,mountpoint);
         boolean ok_ums = _activity.ums(_path,null);
+        MassStorageUnit.refreshStatus();
+        if(MassStorageUnit.mStatusFile!=null&&MassStorageUnit.mStatusFile.length()>0)//change it to the original path
+            _path = MassStorageUnit.mStatusFile;
+        boolean ok_mount = _activity.mount(false,!_block,!_block,!_block,_path,mountpoint);
+
         String tip = "";
         if(ok_mount)
             tip+="mount success!";
@@ -329,8 +351,11 @@ public class QuickStartFragment extends Fragment {
             return;
         }
         String _mountPoint = getMountPoint();
-        boolean ok_mount = _activity.mount(false,true,true,true,file,_mountPoint);
         boolean ok_ums = _activity.ums(file,null);
+        MassStorageUnit.refreshStatus();
+        if(MassStorageUnit.mStatusFile!=null&&MassStorageUnit.mStatusFile.length()>0)
+            file = MassStorageUnit.mStatusFile;
+        boolean ok_mount = _activity.mount(false,true,true,true,file,_mountPoint);
         String tip ="";
         if(ok_mount)
             tip+="mount success!";

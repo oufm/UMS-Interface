@@ -13,8 +13,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -25,6 +23,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.sjj.echo.routine.ShellUnit.stdErr;
 
 /**
  * Created by SJJ on 2016/12/7.
@@ -97,6 +97,13 @@ public class FileTool {
             {"xml","text/plain"},
             {"z","application/x-compress"},
             {"zip","application/x-zip-compressed"},
+            {"mid","audio/*"},
+            {"midi","audio/*"},
+            {"amr","audio/*"},
+            {"flv","video/*"},
+            {"mkv","video/*"},
+            {"mov","video/*"},
+            {"rmvb","video/*"},
             {"","*/*"}};
 
     /**
@@ -144,62 +151,62 @@ public class FileTool {
             context.startActivity(intent);
 
     }
-
-    /**
-     * last error output for root,null if success
-     * */
-    static public String stdErr;
-    /**
-     * last exit code for root
-     * */
-    static public int exitValue;
-    /**
-    * execute the command through shell
-    * @param root should be execute as root
-     *@param cmd command
-    * */
-    static public String exec(String cmd,boolean root)
-    {
-        String outString = "";
-        try {
-            char[] buff = new char[1024*10];
-            Process process;
-            if(root)
-                process = Runtime.getRuntime().exec("su");
-            else
-                process = Runtime.getRuntime().exec("sh");
-            OutputStreamWriter stdin = new OutputStreamWriter(process.getOutputStream());
-            InputStreamReader stdout = new InputStreamReader(process.getInputStream());
-            stdin.write(cmd+"\n");
-            stdin.write("exit\n");
-            stdin.flush();
-            exitValue = process.waitFor();
-            //if(exitValue==0)
-            //{
-                int __count = stdout.read(buff);
-                if(__count>0)
-                {
-                    outString = new String(buff);
-                }
-            //}
-            stdErr = null;
-            int count = new InputStreamReader(process.getErrorStream()).read(buff);
-            if(count > 0)
-                stdErr = new String(buff);
-        } catch (IOException e) {
-            // TODO 自动生成的 catch 块
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            // TODO 自动生成的 catch 块
-            e.printStackTrace();
-        }
-        return outString;
-    }
-    /**
-     * execute the command as root*/
-    static public String execRoot(String cmd) {
-       return exec(cmd,true);
-    }
+//
+//    /**
+//     * last error output for root,null if success
+//     * */
+//    static public String stdErr;
+//    /**
+//     * last exit code for root
+//     * */
+//    static public int exitValue;
+//    /**
+//    * execute the command through shell
+//    * @param root should be execute as root
+//     *@param cmd command
+//    * */
+//    static public String exec(String cmd,boolean root)
+//    {
+//        String outString = "";
+//        try {
+//            char[] buff = new char[1024*10];
+//            Process process;
+//            if(root)
+//                process = Runtime.getRuntime().exec("su");
+//            else
+//                process = Runtime.getRuntime().exec("sh");
+//            OutputStreamWriter stdin = new OutputStreamWriter(process.getOutputStream());
+//            InputStreamReader stdout = new InputStreamReader(process.getInputStream());
+//            stdin.write(cmd+"\n");
+//            stdin.write("exit\n");
+//            stdin.flush();
+//            exitValue = process.waitFor();
+//            //if(exitValue==0)
+//            //{
+//                int __count = stdout.read(buff);
+//                if(__count>0)
+//                {
+//                    outString = new String(buff);
+//                }
+//            //}
+//            stdErr = null;
+//            int count = new InputStreamReader(process.getErrorStream()).read(buff);
+//            if(count > 0)
+//                stdErr = new String(buff);
+//        } catch (IOException e) {
+//            // TODO 自动生成的 catch 块
+//            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            // TODO 自动生成的 catch 块
+//            e.printStackTrace();
+//        }
+//        return outString;
+//    }
+//    /**
+//     * execute the command as root*/
+//    static public String execRoot(String cmd) {
+//       return exec(cmd,true);
+//    }
     /**
      *get the internal or outside sd card path
      * @param is_removale true is is outside sd card
@@ -306,14 +313,14 @@ public class FileTool {
         //Log.d("@echo off","openDirRoot|path="+path);
         if(!path.endsWith("/"))//以'/'结尾,可以作为判断,如果真的不是目录,自然出错
             path+="/";
-        String resultString = FileTool.execRoot("ls -al \""+path+"\"");
-        if(resultString == null||stdErr!=null||exitValue!=0) {
+        String resultString = ShellUnit.execRoot("ls -al \""+path+"\"");
+        if(resultString == null||stdErr!=null) {
             return null;
         }
         List<FileItem> list = new ArrayList<>();
         Pattern linePattern = Pattern.compile("(\\n|^).+");//匹配每行
         Matcher lineMatcher = linePattern.matcher(resultString);
-        int maxLinkCheckNum = 7;//每次打开文件夹,检查软链是否为目录的最大次数,过大会引起ANR
+        int maxLinkCheckNum = 55;//每次打开文件夹,检查软链是否为目录的最大次数,过大会引起ANR
         while(lineMatcher.find())
         {
             String lineString = lineMatcher.group();
@@ -344,8 +351,8 @@ public class FileTool {
             if(premString.startsWith("l")&&maxLinkCheckNum>0)
             {
                 maxLinkCheckNum--;
-                String _sl = FileTool.execRoot("ls -ld \""+path+nameString+"/\"");
-                if(_sl != null&&stdErr==null&&exitValue==0)
+                String _sl = ShellUnit.execRoot("ls -ld \""+path+nameString+"/\"");
+                if(_sl != null&&stdErr==null)
                 {
                     dir = _sl.startsWith("d");
                 }
@@ -377,8 +384,8 @@ public class FileTool {
         File dstFile = new File(dstPath);
         if(!srcFile.renameTo(dstFile))
         {
-            FileTool.execRoot("mv \""+srcPath+"\" \""+dstPath+"\"");
-            if(stdErr!=null||exitValue!=0)
+            ShellUnit.execRoot("mv \""+srcPath+"\" \""+dstPath+"\"");
+            if(stdErr!=null)
                 return false;
         }
         return true;
@@ -406,8 +413,8 @@ public class FileTool {
             }
         }
         if(!file.delete()) {
-            FileTool.execRoot("rm -rf \"" + path + "\"");
-            if(stdErr!=null|exitValue!=0)
+            ShellUnit.execRoot("rm -rf \"" + path + "\"");
+            if(stdErr!=null)
                 return false;
         }
         return true;
@@ -420,15 +427,15 @@ public class FileTool {
         try {
             if(!file.createNewFile())
             {
-                FileTool.execRoot("touch \""+path+"\"");
-                if(stdErr!=null||exitValue!=0)
+                ShellUnit.execRoot("touch \""+path+"\"");
+                if(stdErr!=null)
                     return false;
             }
         } catch (IOException e) {
             // TODO 自动生成的 catch 块
             e.printStackTrace();
-            FileTool.execRoot("touch \""+path+"\"");
-            if(stdErr!=null||exitValue!=0)
+            ShellUnit.execRoot("touch \""+path+"\"");
+            if(stdErr!=null)
                 return false;
         }
         return true;
@@ -439,8 +446,8 @@ public class FileTool {
         File file = new File(path);
         if(!file.mkdirs())
         {
-            FileTool.execRoot("mkdir \""+path+"\"");
-            if(stdErr!=null||exitValue!=0)
+            ShellUnit.execRoot("mkdir \""+path+"\"");
+            if(stdErr!=null)
                 return false;
         }
         return true;
@@ -479,8 +486,8 @@ public class FileTool {
                 // TODO 自动生成的 catch 块
                 e.printStackTrace();
                 //java方式复制失败,尝试使用shell命令
-                FileTool.execRoot("cp -R \""+srcFile+"\" \""+dstDir+"\"");
-                if(stdErr!=null||exitValue!=0)
+                ShellUnit.execRoot("cp -R \""+srcFile+"\" \""+dstDir+"\"");
+                if(stdErr!=null)
                     return false;
             } finally {
                 try {
@@ -502,8 +509,8 @@ public class FileTool {
         File file = new File(srcString);
         String dstString = dstDir + srcString.substring(srcString.lastIndexOf("/")+1, srcString.length());
         if(!file.renameTo(new File(dstString))) {
-            FileTool.execRoot("mv \"" + srcString + "\" \"" + dstString + "\"");
-            if(stdErr!=null||exitValue!=0)
+            ShellUnit.execRoot("mv \"" + srcString + "\" \"" + dstString + "\"");
+            if(stdErr!=null)
                 return false;
         }
         return true;
@@ -526,14 +533,10 @@ public class FileTool {
         cmd+="\" -C \"";
         cmd+=baseDir;
         cmd+="\"";
-        exec(cmd,false);
-        if(stdErr!=null||exitValue!=0)
+        ShellUnit.execBusybox(cmd);
+        if(stdErr!=null)
         {
-            exec(cmd,true);
-            if(stdErr!=null)
-            {
-                return false;
-            }
+            return false;
         }
         return true;
     }

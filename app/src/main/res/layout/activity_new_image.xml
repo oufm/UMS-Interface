@@ -35,7 +35,7 @@
             <EditText
                 android:id="@+id/image_dir_edit"
                 android:hint="@string/ums_edit_hint"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_weight="1"
                 android:text="/sdcard"
                 android:layout_height="70dp"
@@ -48,7 +48,7 @@
                 android:gravity="center">
                 <Button
                     android:id="@+id/image_dir_btn"
-                    android:layout_width="80dp"
+                    android:layout_width="100dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center"
                     android:gravity="center"
@@ -76,11 +76,17 @@
             >
             <EditText
                 android:id="@+id/image_file_edit"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_weight="1"
                 android:layout_height="70dp"
                 android:layout_gravity="center_vertical"
                 />
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:id="@+id/image_allocate"
+                android:text="@string/alloc"
+                android:gravity="center"/>
         </LinearLayout>
         <android.support.v4.widget.Space
             android:layout_width="match_parent"
@@ -97,21 +103,33 @@
             android:layout_height="70dp"
             android:orientation="horizontal"
             android:paddingLeft="3dp"
-            android:gravity="right"
+            android:gravity="center_vertical"
             >
             <EditText
                 android:id="@+id/image_size_edit"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="100dp"
+                android:gravity="center"
                 android:inputType="number"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:text="50"
                 />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="MB"
+                android:textColor="#000"/>
         </LinearLayout>
         <android.support.v4.widget.Space
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/filesystem"
+            />
         <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

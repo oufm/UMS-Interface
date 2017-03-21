@@ -361,6 +361,11 @@ public class Thumbnail {
 
                 ThumbnailTask thumbnailTask = null;
                 synchronized (this) {//在此段间隙中,可能poll==null后,add才执行,并在"mThread = null"前错误判断"mThread != null",导致不启动线程
+                    if(mTaskQueue.size()==0)
+                    {
+                        mThread = null;
+                        return;
+                    }
                     thumbnailTask = mTaskQueue.poll();
                     mTaskDoing = thumbnailTask;
                     if (thumbnailTask == null)

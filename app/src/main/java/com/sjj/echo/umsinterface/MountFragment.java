@@ -249,10 +249,7 @@ public class MountFragment extends Fragment {
         cmd +=" ";
         cmd += "\""+ _source+"\" \""+ _point+"\"";
         ShellUnit.execBusybox(cmd);
-        if(ShellUnit.exitValue==ShellUnit.EXEC_ERR) {
-            return false;
-        }
-        else if(ShellUnit.exitValue!=0||ShellUnit.stdErr!=null)
+        if(ShellUnit.stdErr!=null)
             return false;
         else
             return true;
@@ -283,6 +280,7 @@ public class MountFragment extends Fragment {
         mCheckCharset = (CheckBox) rootView.findViewById(R.id.check_charset);
         mContentCharset = rootView.findViewById(R.id.content_charset);
 
+        Button allocBtn = (Button) rootView.findViewById(R.id.mount_alloc);
         Button devBtn = (Button) rootView.findViewById(R.id.mount_dev_btn);
         Button targetBtn = (Button) rootView.findViewById(R.id.mount_target_btn);
         mDevEdit = (EditText) rootView.findViewById(R.id.mount_dev_edit);
@@ -311,7 +309,7 @@ public class MountFragment extends Fragment {
         mReadonlyCheck.setChecked(_readonly);
         boolean _loop = mSharedPreferences.getBoolean(KEY_MOUNT_LOOP,false);
         mLoopCheck.setChecked(_loop);
-        mCheckMask.setChecked(mSharedPreferences.getBoolean(KEY_MOUNT_MASK,false));
+        mCheckMask.setChecked(mSharedPreferences.getBoolean(KEY_MOUNT_MASK,true));
         mCheckCharset.setChecked(mSharedPreferences.getBoolean(KEY_MOUNT_CHARSET,false));
         if(fileSystems[mFilesystemSpinner.getSelectedItemPosition()].equals("vfat"))
             mCheckMask.setChecked(true);
@@ -332,6 +330,13 @@ public class MountFragment extends Fragment {
         });
         //checkLoop();
 
+        allocBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String dir = ((FrameActivity)mActivity).getMountPoint();
+                mTargetEdit.setText(dir);
+            }
+        });
         devBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
