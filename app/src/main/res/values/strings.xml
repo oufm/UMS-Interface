@@ -68,8 +68,8 @@
     <string name="user">user</string>
     <string name="group">group</string>
     <string name="other">other</string>
-    <string name="permission_tip"><![CDATA[dmask & fmask (needed by vfat)]]></string>
-    <string name="mount_namespace_tip">if \'mount namespace separation\' in SuperSu is checked,this function may be impeded</string>
+    <string name="permission_tip"><![CDATA[dmask & fmask]]></string>
+    <string name="mount_namespace_tip">make sure \'mount namespace separation\' is canceled</string>
     <string name="charset_tip">eliminate garbled</string>
     <string name="status">status</string>
     <string name="umsdev">It\'s a block device please  operate carefully !</string>
@@ -120,6 +120,8 @@
     <string name="see">see</string>
     <string name="init_fail">init fail !</string>
     <string name="alloc">alloc</string>
+    <string name="error">error</string>
+    <string name="no_root_tip">root permission fail!</string>
     <!--<string name="text">text</string>-->
     <!--<string name="audio">audio</string>-->
     <!--<string name="video">video</string>-->

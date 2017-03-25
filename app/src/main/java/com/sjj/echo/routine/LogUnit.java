@@ -13,12 +13,49 @@ import java.util.Queue;
  */
 
 public class LogUnit {
+    class LogThread extends Thread
+    {
+        public boolean mClose = false;
+        public boolean mRunning = false;
+        @Override
+        public void run() {
+            mRunning = true;
+            byte[] _buf;
+            while(true) {
+                if(mClose)
+                    break;
+                if(mOutputStream==null)
+                    return;
+                checkSize();
+                try {
+                    synchronized(mBuffer) {
+                        if (mBuffer.size() == 0) {
+                            mBuffer.wait(1000*60*3);//thread will exit if no log in three minutes.
+                            if(mBuffer.size()==0)
+                                break;
+                        }
+                        _buf = mBuffer.poll().getBytes();
+                    }
+                    mOutputStream.write(_buf);
+                } catch (InterruptedException e) {
+                    mRunning = false;
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    mRunning = false;
+                    e.printStackTrace();
+                }
+
+            }
+            mRunning = false;
+        }
+    }
     private String mPath;
     //private Thread mThread;
     private Queue<String> mBuffer = new LinkedList<>();
     private File mFile;
     private static int sMaxLogSize = 2*1024*1024;
     private FileOutputStream mOutputStream;
+    private LogThread mThread;
     private static String sDefaultPath = "/data/data/com.sjj.echo.umsinterface/ums.log";
     private static LogUnit sDefaultLog;
     static {
@@ -57,11 +94,20 @@ public class LogUnit {
     {
         if(mOutputStream==null)
             return;
+        if(!mThread.mRunning) {
+            mThread = new LogThread();//thread already exit
+            mThread.start();
+        }
         String _str = String.format("\n[%5s]>>%s",tag,log);
         synchronized(mBuffer){
            mBuffer.add(_str);
             mBuffer.notify();
         }
+    }
+    public void close()
+    {
+        mThread.mClose = true;
+        logWrite("EXIT","EXIT");//awake the waiting thread.
     }
     public LogUnit(String _path)
     {
@@ -79,31 +125,8 @@ public class LogUnit {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                byte[] _buf;
-                while(true) {
-                    if(mOutputStream==null)
-                        return;
-                    checkSize();
-                    try {
-                        synchronized(mBuffer) {
-                            if (mBuffer.size() == 0)
-                                mBuffer.wait();
-                            _buf = mBuffer.poll().getBytes();
-                        }
-                        mOutputStream.write(_buf);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-
-            }
-        }).start();
+        mThread = new LogThread();
+        mThread.start();
 
     }
 }

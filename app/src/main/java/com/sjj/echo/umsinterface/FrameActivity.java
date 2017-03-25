@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -70,6 +71,7 @@ public class FrameActivity extends AppCompatActivity implements PopupMenu.OnMenu
     public static void logInfo(String _str)
     {
         sLog.logWrite("INFO",_str);
+        //Log.d("UMS_DEBUG","[ INFO]"+_str);
     }
 
 
@@ -79,6 +81,11 @@ public class FrameActivity extends AppCompatActivity implements PopupMenu.OnMenu
 //
 //        // 不允许重复创建
 //        addShortcutIntent.putExtra("duplicate", false);// 经测试不是根据快捷方式的名字判断重复的
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
 //        // 应该是根据快链的Intent来判断是否重复的,即Intent.EXTRA_SHORTCUT_INTENT字段的value
 //        // 但是名称不同时，虽然有的手机系统会显示Toast提示重复，仍然会建立快链
 //        // 屏幕上没有空间时会提示
@@ -168,6 +175,9 @@ public class FrameActivity extends AppCompatActivity implements PopupMenu.OnMenu
 //            Toast.makeText(this,"init fail!",Toast.LENGTH_LONG).show();
 //    }
 
+    /**
+     * return the content for a URL
+     * */
     private String getFromUrl(String urlStr)
     {
         try {
@@ -185,6 +195,9 @@ public class FrameActivity extends AppCompatActivity implements PopupMenu.OnMenu
         return null;
     }
 
+    /**
+     * download update package
+     * */
     private void downloadUpdate()
     {
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse("https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/update/app-release.apk"));
@@ -328,6 +341,7 @@ public class FrameActivity extends AppCompatActivity implements PopupMenu.OnMenu
         return mMountFragment.mount(_readonly,_loop,_charset,_mask,_source,_point);
     }
 
+
     public boolean ums(String _dev,String function)
     {
         logInfo("ums(dev="+_dev+",function="+function+")");
@@ -377,10 +391,17 @@ public class FrameActivity extends AppCompatActivity implements PopupMenu.OnMenu
         return true;
     }
 
-
     private void initShell()
     {
         ShellUnit.initBusybox(getResources().openRawResource(R.raw.busybox));
+        if(!ShellUnit.sRootReady)
+            new AlertDialog.Builder(this).setTitle(R.string.error).setMessage(R.string.no_root_tip)
+            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    FrameActivity.this.finish();
+                }
+            }).create().show();
         if(!ShellUnit.sSuReady||!ShellUnit.sBusyboxReady)
             Toast.makeText(this,getString(R.string.init_fail),Toast.LENGTH_LONG).show();
         logInfo("SUReady="+ShellUnit.sSuReady+";BusyboxReady="+ShellUnit.sBusyboxReady);
@@ -392,6 +413,8 @@ public class FrameActivity extends AppCompatActivity implements PopupMenu.OnMenu
         super.onCreate(savedInstanceState);
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
+        Log.d("UMS_DEBUG","[ INIT]onCreate instance="+this.hashCode() );
+
         Locale locale = getResources().getConfiguration().locale;
         sLang = locale.getLanguage();
         PermissionUnit.getPermission(new String[]{"android.permission.INTERNET","android.permission.RECEIVE_BOOT_COMPLETED"},this);
@@ -436,6 +459,13 @@ public class FrameActivity extends AppCompatActivity implements PopupMenu.OnMenu
         _tabLayout.setupWithViewPager(mViewPager);
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ShellUnit.close();
+        sLog.close();
+    }
 
     private boolean onMenu(int id)
     {

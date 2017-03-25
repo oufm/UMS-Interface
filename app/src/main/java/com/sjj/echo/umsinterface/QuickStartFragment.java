@@ -71,6 +71,9 @@ public class QuickStartFragment extends Fragment {
         mActivity = activity;
     }
 
+    /**
+     * return the two dir are same or not
+     * */
     static public boolean sameDir(String dir1,String dir2)
     {
         String targetName = "/UMS_CHECK_DIR";
@@ -86,6 +89,9 @@ public class QuickStartFragment extends Fragment {
 
     }
 
+    /**
+     * search the mount information
+     * */
     private void getMount(String _dev,boolean _loop)
     {
         mStatusMount = null;
@@ -136,6 +142,9 @@ public class QuickStartFragment extends Fragment {
         }
     }
 
+    /***
+     * search current status
+     */
     private void getStatus() {
         //mStatusFile = null;
         MassStorageUnit.refreshStatus();
@@ -166,6 +175,10 @@ public class QuickStartFragment extends Fragment {
 //        }
     }
 
+    /**
+     * update status for UI
+     * @param detect whether to research the status.
+     * */
     private void updateUIStatus(boolean detect)
     {
         logInfo("quick_start updateUIStatus detect="+detect);
@@ -208,6 +221,9 @@ public class QuickStartFragment extends Fragment {
 
     }
 
+    /**
+     * init history list
+     * */
     private void setupList()
     {
         restoreHistory();
@@ -241,6 +257,9 @@ public class QuickStartFragment extends Fragment {
 
     }
 
+    /**
+     * allocate an image path
+     * */
     public String getFilename()
     {
         logInfo("quick_start getFilename");
@@ -251,15 +270,18 @@ public class QuickStartFragment extends Fragment {
         return "/sdcard/ums_img/"+num+".img";
     }
 
+    /**
+     * choose the default mount point base dir.
+     * */
     private void setImgDir()
     {
         logInfo("quick_start setImgDir");
         String _target = "UMS_SDCARD_REAL_PATH";
         ShellUnit.execBusybox("touch /sdcard/"+_target);
-        String _output=ShellUnit.execBusybox("find /data/media/ -name "+_target);
+        String _output=ShellUnit.execBusybox("find /data/media/ -maxdepth 3 -name "+_target);
         if(ShellUnit.stdErr!=null||_output.length()<=1)
         {
-            _output=ShellUnit.execBusybox("find /mnt/media_rw/ -name "+_target);
+            _output=ShellUnit.execBusybox("find /mnt/media_rw/ -maxdepth 3 -name "+_target);
         }
         execRoot("rm /sdcard/"+_target);
 //        if(ShellUnit.stdErr!=null)
@@ -273,6 +295,9 @@ public class QuickStartFragment extends Fragment {
 
     }
 
+    /**
+     * allocate a mount point
+     * */
     public String getMountPoint()
     {
         logInfo("quick_start getMountPoint");
@@ -284,6 +309,9 @@ public class QuickStartFragment extends Fragment {
         return mImgDir+"/mnt"+num;
     }
 
+    /**
+     * use the item in history automatically
+     * */
     public void useImage(String _path)
     {
         logInfo("quick_start useImage path="+_path);
@@ -332,6 +360,9 @@ public class QuickStartFragment extends Fragment {
         updateUIStatus(false);
     }
 
+    /**
+     * create a new image and use it automatically
+     * */
     public void quickCreate()
     {
         logInfo("quick_start quickCreate");
@@ -532,7 +563,7 @@ public class QuickStartFragment extends Fragment {
                     return;
                 logInfo("quick_start mUsbBtn mStatusUsb="+mStatusUsb);
                 if(mStatusUsb) {
-                    if (((FrameActivity) mActivity).ums("","mtp,ffs"))
+                    if (((FrameActivity) mActivity).ums(mStatusFile,"mtp,adb"))
                     {
                         mStatusUsb = false;
                     }

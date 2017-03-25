@@ -94,7 +94,7 @@ public class FileListView extends ListView implements View.OnKeyListener {
     public String getParentPath()//return the parent path with '/'
     {
         if(mCurPath.equals("/"))
-            return null;
+            return "/";
         String path;
         if(mCurPath.endsWith("/"))
             path = mCurPath.substring(0, mCurPath.length()-1);
@@ -102,7 +102,7 @@ public class FileListView extends ListView implements View.OnKeyListener {
             path = mCurPath;
         int offset = path.lastIndexOf("/");
         if(offset<0)
-            return null;
+            return "/";
         return path.substring(0,offset+1);
 
     }
@@ -166,6 +166,8 @@ public class FileListView extends ListView implements View.OnKeyListener {
                         return false;
                 }
                     position--;
+                if(position<=0)
+                    position = 0;
                 if(!mSelectMode) {
                     mSelectMode = true;
                     mFileAdapter.touchItem(position,view);
@@ -312,6 +314,8 @@ public class FileListView extends ListView implements View.OnKeyListener {
      * */
     public boolean openDir(String _path,boolean root,boolean top)
     {
+        if(_path==null||_path.length()==0)
+            return false;
         List<FileItem> list = null;
         String path = _path;//path not ended with '/'
         if(_path.length()>1&&_path.endsWith("/"))

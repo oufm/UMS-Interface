@@ -1,5 +1,6 @@
 package com.sjj.echo.routine;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -145,10 +146,16 @@ public class FileTool {
         intent.setDataAndType(Uri.parse("file://"+path), _type);
         //this flag must be set.
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
-        if(ignoreDefault)
-            context.startActivity(Intent.createChooser(intent, ""));
-        else
-            context.startActivity(intent);
+        try {
+            if (ignoreDefault)
+                context.startActivity(Intent.createChooser(intent, ""));
+            else
+                context.startActivity(intent);
+        }
+        catch (ActivityNotFoundException e)
+        {
+            e.printStackTrace();
+        }
 
     }
 //

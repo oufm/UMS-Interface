@@ -135,11 +135,12 @@
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
                 android:ellipsize="end"
-                android:textSize="30sp"
+                android:textSize="25sp"
+                android:singleLine="true"
                 android:text="@string/quick_create"/>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
@@ -152,10 +153,10 @@
                     android:textColor="@android:color/white"
                     android:text="@string/image_size"/>
                 <EditText
-                    android:layout_width="60dp"
+                    android:layout_width="55dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:textSize="25sp"
+                    android:textSize="20sp"
                     android:gravity="center"
                     android:textColor="@android:color/white"
                     android:text="50"

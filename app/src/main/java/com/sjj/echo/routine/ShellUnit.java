@@ -24,7 +24,9 @@ public class ShellUnit {
     private static int sTaskID = 0;
     public static boolean sSuReady = false;
     public static boolean sBusyboxReady = false;
+    public static boolean sRootReady = false;
 
+   // static LogUnit rawLog = new LogUnit("/data/data/com.sjj.echo.umsinterface/raw_ums.log");
 
     /**
      * last error output for root,null if success
@@ -33,18 +35,53 @@ public class ShellUnit {
 
     static {
         sLog.logWrite("INIT","init ShellUnit");
+        ProcessBuilder tb = new ProcessBuilder("su");
+        Process tp = null;
+        char[] buff = new char[1024];
         try {
-            ProcessBuilder pb = new ProcessBuilder("su");
-            //pb.redirectErrorStream(true);
-            sProcess = pb.start();
-            //sProcess = Runtime.getRuntime().exec("su");//don't do it in this way,will block
-            sInStream = new OutputStreamWriter(sProcess.getOutputStream());
-            sOutStream = new InputStreamReader(sProcess.getInputStream());
-            sErrStream = new InputStreamReader(sProcess.getErrorStream());
-            sSuReady =true;
+            tp = tb.start();
+            OutputStreamWriter tIn = new OutputStreamWriter(tp.getOutputStream());
+            InputStreamReader tOut = new InputStreamReader(tp.getInputStream());
+            String rootText = "UMS_ROOT_TEST";
+            tIn.write("\necho "+rootText+"\n");
+            tIn.flush();
+            tIn.write("exit\n");
+            tIn.flush();
+            tp.waitFor();
+            int count =tOut.read(buff);
+            if(count>0)
+            {
+                if(new String(buff,0,count).startsWith(rootText))
+                    sRootReady = true;
+            }
         } catch (IOException e) {
             e.printStackTrace();
-            stdErr = "init LogUnit fail:"+e.toString();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        if(sRootReady) {
+            try {
+                ProcessBuilder pb = new ProcessBuilder("su");
+                //pb.redirectErrorStream(true);
+                sProcess = pb.start();
+                sProcess = Runtime.getRuntime().exec("su");//don't do it in this way,will block
+                sInStream = new OutputStreamWriter(sProcess.getOutputStream());
+                sOutStream = new InputStreamReader(sProcess.getInputStream());
+                sErrStream = new InputStreamReader(sProcess.getErrorStream());
+                sSuReady = true;
+            } catch (IOException e) {
+                e.printStackTrace();
+                stdErr = "init LogUnit fail:" + e.toString();
+            }
+        }
+    }
+
+    public static void close()
+    {
+        if(sProcess!=null) {
+            sProcess.destroy();
+            sProcess = null;
         }
     }
 
@@ -147,12 +184,16 @@ public class ShellUnit {
         String task = cmd+"\necho "+finishflag+"\n";//remember '\n'
         try {
             int count ;
+           // rawLog.logWrite("RIN",task);
+           // Log.d("UMS_DEBUG","[   IN]>>"+task);
             sInStream.write(task);
             sInStream.flush();
             while (true) {
                 count = sOutStream.read(buff);//remember check ready,or block.
                 if (count > 0) {
                     strBuff.append(buff, 0, count);
+                  //  rawLog.logWrite("ROUT",strBuff.toString());
+                  //  Log.d("UMS_DEBUG","[  OUT]>>"+strBuff.toString());
                     int searchBegin = strBuff.length() - count - flagLength;
                     if(searchBegin<0)
                         searchBegin = 0;
@@ -164,6 +205,8 @@ public class ShellUnit {
                 count = sErrStream.read(buff);
                 if (count > 0) {
                     stdErr = new String(buff, 0, count);
+                  //  rawLog.logWrite("RERR",stdErr);
+                  //  Log.d("UMS_DEBUG","[  ERR]>>"+stdErr);
                 }
             }
             strBuff.delete(strBuff.length()-flagLength-1,strBuff.length());
