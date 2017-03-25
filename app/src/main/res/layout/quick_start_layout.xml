@@ -34,7 +34,7 @@
                     android:singleLine="true"
                     android:ellipsize="marquee"
                     android:text="@string/quick_searching"
-                    android:textSize="25sp" />
+                    android:textSize="23sp" />
                 <ImageView
                     android:id="@+id/refresh_icon"
                     android:layout_width="wrap_content"
@@ -148,15 +148,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:layout_gravity="center_vertical"
                     android:textColor="@android:color/white"
                     android:text="@string/image_size"/>
                 <EditText
-                    android:layout_width="55dp"
+                    android:layout_width="53dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:textSize="20sp"
+                    android:textSize="19sp"
                     android:gravity="center"
                     android:textColor="@android:color/white"
                     android:text="50"
@@ -167,7 +167,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:layout_weight="1"
                     android:textColor="@android:color/white"
                     android:text="MB"/>

@@ -144,8 +144,21 @@ public class InfoFragment extends Fragment {
                                     int offsetEnd = itemSelect.indexOf(" ");
                                     if(offsetEnd>0)
                                     {
-                                        String _path = itemSelect.substring(0,offsetEnd);
-                                        ((FrameActivity)mActivity).umsRun(_path);
+                                        final String _path = itemSelect.substring(0,offsetEnd);
+
+                                        Boolean _block = !(_path.indexOf("loop")>=0);
+                                        if(_block!=null&&_block)
+                                        {
+                                            new android.app.AlertDialog.Builder(mActivity).setTitle(R.string.warning)
+                                                    .setMessage(R.string.umsdev).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    ((FrameActivity)mActivity).umsRun(_path);
+                                                }
+                                            }).setNegativeButton(R.string.cancel,null).create().show();
+                                        }
+                                        else
+                                             ((FrameActivity)mActivity).umsRun(_path);
 //                                        Intent intent = mActivity.getIntent();
 //                                        intent.putExtra(UmsFragment.KEY_INTENT_CONFIG,true);
 //                                        intent.setData(Uri.parse("file://"+_path));

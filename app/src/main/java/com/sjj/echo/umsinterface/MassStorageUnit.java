@@ -25,6 +25,8 @@ public class MassStorageUnit {
     public static void setConfigPath(String path)
     {
         mConfigPath = path;
+        if(!mConfigPath.endsWith("/"))
+            mConfigPath+="/";
         configCheck();
     }
 

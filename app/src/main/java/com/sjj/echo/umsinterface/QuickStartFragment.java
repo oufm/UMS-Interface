@@ -214,7 +214,7 @@ public class QuickStartFragment extends Fragment {
             mUseFileText.setText(mStatusFile);
             mUsbBtn.setVisibility(View.INVISIBLE);
             mMountBtn.setVisibility(View.INVISIBLE);
-            mUseText.setText(R.string.quick_no_usb);
+            mUsbText.setText(R.string.quick_no_usb);
             mMountText.setText(R.string.quick_no_mount);
         }
         _anim.cancel();

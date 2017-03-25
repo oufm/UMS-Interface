@@ -241,7 +241,7 @@ public class FrameActivity extends AppCompatActivity implements PopupMenu.OnMenu
         int _version = mSharedPreferences.getInt(KEY_VERSION,0);
         if(_version <sVersioncode)
         {
-            ShortcutActivity.addShortcut(this);
+            //ShortcutActivity.addShortcut(this);
             mSharedPreferences.edit().putInt(KEY_VERSION,sVersioncode).commit();
         }
 

@@ -55,7 +55,7 @@ public class CreateImageFragment extends Fragment {
         ShellUnit.execBusybox(cmd);
         //there seems a bug with command "dd" ,it always print the information through stderr,to check whether success "ls ..."
         mStderr = ShellUnit.stdErr;
-        ShellUnit.execRoot("ls \""+_path+"\"");
+        ShellUnit.execRoot("ls -l \""+_path+"\"");
         if(ShellUnit.stdErr==null)
             return true;
         else
