@@ -59,7 +59,18 @@ public class ShellUnit {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        init();
 
+    }
+
+    public static void restart()
+    {
+        if(sProcess==null)
+            init();
+    }
+
+    private static void init()
+    {
         if(sRootReady) {
             try {
                 ProcessBuilder pb = new ProcessBuilder("su");
@@ -82,6 +93,9 @@ public class ShellUnit {
         if(sProcess!=null) {
             sProcess.destroy();
             sProcess = null;
+            sInStream = null;
+            sOutStream = null;
+            sErrStream = null;
         }
     }
 

@@ -31,11 +31,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sjj.echo.routine.FileTool;
+import com.sjj.echo.routine.LogUnit;
 import com.sjj.echo.routine.PermissionUnit;
 import com.sjj.echo.umsinterface.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.sjj.echo.routine.ShellUnit.restart;
 
 //must implements ActivityCompat.OnRequestPermissionsResultCallback or it will crash !!
 /**
@@ -101,6 +104,10 @@ public class ExplorerActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.explorer_main);
+
+        //app may be cached, LogUnit and ShellUnit may be closed ,restart them.
+        LogUnit.getDefaultLog().restart();
+        restart();
 
         explorerExit = findViewById(R.id.explorer_exit);
         explorerSelect = findViewById(R.id.explorer_select);

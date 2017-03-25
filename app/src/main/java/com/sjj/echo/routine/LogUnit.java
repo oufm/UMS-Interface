@@ -107,12 +107,23 @@ public class LogUnit {
     public void close()
     {
         mThread.mClose = true;
+        mThread = null;
+        mOutputStream = null;
         logWrite("EXIT","EXIT");//awake the waiting thread.
     }
     public LogUnit(String _path)
     {
         mPath = _path;
-        mFile = new File(_path);
+        init();
+    }
+    public void restart()
+    {
+        if(mThread==null)
+            init();
+    }
+    private void init()
+    {
+        mFile = new File(mPath);
         try {
             if(!mFile.isFile())
                 if(!mFile.createNewFile())
@@ -127,6 +138,5 @@ public class LogUnit {
         }
         mThread = new LogThread();
         mThread.start();
-
     }
 }
