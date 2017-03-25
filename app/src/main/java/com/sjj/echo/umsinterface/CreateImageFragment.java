@@ -123,7 +123,10 @@ public class CreateImageFragment extends Fragment {
                             .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    ((FrameActivity)mActivity).umsRun(final_path);
+                                    //((FrameActivity)mActivity).umsRun(final_path);
+                                    //must swith to QuickStartFragment first!
+                                    ((FrameActivity)mActivity).switchPager(0);
+                                    ((FrameActivity)mActivity).useImg(final_path);
 //                                    Intent intent = mActivity.getIntent();
 //                                    intent.putExtra(UmsFragment.KEY_INTENT_CONFIG,true);
 //                                    intent.setData(Uri.parse("file://"+ final_path));

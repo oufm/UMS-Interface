@@ -61,7 +61,7 @@
     <string name="ums_reboot_android">重启安卓框架</string>
     <string name="deselect_loop_tip">所选的文件似乎是一个块设备,然而\'loop\' 被选中了.取消选中\'loop\'?</string>
     <string name="select_loop_tip">所选的文件似乎不是一个块设备, 然而 \'loop\' 没被选中.选中 \'loop\'?</string>
-    <string name="new_image_success_tip">创建镜像文件成功!是否把它设为大容量存储镜像?</string>
+    <string name="new_image_success_tip">创建镜像文件成功!是否在快速启动中使用?</string>
     <string name="tip">提示</string>
 
     <string name="read">读</string>

@@ -60,7 +60,7 @@
     <string name="ums_reboot_android">reboot android framework</string>
     <string name="deselect_loop_tip">The file you select seems like a block device,but \'loop\' is selected.Deselect \'loop\'?</string>
     <string name="select_loop_tip">The file you select doesn\'t like a block device, but \'loop\' is not selected.Select \'loop\'?</string>
-    <string name="new_image_success_tip">Create image file success!Do you want to set the image as mass storage device?</string>
+    <string name="new_image_success_tip">Create image file success!Use it in quick start?</string>
     <string name="tip">tip</string>
     <string name="read">read</string>
     <string name="write">write</string>

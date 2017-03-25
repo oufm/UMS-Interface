@@ -74,6 +74,10 @@ public class FrameActivity extends AppCompatActivity implements PopupMenu.OnMenu
         //Log.d("UMS_DEBUG","[ INFO]"+_str);
     }
 
+    public void useImg(String path)
+    {
+        mQuickStartFragment.useImage(path);
+    }
 
 //    private void addShortcut()
 //    {
@@ -109,6 +113,11 @@ public class FrameActivity extends AppCompatActivity implements PopupMenu.OnMenu
 //        // 发送广播
 //        sendBroadcast(addShortcutIntent);
 //    }
+
+    public void switchPager(int index)
+    {
+        mViewPager.setCurrentItem(index);
+    }
 
     public String getMountPoint()
     {
