@@ -1,6 +1,6 @@
 # UMS Interface
 
-## lastest version
+## latest version
  * 1.3_ultimate [download apk](https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/update/app-release.apk)
 
 ## screen shots
@@ -31,3 +31,6 @@
  
 ## tutorial
  * [安卓4.4以上版本将手机作为U盘使用](http://jingyan.baidu.com/article/a3f121e4be8e7ffc9052bb19.html)
+ 
+## license
+ * GPLv3
