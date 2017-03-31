@@ -122,6 +122,7 @@
     <string name="alloc">alloc</string>
     <string name="error">error</string>
     <string name="no_root_tip">root permission fail!</string>
+    <string name="quick_extend_sd">extend sdcard</string>
     <!--<string name="text">text</string>-->
     <!--<string name="audio">audio</string>-->
     <!--<string name="video">video</string>-->

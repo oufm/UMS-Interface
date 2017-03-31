@@ -114,6 +114,12 @@ public class FrameActivity extends AppCompatActivity implements PopupMenu.OnMenu
 //        sendBroadcast(addShortcutIntent);
 //    }
 
+    public void saveHistory(String path,boolean save)
+    {
+        mQuickStartFragment.saveHistory(path,save);
+    }
+
+
     public void switchPager(int index)
     {
         mViewPager.setCurrentItem(index);
@@ -345,9 +351,9 @@ public class FrameActivity extends AppCompatActivity implements PopupMenu.OnMenu
         return mCreateImageFragment.createImage(_path,_size,_format);
     }
 
-    public boolean mount(boolean _readonly,boolean _loop,boolean _charset,boolean _mask,String _source,String _point)
+    public boolean mount(boolean _readonly,boolean _mask,String _source,String _point)
     {
-        return mMountFragment.mount(_readonly,_loop,_charset,_mask,_source,_point);
+        return mMountFragment.mount(_readonly,_mask,_source,_point);
     }
 
 
@@ -513,7 +519,7 @@ public class FrameActivity extends AppCompatActivity implements PopupMenu.OnMenu
             reboot("reboot bootloader");
         }else if(id==R.id.action_reboot_android)
         {
-            reboot("stop && start");
+            reboot(ShellUnit.BUSYBOX+" killall "+"zygote zygote64 ");
         }else if(id == R.id.action_check_update)
         {
             new Thread(new Runnable() {

@@ -117,13 +117,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#91b648"
+        android:background="#7fa94d"
         android:orientation="horizontal">
         <ImageView
             android:layout_marginTop="0dp"
             android:layout_marginBottom="0dp"
             android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_height="90dp"
             android:background="@mipmap/ic_launch_white_48dp"/>
         <LinearLayout
             android:layout_width="wrap_content"
@@ -177,12 +177,67 @@
         </LinearLayout>
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:background="@android:drawable/button_onoff_indicator_on"
             android:gravity="center"
             android:layout_gravity="right|center_vertical"
             android:id="@+id/quick_create_btn"
             android:text="@string/create"/>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/extend_sd_root">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#7ba346"
+            android:id="@+id/extend_sd_view"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_width="100dp"
+                android:layout_height="90dp"
+                android:background="@mipmap/ic_sd_card_white_48dp"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:ellipsize="end"
+                    android:textSize="25sp"
+                    android:singleLine="true"
+                    android:text="@string/quick_extend_sd"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:id="@+id/extend_sd_text"
+                        android:textColor="@android:color/white"/>
+                </LinearLayout>
+            </LinearLayout>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:background="@android:drawable/button_onoff_indicator_on"
+                android:gravity="center"
+                android:layout_gravity="right|center_vertical"
+                android:id="@+id/quick_extend_sd"
+                android:text="@string/start"/>
+        </LinearLayout>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -205,7 +260,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:textSize="35sp"
+                android:textSize="30sp"
                 android:textColor="@android:color/white"
                 android:text="@string/history"/>
         </LinearLayout>

@@ -1,14 +1,12 @@
 package com.sjj.echo.umsinterface;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +23,7 @@ import com.sjj.echo.explorer.ExplorerActivity;
 import com.sjj.echo.routine.ShellUnit;
 
 import static com.sjj.echo.umsinterface.FrameActivity.logInfo;
+import static com.sjj.echo.umsinterface.R.string.mount;
 
 /**
  * Created by SJJ on 2017/3/8.
@@ -36,7 +35,6 @@ public class MountFragment extends Fragment {
     EditText mDevEdit;
     EditText mTargetEdit;
     CheckBox mReadonlyCheck;
-    CheckBox mLoopCheck;
     Spinner mFilesystemSpinner;
     Activity mActivity;
 
@@ -50,21 +48,14 @@ public class MountFragment extends Fragment {
     CheckBox mCheckOtherWrite;
     CheckBox mCheckOtherExexcute;
 
-    EditText mIocharset;
-    EditText mCodepage;
-
-    CheckBox mCheckCharset;
     CheckBox mCheckMask;
-    View mContentCharset;
     View mContentMask;
 
     static final String KEY_MOUNT_DEV = "KEY_MOUNT_DEV";
     static final String KEY_MOUNT_TARGET = "KEY_MOUNT_TARGET";
     static final String KEY_MOUNT_READONLY = "KEY_MOUNT_READONLY";
-    static final String KEY_MOUNT_LOOP = "KEY_MOUNT_LOOP";
     static final String KEY_MOUNT_TYPE = "KEY_MOUNT_TYPE";
     static final String KEY_MOUNT_MASK = "KEY_MOUNT_MASK";
-    static final String KEY_MOUNT_CHARSET = "KEY_MOUNT_CHARSET";
     SharedPreferences mSharedPreferences;
     View mView;
 
@@ -81,13 +72,6 @@ public class MountFragment extends Fragment {
             mTargetEdit.setText(target);
     }
 
-    private void checkCharset()
-    {
-        if(mCheckCharset.isChecked())
-            mContentCharset.setVisibility(View.VISIBLE);
-        else
-            mContentCharset.setVisibility(View.INVISIBLE);
-    }
     private void checkMask()
     {
         if(mCheckMask.isChecked())
@@ -151,48 +135,6 @@ public class MountFragment extends Fragment {
         return null;
     }
 
-    private Boolean isBlockDev()
-    {
-        return isBlockDev(mDevEdit.getText().toString());
-        //check if the file is a block device
-
-    }
-
-    /**
-     * check whether the 'loop' selection is suitable for the device file
-     * */
-    private void checkLoop()
-    {
-        Boolean isBlock = isBlockDev();
-        if(isBlock==null)
-            return;
-        boolean _loop = mLoopCheck.isChecked();
-        if(isBlock&&_loop)
-        {
-            new AlertDialog.Builder(mActivity).setTitle(R.string.tip)
-                    .setMessage(R.string.deselect_loop_tip)
-                    .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //mLoopCheck.setSelected(false);
-                            mLoopCheck.setChecked(false);
-                        }
-                    }).setNegativeButton(getString(R.string.no), null).create().show();
-        }
-        if(!isBlock&&!_loop)
-        {
-            new AlertDialog.Builder(mActivity).setTitle(R.string.tip)
-                    .setMessage(R.string.select_loop_tip)
-                    .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //mLoopCheck.setSelected(true);
-                            mLoopCheck.setChecked(true);
-                        }
-                    }).setNegativeButton(getString(R.string.no), null).create().show();
-        }
-    }
-
     /**
      * save the mount select information
      * */
@@ -200,34 +142,47 @@ public class MountFragment extends Fragment {
     {
         mSharedPreferences.edit().putString(KEY_MOUNT_DEV,mDevEdit.getText().toString()).commit();
         mSharedPreferences.edit().putString(KEY_MOUNT_TARGET,mTargetEdit.getText().toString()).commit();
-        mSharedPreferences.edit().putInt(KEY_MOUNT_TYPE,mFilesystemSpinner.getSelectedItemPosition()).commit();
-        mSharedPreferences.edit().putBoolean(KEY_MOUNT_READONLY,mReadonlyCheck.isChecked()).commit();
-        mSharedPreferences.edit().putBoolean(KEY_MOUNT_LOOP,mLoopCheck.isChecked()).commit();
-        mSharedPreferences.edit().putBoolean(KEY_MOUNT_MASK,mCheckMask.isChecked()).commit();
-        mSharedPreferences.edit().putBoolean(KEY_MOUNT_CHARSET,mCheckCharset.isChecked()).commit();
+//        mSharedPreferences.edit().putInt(KEY_MOUNT_TYPE,mFilesystemSpinner.getSelectedItemPosition()).commit();
+//        mSharedPreferences.edit().putBoolean(KEY_MOUNT_READONLY,mReadonlyCheck.isChecked()).commit();
+//        mSharedPreferences.edit().putBoolean(KEY_MOUNT_LOOP,mLoopCheck.isChecked()).commit();
+//        mSharedPreferences.edit().putBoolean(KEY_MOUNT_MASK,mCheckMask.isChecked()).commit();
+//        mSharedPreferences.edit().putBoolean(KEY_MOUNT_CHARSET,mCheckCharset.isChecked()).commit();
     }
 
-    public boolean mount(boolean _readonly,boolean _loop,boolean _charset,boolean _mask,String _source,String _point)
+    private String mountFix(String src)
     {
-        String _iocharset = null;
-        String _codepage = null;
-        String _maskStr = null;
-        if(_charset)
+        if(!src.contains(":")&&!src.contains(","))
+            return src;
+        int id=0;
+        while(true)
         {
-            _iocharset = "utf8";
-            _codepage = "936";
+            String out = ShellUnit.execBusybox("mount |"+ShellUnit.BUSYBOX+" grep "+"ums_link_"+id);
+            if(out.length()==0)
+                break;
+            id++;
         }
+        ShellUnit.execBusybox("mkdir -p "+QuickStartFragment.mImgDir+"/../ums_link");
+        String dest =QuickStartFragment.mImgDir+"/../ums_link/ums_link_"+id;
+        ShellUnit.execBusybox("ln -sf \""+src+"\" "+dest);
+        return dest;
+    }
+
+
+    public boolean mount(boolean _readonly,boolean _mask,String _source,String _point)
+    {
+
+        String _maskStr = null;
         if(_mask)
             _maskStr = "0000";
 
-        return mount(_readonly,_loop,_iocharset,_codepage,_maskStr,_source,_point,null);
+        return mount(_readonly,_maskStr,_source,_point,null);
     }
 
-    public boolean mount(boolean _readonly,boolean _loop,String _iocharset,String _codepage,String _mask,String _source,String _point,String _type)
+    public boolean mount(boolean _readonly,String _mask,String _source,String _point,String _type)
     {
-        logInfo("mount(readonly="+_readonly+",loop="+_loop+",iocharset="+ (_iocharset==null?"null":_iocharset)
-                +",codepage="+ (_codepage==null?"null":_codepage)+",mask="+(_mask==null?"null":_mask)
+        logInfo("mount(readonly="+_readonly+",mask="+(_mask==null?"null":_mask)
                 +",source="+_source+",mountpoint="+_point+",type="+ (_type==null?"null":_type)+")");
+        _source = mountFix(_source);
         String cmd = "mount ";
         cmd +=" ";
         if(_type!=null)
@@ -235,17 +190,13 @@ public class MountFragment extends Fragment {
             cmd +="-t "+_type+" ";
         }
         if(_readonly)
-            cmd +="-o ro";
+            cmd +="-o ro,shortname=mixed,utf8";
         else
-            cmd +="-o rw";
-        if(_iocharset!=null&&_codepage!=null)
-            cmd +=",iocharset="+_iocharset+",codepage="+_codepage;
+            cmd +="-o rw,shortname=mixed,utf8";
         if(_mask!=null)
         {
             cmd +=",fmask="+_mask+",dmask="+_mask;
         }
-        if(_loop)
-            cmd +=",loop";
         cmd +=" ";
         cmd += "\""+ _source+"\" \""+ _point+"\"";
         ShellUnit.execBusybox(cmd);
@@ -273,12 +224,8 @@ public class MountFragment extends Fragment {
         mCheckUserWrite = (CheckBox) rootView.findViewById(R.id.check_user_write);
         mCheckUserRead = (CheckBox) rootView.findViewById(R.id.check_user_read);
 
-        mIocharset = (EditText) rootView.findViewById(R.id.edit_iocharset);
-        mCodepage = (EditText) rootView.findViewById(R.id.edit_codepage);
         mCheckMask = (CheckBox) rootView.findViewById(R.id.check_mask);
         mContentMask = rootView.findViewById(R.id.content_mask);
-        mCheckCharset = (CheckBox) rootView.findViewById(R.id.check_charset);
-        mContentCharset = rootView.findViewById(R.id.content_charset);
 
         Button allocBtn = (Button) rootView.findViewById(R.id.mount_alloc);
         Button devBtn = (Button) rootView.findViewById(R.id.mount_dev_btn);
@@ -286,7 +233,6 @@ public class MountFragment extends Fragment {
         mDevEdit = (EditText) rootView.findViewById(R.id.mount_dev_edit);
         mTargetEdit = (EditText) rootView.findViewById(R.id.mount_target_edit);
         mReadonlyCheck = (CheckBox) rootView.findViewById(R.id.mount_readonly);
-        mLoopCheck = (CheckBox) rootView.findViewById(R.id.mount_loop);
         final Button mountBtn = (Button) rootView.findViewById(R.id.mount_btn);
         mFilesystemSpinner = (Spinner) rootView.findViewById(R.id.mount_file_system_spinner);
 
@@ -303,18 +249,13 @@ public class MountFragment extends Fragment {
         final String _target = mSharedPreferences.getString(KEY_MOUNT_TARGET,null);
         if(_target!=null)
             mTargetEdit.setText(_target);
-        int _type = mSharedPreferences.getInt(KEY_MOUNT_TYPE,0);
-        mFilesystemSpinner.setSelection(_type);
-        boolean _readonly = mSharedPreferences.getBoolean(KEY_MOUNT_READONLY,false);
-        mReadonlyCheck.setChecked(_readonly);
-        boolean _loop = mSharedPreferences.getBoolean(KEY_MOUNT_LOOP,false);
-        mLoopCheck.setChecked(_loop);
-        mCheckMask.setChecked(mSharedPreferences.getBoolean(KEY_MOUNT_MASK,true));
-        mCheckCharset.setChecked(mSharedPreferences.getBoolean(KEY_MOUNT_CHARSET,false));
+//        int _type = mSharedPreferences.getInt(KEY_MOUNT_TYPE,0);
+//        mFilesystemSpinner.setSelection(_type);
+//        boolean _readonly = mSharedPreferences.getBoolean(KEY_MOUNT_READONLY,false);
+//        mReadonlyCheck.setChecked(_readonly);
         if(fileSystems[mFilesystemSpinner.getSelectedItemPosition()].equals("vfat"))
             mCheckMask.setChecked(true);
         checkMask();
-        checkCharset();
 
         mCheckMask.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -322,13 +263,6 @@ public class MountFragment extends Fragment {
                 MountFragment.this.checkMask();
             }
         });
-        mCheckCharset.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                MountFragment.this.checkCharset();
-            }
-        });
-        //checkLoop();
 
         allocBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -360,70 +294,31 @@ public class MountFragment extends Fragment {
         mountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //checkLoop();
                 // mount operation
                 mTargetEdit.requestFocus();
                 mountBtn.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         boolean _readonly = mReadonlyCheck.isChecked();
-                        final boolean _loop = mLoopCheck.isChecked();
                         boolean _mask = mCheckMask.isChecked();
-                        boolean _charset = mCheckCharset.isChecked();
                         String _type = fileSystems[mFilesystemSpinner.getSelectedItemPosition()];
                         if(_type.startsWith(" "))
                             _type = null;
-                        String _iocharset = null;
-                        String _codepage = null;
                         String _maskStr = null;
-                        if(_charset)
-                        {
-                            _iocharset = mIocharset.getText().toString();
-                            _codepage = mCodepage.getText().toString();
-                        }
                         if(_mask)
                             _maskStr = getmask();
-                        if(!mount(_readonly,_loop,_iocharset,_codepage,_maskStr,mDevEdit.getText().toString()
+                        if(!mount(_readonly,_maskStr,mDevEdit.getText().toString()
                                 ,mTargetEdit.getText().toString(),_type))
                         {
-                            Toast.makeText(mActivity,getString(R.string.mount)+" "+getString(R.string.fail)+":"+ShellUnit.stdErr,Toast.LENGTH_LONG).show();
+                            Toast.makeText(mActivity,getString(mount)+" "+getString(R.string.fail)+":"+ShellUnit.stdErr,Toast.LENGTH_LONG).show();
                         }else
                         {
-                            Toast.makeText(mActivity,getString(R.string.mount)+" "+getString(R.string.success),Toast.LENGTH_LONG).show();
+                            Toast.makeText(mActivity,getString(mount)+" "+getString(R.string.success),Toast.LENGTH_LONG).show();
                         }
 
                         saveStatus();
                     }
                 }, 500);
-
-            }
-        });
-
-        mLoopCheck.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkLoop();
-            }
-        });
-
-        mDevEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                //checkLoop();
-                mDevEdit.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Boolean _isBlock = isBlockDev();
-                        if(_isBlock!=null)
-                        {
-                            if(_isBlock)
-                                mLoopCheck.setChecked(false);
-                            else
-                                mLoopCheck.setChecked(true);
-                            //checkLoop();
-                        }
-                    }
-                }, 200);
 
             }
         });

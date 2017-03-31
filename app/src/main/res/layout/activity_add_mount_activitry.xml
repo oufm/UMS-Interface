@@ -137,12 +137,12 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:text="@string/ums_readonly_check_tip"/>
-            <CheckBox
-                android:id="@+id/mount_loop"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="@string/mount_loop_check_tip"/>
+            <!--<CheckBox-->
+                <!--android:id="@+id/mount_loop"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="8dp"-->
+                <!--android:text="@string/mount_loop_check_tip"/>-->
             <Spinner
                 android:paddingRight="0dp"
                 android:paddingTop="4dp"
@@ -156,57 +156,56 @@
 
             </Spinner>
         </LinearLayout>
-        <android.support.v4.widget.Space
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/charset_tip"/>
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:id="@+id/check_charset"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:id="@+id/content_charset"
-            android:visibility="invisible"
-            android:gravity="center">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="iocharset"/>
-            <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:id="@+id/edit_iocharset"
-                android:text="utf8"/>
-            <android.support.v4.widget.Space
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="codepage"/>
-            <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:id="@+id/edit_codepage"
-                android:text="936"/>
+        <!--<android.support.v4.widget.Space-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:layout_weight="2"/>-->
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal">-->
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/charset_tip"/>-->
+            <!--<CheckBox-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:checked="true"-->
+                <!--android:id="@+id/check_charset"/>-->
+        <!--</LinearLayout>-->
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:id="@+id/content_charset"-->
+            <!--android:gravity="center">-->
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="iocharset"/>-->
+            <!--<EditText-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="4"-->
+                <!--android:id="@+id/edit_iocharset"-->
+                <!--android:text="iso8859-1"/>-->
+            <!--<android.support.v4.widget.Space-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight="1"/>-->
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="codepage"/>-->
+            <!--<EditText-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="4"-->
+                <!--android:id="@+id/edit_codepage"-->
+                <!--android:text="437"/>-->
 
-        </LinearLayout>
+        <!--</LinearLayout>-->
         <android.support.v4.widget.Space
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -235,7 +234,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/content_mask"
-            android:visibility="invisible"
             android:layout_gravity="center">
             <TableRow>
                 <TextView android:text="   " />

@@ -35,7 +35,7 @@ public class MassStorageUnit {
         File _lun = new File(lun);
         if(_lun.exists()&&_lun.isDirectory())
             return lun;
-        String _output = ShellUnit.execBusybox("du /sys  |"+ShellUnit.BUSYBOX+"grep \"/lun\"");
+        String _output = ShellUnit.execBusybox("du /sys  |"+ShellUnit.BUSYBOX+" grep \"/lun\"");
         if(_output == null||_output.length()==0)
             return null;
         int startOffset = _output.indexOf("/");
@@ -135,7 +135,7 @@ public class MassStorageUnit {
     static private String searchPath()
     {
         final String target = "/android_usb/android0";
-        String output = ShellUnit.execBusybox("du /sys  |"+ShellUnit.BUSYBOX+"grep "+target);
+        String output = ShellUnit.execBusybox("du /sys  |"+ShellUnit.BUSYBOX+" grep "+target);
         if(output == null||output.length()==0)
             return null;
         int startOffset = output.indexOf("/");

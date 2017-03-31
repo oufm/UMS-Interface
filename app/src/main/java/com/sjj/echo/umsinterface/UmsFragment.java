@@ -166,6 +166,7 @@ public class UmsFragment extends Fragment {
         else {
             Toast.makeText(mActivity, "UMS"+" "+getString(R.string.success), Toast.LENGTH_SHORT).show();
             saveStatus();
+            ((FrameActivity)mActivity).saveHistory(_devPath,true);
         }
         refreshStatus();
     }

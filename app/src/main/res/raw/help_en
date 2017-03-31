@@ -25,12 +25,8 @@ path this software relied.Like  /sys/class/android_usb/android0 or  /sys/devices
 source of the data to mount,an image file or a block device is available .<br/>
 <b style="color:#009;">mount point:</b>
 chose a directory to mount.<br/>
-<b style="color:#009;">loop:</b>
-must be checked,when use image file.<br/>
 <b style="color:#009;">file system:</b>
 will be automatically chose if not specified.<br/>
-<b style="color:#009;">eliminate garbled:</b>
-change charset for file names.
 <b style="color:#009;">mask:</b>
 used to set dmask and fmask.<br/>
 <b style="color:#900;"> ** </b>

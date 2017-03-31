@@ -1,7 +1,7 @@
 # UMS Interface
 
 ## latest version
- * 1.3_ultimate [download apk](https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/update/app-release.apk)
+ * 1.3.4 [download apk](https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/update/app-release.apk)
 
 ## screen shots
 ![](https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/screenshots/p1.png)
@@ -15,7 +15,7 @@
 ![](https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/screenshots/p5.png)
 
 ## introduction
- * Root permission is needed,or ANR when launch .
+ * Root permission is needed.
  * This program allows you to chose a block device or disk image as a 'disk',and communicate with PC through usb mass storage (just as usb disk do).
  * There are some special usages. For example, you can select the whole emmc '/dev/block/mmcblk0' and mount it to pc linux, so that you can some tool like gparted to do something like partition.And you can also use it as boot disk.
 
