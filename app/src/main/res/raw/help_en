@@ -9,6 +9,8 @@ set current data source as U disk<br/>
 mount current data source<br/>
 <b style="color:#009;">quick create:</b>
 create a image with the given size,format as vfat,mount it,and use as U disk<br/>
+<b style="color:#900;"> ** </b>
+If the file you just copied can not be displayed immediately, try click 'close'/'launch' and 'umount'/'mount' continuously<br/>
 <h1 style="color:#0F0">U disk</h1>
 <b style="color:#009;">block device:</b>
 Representing a disk or partition, usually located in /dev/block or /dev.<br/>
