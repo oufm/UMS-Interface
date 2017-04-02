@@ -106,6 +106,8 @@ public class LogUnit {
     }
     public void close()
     {
+        if(mThread==null)
+            return;
         mThread.mClose = true;
         mThread = null;
         mOutputStream = null;

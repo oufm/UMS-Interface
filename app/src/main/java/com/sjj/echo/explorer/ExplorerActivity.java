@@ -177,8 +177,7 @@ public class ExplorerActivity extends AppCompatActivity
 //        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
 //        mNavigationView.setNavigationItemSelectedListener(this);
 
-        PermissionUnit.getPermission(new String[]{"android.permission.RECEIVE_BOOT_COMPLETED",
-                "android.permission.WRITE_EXTERNAL_STORAGE"},this);
+        PermissionUnit.getPermission(new String[]{"android.permission.WRITE_EXTERNAL_STORAGE"},this);
         mTabLayout = (TabLayout) findViewById(R.id.explorer_tab_layout);
         mViewPager = (ViewPager) findViewById(R.id.explorer_id_viewpager);
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);

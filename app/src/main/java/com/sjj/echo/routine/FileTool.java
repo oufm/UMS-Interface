@@ -266,9 +266,10 @@ public class FileTool {
     static public List<FileItem> openDir(String path)//path that doesn't ended with '/' except rootpath
     {
         //Log.d("@echo off","openDir|path="+path);
+        if(path.equals("/"))
+            return openDirRoot(path);
         File file = new File(path);
         List<FileItem> list = new ArrayList<>();
-
         File[] allFile = file.listFiles();
         if(allFile == null) {
             Log.d("@echo off","openDir|fail");

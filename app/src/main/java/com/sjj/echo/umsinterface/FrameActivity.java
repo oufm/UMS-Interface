@@ -432,7 +432,7 @@ public class FrameActivity extends AppCompatActivity implements PopupMenu.OnMenu
 
         Locale locale = getResources().getConfiguration().locale;
         sLang = locale.getLanguage();
-        PermissionUnit.getPermission(new String[]{"android.permission.INTERNET","android.permission.RECEIVE_BOOT_COMPLETED"},this);
+        PermissionUnit.getPermission(new String[]{"android.permission.INTERNET","com.android.launcher.permission.INSTALL_SHORTCUT"},this);
         //app may be cached, LogUnit and ShellUnit may be closed ,restart them.
         sLog.restart();
         ShellUnit.restart();
