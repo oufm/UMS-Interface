@@ -27,7 +27,7 @@
             />
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="65dp"
             android:orientation="horizontal"
             android:paddingLeft="3dp"
             android:gravity="center"
@@ -95,7 +95,7 @@
                     android:id="@+id/mount_target_edit"
                     android:layout_width="match_parent"
                     android:hint="@string/ums_edit_hint"
-                    android:layout_height="55dp"
+                    android:layout_height="65dp"
                     />
             </LinearLayout>
             <LinearLayout

@@ -74,7 +74,7 @@
     <string name="mount_namespace_tip">确保\'挂载命名空间分离\'已关闭</string>
     <string name="charset_tip">消除乱码</string>
     <string name="status">状态</string>
-    <string name="umsdev">这是一个块设备,请谨慎操作,防止数据丢失!</string>
+    <string name="umsdev">这是一个块设备,请谨慎操作,以免数据丢失!</string>
     <string name="reportfail">生成设备报告失败</string>
     <string name="reportok">成功,可将其与遇到的问题一并发送.位于: </string>
     <string name="create_report">导出日志</string>

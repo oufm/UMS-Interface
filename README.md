@@ -1,7 +1,7 @@
 # UMS Interface
 
 ## latest version
- * 1.3.4 [download apk](https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/update/app-release.apk)
+ * 1.3.5 [download apk](https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/update/app-release.apk)
 
 ## screen shots
 ![](https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/screenshots/p1.png)

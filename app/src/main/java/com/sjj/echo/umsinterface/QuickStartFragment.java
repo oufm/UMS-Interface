@@ -150,6 +150,17 @@ public class QuickStartFragment extends Fragment {
                 end = out.length();
             mStatusSD = "/dev/block/vold/"+out.substring(0,end);
         }
+        if(mStatusSD==null)
+        {
+            String _out = ShellUnit.execRoot("ls /dev/block/vold/ ");
+            if(ShellUnit.stdErr==null&&_out.length()>0)
+            {
+                int end = _out.indexOf("\n");
+                if(end<0)
+                    end = _out.length();
+                mStatusSD = "/dev/block/vold/"+_out.substring(0,end);
+            }
+        }
     }
 
     private void getSdByMount()
