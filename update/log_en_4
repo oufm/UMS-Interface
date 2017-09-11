@@ -1,0 +1,4 @@
+1.1.2:
+   * Fix android7.x permission issue.
+   * Enhance language support.
+   * Add update function.

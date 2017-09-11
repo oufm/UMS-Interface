@@ -1,12 +1,12 @@
 # UMS Interface
 This program allows you to chose a block device or disk image as a 'disk',and communicate with PC through usb mass storage (just as usb disk do).Root permission is needed.
+
+ * [download latest version](https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/update/app-release.apk)
+
 ![](https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/screenshots/p1.png)
 
-## latest version
- * [download apk](https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/update/app-release.apk)
-
 ## introduction
-<h3 style="color:#0F0">quick start</h3>
+<h4 style="color:#0F0">quick start</h4>
 <b style="color:#009;">usb connection:</b>
 set current data source as U disk<br/>
 <b style="color:#009;">mount to:</b>
@@ -15,7 +15,7 @@ mount current data source<br/>
 create a image with the given size,format as vfat,mount it,and use it as U disk<br/><br/>
 <b style="color:#900;">
     *If the file you just copied can not be displayed immediately, try click 'close'/'launch' and 'umount'/'mount' continuously.</b><br/>
-<h3 style="color:#0F0">U disk</h3>
+<h4 style="color:#0F0">U disk</h4>
 <b style="color:#009;">block device:</b>
 Representing a disk or partition, usually located in /dev/block or /dev.<br/>
 <b style="color:#009;">image file:</b>
@@ -26,7 +26,7 @@ source of the data in U disk,an image file or a block device is available .<br/>
 path this software relied.Like  /sys/class/android_usb/android0 or  /sys/devices/virtual/android_usb/android0.<br/>
 <b style="color:#009;">readonly:</b>may have no effect for some phone
 <br/>
-<h3 style="color:#0F0">mount</h3>
+<h4 style="color:#0F0">mount</h4>
 <b style="color:#009;">data source:</b>
 source of the data to mount,an image file or a block device is available .<br/>
 <b style="color:#009;">mount point:</b>
@@ -37,7 +37,7 @@ will be automatically chose if not specified.<br/>
 used to set dmask and fmask.<br/><br/>
 <b style="color:#900;">
     *You must disable 'mount namespace separation' in SuperSu, or it won't work.</b><br/>
-<h3 style="color:#0F0">create image</h3>
+<h4 style="color:#0F0">create image</h4>
 <b style="color:#009;">format:</b>
 create file system for image file.<br/><br/>
 It can be used as a boot disk for PC when select a solved image.<br/>
@@ -57,7 +57,7 @@ It can be used as a boot disk for PC when select a solved image.<br/>
  * [boot disk image(PE),password: er8y](http://pan.baidu.com/s/1gfa9GbD)
 
 ## 简介
-<h3 style="color:#0F0">快捷启动</h3>
+<h4 style="color:#0F0">快捷启动</h4>
 <b style="color:#009;">U盘连接:</b>
 将当前数据源作为U盘,点击'终止'取消 <br/>
 <b style="color:#009;">挂载到:</b>
@@ -66,7 +66,7 @@ It can be used as a boot disk for PC when select a solved image.<br/>
 点击创建,创建指定大小镜像文件,格式化vfat,并将其挂载,同时作为U盘使用<br/><br/>
 <b style="color:#900;">  
     *如果刚复制的文件无法立即显示,尝试连续点击'关闭'/'启动','卸载'/'挂载'.</b><br/>
-<h3 style="color:#0F0">U盘</h3>
+<h4 style="color:#0F0">U盘</h4>
 <b style="color:#009;">块设备:</b>
 代表一个存储器或分区,通常位于/dev/block 或 /dev.<br/>
 <b style="color:#009;">镜像文件:</b>
@@ -79,7 +79,7 @@ It can be used as a boot disk for PC when select a solved image.<br/>
 U盘只读,很多手机上可能无效<br/><br/>
 <b style="color:#900;">
     *由于内核原因,使用三星芯片的一些手机使用此功能会被作为ＣＤ　ＲＯＭ</b><br/>
-<h3 style="color:#0F0">挂载</h3>
+<h4 style="color:#0F0">挂载</h4>
 <b style="color:#009;">数据源:</b>
 可以指定内含文件系统的镜像文件或块设备.<br/>
 <b style="color:#009;">挂载点:</b>
@@ -90,7 +90,7 @@ U盘只读,很多手机上可能无效<br/><br/>
 用于挂载vfat时指定文件访问权限.<br/><br/>
 <b style="color:#900;"> 
     *SuperSU 中的"挂载空间分离"可能会影响本功能,可尝试在SuperSu中取消.</b><br/>
-<h3 style="color:#0F0">创建镜像</h3>
+<h4 style="color:#0F0">创建镜像</h4>
 <b style="color:#009;">格式化:</b>
 为文件建立文件系统,以便立即挂载.<br/>
 <b style="color:#900;"></b>

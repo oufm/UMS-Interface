@@ -1,0 +1,5 @@
+1.2.0
+	* fix vfat mount permission
+	* fix eliminate garbled
+	* add format function
+	* mass storage may be show as CD ROM in some phone whose chip make by samsung

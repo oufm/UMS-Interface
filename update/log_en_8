@@ -1,0 +1,4 @@
+1.3.2
+	* fix access permission for mount point
+	* improve the efficiency of implementation
+	* improve UI
