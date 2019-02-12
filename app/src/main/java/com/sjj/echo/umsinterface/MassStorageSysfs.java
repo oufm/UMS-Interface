@@ -8,21 +8,16 @@ import java.io.File;
  * Created by SJJ on 2017/1/1.
  */
 
-public class MassStorageUnit {
+public class MassStorageSysfs extends MassStorage {
     static private String mConfigPath = "/sys/devices/virtual/android_usb/android0/";
     static public String mLunPath = "/sys/devices/virtual/android_usb/android0/f_mass_storage/lun";
-    static public String mError = null;
-    static public String mStatusEnable = "unknown";
-    static public String mStatusFile = "unknown";
-    static public String mStatusFunction = "unknown";
-    static public String mStatusReadonly = "unknown";
-    static public boolean mReady = false;
 
-    static {
+    public MassStorageSysfs()
+    {
         configCheck();
     }
 
-    public static void setConfigPath(String path)
+    public void setConfigPath(String path)
     {
         mConfigPath = path;
         if(!mConfigPath.endsWith("/"))
@@ -30,7 +25,7 @@ public class MassStorageUnit {
         configCheck();
     }
 
-    private static String samsungFix(String lun)
+    private String samsungFix(String lun)
     {
         File _lun = new File(lun);
         if(_lun.exists()&&_lun.isDirectory())
@@ -53,7 +48,7 @@ public class MassStorageUnit {
 
     }
 
-    static private boolean pathCheck()
+    private boolean pathCheck()
     {
         File _config = new File(mConfigPath);
         File _functions = new File(mConfigPath+"functions");
@@ -72,13 +67,13 @@ public class MassStorageUnit {
      * @param dev block device or image file
      * @param readonly  readonly or not
      * */
-    static public boolean umsConfig(String dev,boolean readonly)
+    public boolean umsConfig(String dev,boolean readonly)
     {
         return umsConfig(dev,readonly,"mass_storage");
     }
 
 
-    static private void configCheck()
+    private void configCheck()
     {
         mError = null;
         mReady = false;
@@ -105,12 +100,12 @@ public class MassStorageUnit {
      * @param dev block device or image file
      * @param readonly  readonly or not
      * */
-    static public boolean umsConfig(String dev,boolean readonly,String function)
+    public boolean umsConfig(String dev,boolean readonly,String function)
     {
         mError = null;
         if(!mReady)
         {
-            mError = "MassStorageUnit is not ready!";
+            mError = "MassStorageSysfs is not ready!";
             return false;
         }
         String cmd = "";
@@ -132,7 +127,7 @@ public class MassStorageUnit {
      * search the config path.
      * @return the config path ,null if no find
      * */
-    static private String searchPath()
+    private String searchPath()
     {
         final String target = "/android_usb/android0";
         String output = ShellUnit.execBusybox("du /sys  |"+ShellUnit.BUSYBOX+" grep "+target);
@@ -153,7 +148,7 @@ public class MassStorageUnit {
      * read the usb mass storage to the member variables
      * @return exit value of the 'su'
      * */
-    static public boolean refreshStatus()
+    public boolean refreshStatus()
     {
         mError = null;
         if(!mReady)
@@ -209,23 +204,5 @@ public class MassStorageUnit {
         }
         return true;
     }
-
-
-//    static public boolean umsConfig(String configPath,String dev,boolean readonly)
-//    {
-//        mConfigPath = configPath;
-//        return umsConfig(dev,readonly);
-//    }
-
-//    /**
-//     * read the usb mass storage to the member variables
-//     * @param configPath the base directory for configuration
-//     * @return exit value of the 'su'
-//     * */
-//    static public boolean refreshStatus(String configPath)
-//    {
-//        mConfigPath = configPath;
-//        return refreshStatus();
-//    }
 
 }

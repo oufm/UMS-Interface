@@ -40,6 +40,7 @@ import java.net.URLConnection;
 import java.util.Date;
 import java.util.Locale;
 
+import static com.sjj.echo.umsinterface.MassStorage.sMassStorage;
 import static com.sjj.echo.umsinterface.R.raw.ums_device_info;
 
 /**
@@ -362,9 +363,9 @@ public class FrameActivity extends AppCompatActivity implements PopupMenu.OnMenu
         logInfo("ums(dev="+_dev+",function="+function+")");
         boolean ret;
         if(function==null)
-            ret=MassStorageUnit.umsConfig(_dev,false);
+            ret=sMassStorage.umsConfig(_dev,false);
         else
-            ret=MassStorageUnit.umsConfig(_dev,false,function);
+            ret=sMassStorage.umsConfig(_dev,false,function);
         return ret;
     }
 
@@ -438,6 +439,13 @@ public class FrameActivity extends AppCompatActivity implements PopupMenu.OnMenu
         ShellUnit.restart();
 
         initShell();
+        if(sMassStorage == null) {
+            if(ShellUnit.execRoot("getprop sys.usb.configfs").trim().startsWith("1")) {
+                sMassStorage = new MassStorageConfigfs();
+            }else{
+                sMassStorage = new MassStorageSysfs();
+            }
+        }
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         checkVersion();
 

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -26,6 +27,7 @@ import java.util.LinkedList;
 
 import static com.sjj.echo.routine.ShellUnit.execRoot;
 import static com.sjj.echo.umsinterface.FrameActivity.logInfo;
+import static com.sjj.echo.umsinterface.MassStorage.sMassStorage;
 
 
 /**
@@ -180,8 +182,8 @@ public class QuickStartFragment extends Fragment {
     private void getStatus() {
         //mStatusFile = null;
         getSd();
-        MassStorageUnit.refreshStatus();
-        String _path = MassStorageUnit.mStatusFile;
+        sMassStorage.refreshStatus();
+        String _path = sMassStorage.mStatusFile;
         if (_path == null)
             return;
         if(_path.length()==0)
@@ -190,7 +192,7 @@ public class QuickStartFragment extends Fragment {
             return;
         if(mStatusFile==null||!sameDir(mStatusFile,_path))
             mStatusFile = _path;
-        if (MassStorageUnit.mStatusFunction.equals("mass_storage") && MassStorageUnit.mStatusEnable.equals("1"))
+        if (sMassStorage.mStatusFunction.contains("mass_storage") && sMassStorage.mStatusEnable.equals("1"))
             mStatusUsb = true;
         else
             mStatusUsb = false;
@@ -348,9 +350,9 @@ public class QuickStartFragment extends Fragment {
         FrameActivity _activity = (FrameActivity) mActivity;
 
         boolean ok_ums = _activity.ums(_path,null);
-        MassStorageUnit.refreshStatus();
-        if(MassStorageUnit.mStatusFile!=null&&MassStorageUnit.mStatusFile.length()>0)//change it to the original path
-            _path = MassStorageUnit.mStatusFile;
+        sMassStorage.refreshStatus();
+        if(sMassStorage.mStatusFile!=null&&sMassStorage.mStatusFile.length()>0)//change it to the original path
+            _path = sMassStorage.mStatusFile;
         boolean ok_mount = true;
         String tip = "";
         String _out = ShellUnit.execBusybox("mount|"+ShellUnit.BUSYBOX+" grep \""+_path+"\"");
@@ -412,9 +414,9 @@ public class QuickStartFragment extends Fragment {
         }
         String _mountPoint = getMountPoint();
         boolean ok_ums = _activity.ums(file,null);
-        MassStorageUnit.refreshStatus();
-        if(MassStorageUnit.mStatusFile!=null&&MassStorageUnit.mStatusFile.length()>0)
-            file = MassStorageUnit.mStatusFile;
+        sMassStorage.refreshStatus();
+        if(sMassStorage.mStatusFile!=null&&sMassStorage.mStatusFile.length()>0)
+            file = sMassStorage.mStatusFile;
         boolean ok_mount = _activity.mount(false,true,file,_mountPoint);
         String tip ="";
         if(ok_mount)
@@ -526,22 +528,20 @@ public class QuickStartFragment extends Fragment {
             public void onClick(View v) {
                 if(mStatusMountpoint!=null&&mStatusMountpoint.length()>0) {
                     String _path = mStatusMountpoint;
-                    if(_path.startsWith("/data/media")||_path.startsWith("/mnt/media_rw"))
-                    {
-                        if(_path.startsWith(mImgDir))
-                        {
-                            _path = _path.replace(mImgDir,"/sdcard/ums_mnt");
+                    if(Build.VERSION.SDK_INT<=23) {
+                        if (_path.startsWith("/data/media") || _path.startsWith("/mnt/media_rw")) {
+                            if (_path.startsWith(mImgDir)) {
+                                _path = _path.replace(mImgDir, "/sdcard/ums_mnt");
+                            }
                         }
-                    }
-                    if(_path.startsWith("/mnt/media_rw"))
-                    {
-                        String npath = _path.replace("/mnt/media_rw","/storage");
-                        ShellUnit.execRoot("ls \""+npath+"\"");
-                        if(ShellUnit.stdErr==null)
-                        {
-                            _path = npath;
-                        }
+                        if (_path.startsWith("/mnt/media_rw")) {
+                            String npath = _path.replace("/mnt/media_rw", "/storage");
+                            ShellUnit.execRoot("ls \"" + npath + "\"");
+                            if (ShellUnit.stdErr == null) {
+                                _path = npath;
+                            }
 
+                        }
                     }
                     Intent intent = new Intent(mActivity, ExplorerActivity.class);
                     intent.addCategory(Intent.CATEGORY_OPENABLE);

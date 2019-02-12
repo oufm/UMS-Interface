@@ -326,7 +326,7 @@ public class FileListView extends ListView implements View.OnKeyListener {
             list = FileTool.openDirRoot(path);
         else
             list = FileTool.openDir(path);
-        if(null == list)
+        if(null == list || list.size() == 0)
             return false;
         mFiles = list;
         mCurPath = path;

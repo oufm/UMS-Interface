@@ -326,21 +326,24 @@ public class FileTool {
             return null;
         }
         List<FileItem> list = new ArrayList<>();
-        Pattern linePattern = Pattern.compile("(\\n|^).+");//匹配每行
-        Matcher lineMatcher = linePattern.matcher(resultString);
+        String[] lines = resultString.split("\n");
         int maxLinkCheckNum = 55;//每次打开文件夹,检查软链是否为目录的最大次数,过大会引起ANR
-        while(lineMatcher.find())
+        for(String _line: lines)
         {
-            String lineString = lineMatcher.group();
+            String lineString = _line.trim();
             if(lineString.startsWith("\n"))//开头可能有'\n',必须去掉
                 lineString=lineString.substring(1, lineString.length());
             Pattern premPattern = Pattern.compile("^(\\w|-)+"); //匹配权限
             Matcher preMatcher = premPattern.matcher(lineString);
-            if(!preMatcher.find()) break;
+            if(!preMatcher.find()) {
+                continue;
+            }
             String premString = preMatcher.group();
             Pattern timePattern = Pattern.compile("\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}");
             Matcher timeMatcher = timePattern.matcher(lineString);
-            if(!timeMatcher.find()) break;
+            if(!timeMatcher.find()) {
+                continue;
+            }
             String timeString = timeMatcher.group();
             String sizeString = "";
             long size = 0;

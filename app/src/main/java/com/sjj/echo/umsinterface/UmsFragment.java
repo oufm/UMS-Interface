@@ -24,6 +24,7 @@ import com.sjj.echo.explorer.ExplorerActivity;
 import java.util.LinkedList;
 
 import static com.sjj.echo.umsinterface.FrameActivity.logInfo;
+import static com.sjj.echo.umsinterface.MassStorage.sMassStorage;
 
 /**
  * Created by SJJ on 2017/3/8.
@@ -138,16 +139,16 @@ public class UmsFragment extends Fragment {
     protected void refreshStatus()
     {
         logInfo("ums refreshStatus()");
-        if(!MassStorageUnit.refreshStatus())
-            Toast.makeText(mActivity,MassStorageUnit.mError,Toast.LENGTH_LONG).show();
+        if(!sMassStorage.refreshStatus())
+            Toast.makeText(mActivity,sMassStorage.mError,Toast.LENGTH_LONG).show();
         else
         {
             //Toast.makeText(mActivity,"status update ok!",Toast.LENGTH_SHORT).show();
             String info = "(click to refresh)\n";
-            info += "gadget status: "+ (MassStorageUnit.mStatusEnable.equals("1")?"enabled":"disabled")+"\n";
-            info += "gadget functions: "+ MassStorageUnit.mStatusFunction + "\n" ;
-            info += "mass storage file: " + MassStorageUnit.mStatusFile + "\n";
-            info += "mass storage mode: " + (MassStorageUnit.mStatusReadonly.equals("1")?"readonly":"readwrite");
+            info += "gadget status: "+ (sMassStorage.mStatusEnable.equals("1")?"enabled":"disabled")+"\n";
+            info += "gadget functions: "+ sMassStorage.mStatusFunction + "\n" ;
+            info += "mass storage file: " + sMassStorage.mStatusFile + "\n";
+            info += "mass storage mode: " + (sMassStorage.mStatusReadonly.equals("1")?"readonly":"readwrite");
             mStatusTxt.setText(info);
         }
     }
@@ -161,8 +162,8 @@ public class UmsFragment extends Fragment {
         String _devPath = mDevEdit.getText().toString();
         boolean _readonly = mReadonlyCheck.isChecked();
         logInfo("ums umsRun(devPath="+_devPath+",readonly="+_readonly);
-        if(!MassStorageUnit.umsConfig(_devPath,_readonly))
-            Toast.makeText(mActivity,"UMS"+" "+getString(R.string.fail)+":"+MassStorageUnit.mError,Toast.LENGTH_LONG).show();
+        if(!sMassStorage.umsConfig(_devPath,_readonly))
+            Toast.makeText(mActivity,"UMS"+" "+getString(R.string.fail)+":"+sMassStorage.mError,Toast.LENGTH_LONG).show();
         else {
             Toast.makeText(mActivity, "UMS"+" "+getString(R.string.success), Toast.LENGTH_SHORT).show();
             saveStatus();
@@ -184,7 +185,7 @@ public class UmsFragment extends Fragment {
             mDevEdit.setText(device);
         if(config!=null) {
             mPathEdit.setText(config);
-            MassStorageUnit.setConfigPath(config);
+            sMassStorage.setConfigPath(config);
         }
     }
 
@@ -286,7 +287,7 @@ public class UmsFragment extends Fragment {
         mPathEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                MassStorageUnit.setConfigPath(mDevEdit.getText().toString());
+                sMassStorage.setConfigPath(mDevEdit.getText().toString());
             }
         });
 
