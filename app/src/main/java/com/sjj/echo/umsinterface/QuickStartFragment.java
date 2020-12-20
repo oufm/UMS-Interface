@@ -281,7 +281,7 @@ public class QuickStartFragment extends Fragment {
     public String getFilename()
     {
         logInfo("quick_start getFilename");
-        execRoot("mkdir /sdcard/ums_img;chomd 777 /sdcard/ums_img");
+        execRoot("mkdir /sdcard/ums_img;chmod 777 /sdcard/ums_img");
         int num=0;
         while (execRoot("ls /sdcard/ums_img/"+num+".img").length()>0)
             num++;
