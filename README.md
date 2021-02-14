@@ -4,11 +4,88 @@
 
 ## English Description
 
+Basic function: Use the usb gadget driver to make the specified image or block device accessible by the PC as a USB Drive; at the same time, mount the image or block device to the Android local.
+
+
+
+Scenes to be used:
+
+* Get rid of `MTP`, realize file transfer between PC and Android, Mass Storage is more compatible than MTP.
+* Use a mobile phone to replace a physical USB flash drive.
+* Use an existing iso or pe image for PC system maintenance, no need to burn the disk.
+
+
+
+**The UMSInterface APP is no longer maintained. If you still want to use this APP, please refer to the [APP Description](https://github.com/outofmemo/UMS-Interface/blob/master/README-app.md).**
+
+
+
+As an alternative, the following provides an example of a shell script based on the Termux environment to accomplish roughly the same function. This method requires users to have a certain understanding of linux and shell. At the same time, mounting/unmounting partitions, and operations on block devices are High-risk operations, if the user is not familiar with the Linux environment, it may brick the phone.
+
+
+
+The alternative method is as follows:
+
+1. This shell script running environment is based on Termux, please install Termux first.
+
+   In order to facilitate one-click operation, it is recommended to install [Termux:Widget](https://wiki.termux.com/wiki/Termux:Widget).
+
+   In order to display toast messages conveniently, it is recommended to install [Termux:API](https://wiki.termux.com/wiki/Termux:API).
+
+2. Copy [mass_storage.sh](https://github.com/outofmemo/UMS-Interface/blob/master/mass_storage.sh) to `/data/data/com.termux/files/home/.shortcuts/`.
+
+   Some of the parameters can be modified according to actual conditions. For example:
+
+   https://github.com/outofmemo/UMS-Interface/blob/87ce4fe5ae81baaf5a846c680f3fcff3fed9292e/mass_storage.sh#L17
+
+   * `default_size_mb`: The size of the image created by default, unit: MB.
+   * `dst`: Mount point path. Leave blank to not mount.
+   * `src`: Image or block device path.
+     * You can specify a path that does not exist, and an empty image will be created automatically.
+     * You can specify a block device path. But be careful to do so, otherwise operating errors may cause the phone to become bricked.
+     * You can specify an existing image. For example, you can specify an iso image or a pe disk image for PC system maintenance. You can also specify a disk image copied with `dd` command.
+
+3. Add executable permissions to `mass_storage.sh`:
+
+   ```bash
+   chmod +x /data/data/com.termux/files/home/.shortcuts/mass_storage.sh
+   ```
+
+4. If `Termux: Widget` is installed, you can add the corresponding widget on the desktop, and click `mass_storage.sh` on the widget to execute this script.
+
+   If it is not installed, you can execute this script directly in `Termux`.
+
+   ![](https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/screenshots/widget.png)
+
+5. If you want to run this script automatically at boot:
+
+   1. Install [Termux:Boot](https://wiki.termux.com/wiki/Termux:Boot).
+
+   2. Grant `Termux:Boot` self-start permission in the application settings.
+
+   3. Copy `mass_storage.sh` to `/data/data/com.termux/files/home/.termux/boot`, and add executable permissions.
+
+      ```bash
+      cp /data/data/com.termux/files/home/.shortcuts/mass_storage.sh /data/data/com.termux/files/home/.termux/boot
+      chmod +x /data/data/com.termux/files/home/.termux/boot/mass_storage.sh
+      ```
+
+
+
+Precautions:
+
+* After the PC writes the file to the USB Driver, Android cannot perceive the file system changes. You can refresh by executing `mass_storage.sh` again.
+* After the Android writes a file to the image or block device, the PC cannot perceive the change of the file system. You can refresh it by plugging and unplugging the USB or executing `mass_storage.sh` again.
+* Do not write to the file system at the same time on the PC and Android (such as: file movement, copy, rename, create, delete, write), otherwise the file system will be damaged and the file will be lost.
+* Don't store important files in the image or block device specified by the above script without a copy.
+
 
 
 ## 中文描述
 
 基本功能: 使用 `usb gadget` 驱动使指定的镜像或块设备可作为 USB Drive 被PC访问; 同时将此镜像或块设备挂载到Android本地.
+
+
 
 使用场景:
 
@@ -18,11 +95,11 @@
 
 
 
-UMSInterface APP后面不再维护. 如果仍然想使用此APP, 可参考 [APP Description](https://github.com/outofmemo/UMS-Interface/blob/master/README-app.md).
+**UMSInterface APP后面不再维护. 如果仍然想使用此APP, 可参考 [APP Description](https://github.com/outofmemo/UMS-Interface/blob/master/README-app.md).**
 
 
 
-作为替代, 下面提供一个基于`Termux`环境的shell脚本示例, 来完成大致相同的功能. 此方法需要使用者对linux和shell有一定的了解. 同时, 挂载/卸载分区, 以及对块设备的操作本来就是高危操作, 如果使用者对linux环境不熟悉, 可能会时手机变砖, 这也是APP不再维护的原因之一.
+作为替代, 下面提供一个基于`Termux`环境的shell脚本示例, 来完成大致相同的功能. 此方法需要使用者对linux和shell有一定的了解. 同时, 挂载/卸载分区, 以及对块设备的操作本来就是高危操作, 如果使用者对linux环境不熟悉, 可能会使手机变砖.
 
 
 
@@ -30,7 +107,7 @@ UMSInterface APP后面不再维护. 如果仍然想使用此APP, 可参考 [APP 
 
 1. 此shell脚本运行环境基于`Termux`, 请先安装 [Termux](https://termux.com/).
 
-   同时, 为了方便一键操作, 建议安装 [Termux:Widget](https://wiki.termux.com/wiki/Termux:Widget);
+   同时, 为了方便一键操作, 建议安装 [Termux:Widget](https://wiki.termux.com/wiki/Termux:Widget).
 
    为了方便显示toast消息, 建议安装 [Termux:API](https://wiki.termux.com/wiki/Termux:API).
 
