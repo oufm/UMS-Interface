@@ -1,100 +1,88 @@
-# UMS Interface
-This program allows you to chose a block device or disk image as a 'disk',and communicate with PC through usb mass storage (just as usb disk do).Root permission is needed.
+[English Description](#english-description)    [ä¸­æ–‡æè¿°](#ä¸­æ–‡æè¿°)    [APP Description](https://github.com/outofmemo/UMS-Interface/blob/master/README.md)
 
- * [download latest version](https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/update/app-release.apk)
 
-![](https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/screenshots/p1.png)
 
-## introduction
-<h4 style="color:#0F0">quick start</h4>
-<b style="color:#009;">usb connection:</b>
-set current data source as U disk<br/>
-<b style="color:#009;">mount to:</b>
-mount current data source<br/>
-<b style="color:#009;">quick create:</b>
-create a image with the given size,format as vfat,mount it,and use it as U disk<br/><br/>
-<b style="color:#900;">
-    *If the file you just copied can not be displayed immediately, try click 'close'/'launch' and 'umount'/'mount' continuously.</b><br/>
-<h4 style="color:#0F0">U disk</h4>
-<b style="color:#009;">block device:</b>
-Representing a disk or partition, usually located in /dev/block or /dev.<br/>
-<b style="color:#009;">image file:</b>
- Usually named as *.img .An image file with a file system can be mounted like normal disk.<br/>
-<b style="color:#009;">data source:</b>
-source of the data in U disk,an image file or a block device is available .<br/>
-<b style="color:#009;">config path:</b>
-path this software relied.Like  /sys/class/android_usb/android0 or  /sys/devices/virtual/android_usb/android0.<br/>
-<b style="color:#009;">readonly:</b>may have no effect for some phone
-<br/>
-<h4 style="color:#0F0">mount</h4>
-<b style="color:#009;">data source:</b>
-source of the data to mount,an image file or a block device is available .<br/>
-<b style="color:#009;">mount point:</b>
-chose a directory to mount.<br/>
-<b style="color:#009;">file system:</b>
-will be automatically chose if not specified.<br/>
-<b style="color:#009;">mask:</b>
-used to set dmask and fmask.<br/><br/>
-<b style="color:#900;">
-    *You must disable 'mount namespace separation' in SuperSu, or it won't work.</b><br/>
-<h4 style="color:#0F0">create image</h4>
-<b style="color:#009;">format:</b>
-create file system for image file.<br/><br/>
-It can be used as a boot disk for PC when select a solved image.<br/>
+## English Description
 
-## screen shots
-![](https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/screenshots/p2.png)
 
-![](https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/screenshots/p3.png)
 
-![](https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/screenshots/p4.png)
+## ä¸­æ–‡æè¿°
 
-![](https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/screenshots/p5.png)
+åŸºæœ¬åŠŸèƒ½: ä½¿ç”¨ `usb gadget` é©±åŠ¨ä½¿æŒ‡å®šçš„é•œåƒæˆ–å—è®¾å¤‡å¯ä½œä¸º USB Drive è¢«PCè®¿é—®; åŒæ—¶å°†æ­¤é•œåƒæˆ–å—è®¾å¤‡æŒ‚è½½åˆ°Androidæœ¬åœ°.
 
-## see more
- * [android6.0.1 usb mass storage](http://blog.csdn.net/outofmemo/article/details/53348552)
- * [coolapk](http://www.coolapk.com/apk/com.sjj.echo.umsinterface)
- * [boot disk image(PE),password: er8y](http://pan.baidu.com/s/1gfa9GbD)
+ä½¿ç”¨åœºæ™¯:
 
-## ¼ò½é
-<h4 style="color:#0F0">¿ì½İÆô¶¯</h4>
-<b style="color:#009;">UÅÌÁ¬½Ó:</b>
-½«µ±Ç°Êı¾İÔ´×÷ÎªUÅÌ,µã»÷'ÖÕÖ¹'È¡Ïû <br/>
-<b style="color:#009;">¹ÒÔØµ½:</b>
-×Ô¶¯¹ÒÔØµ±Ç°Êı¾İÔ´,µã»÷'ÖÕÖ¹'È¡Ïû<br/>
-<b style="color:#009;">Ò»¼üÆô¶¯:</b>
-µã»÷´´½¨,´´½¨Ö¸¶¨´óĞ¡¾µÏñÎÄ¼ş,¸ñÊ½»¯vfat,²¢½«Æä¹ÒÔØ,Í¬Ê±×÷ÎªUÅÌÊ¹ÓÃ<br/><br/>
-<b style="color:#900;">  
-    *Èç¹û¸Õ¸´ÖÆµÄÎÄ¼şÎŞ·¨Á¢¼´ÏÔÊ¾,³¢ÊÔÁ¬Ğøµã»÷'¹Ø±Õ'/'Æô¶¯','Ğ¶ÔØ'/'¹ÒÔØ'.</b><br/>
-<h4 style="color:#0F0">UÅÌ</h4>
-<b style="color:#009;">¿éÉè±¸:</b>
-´ú±íÒ»¸ö´æ´¢Æ÷»ò·ÖÇø,Í¨³£Î»ÓÚ/dev/block »ò /dev.<br/>
-<b style="color:#009;">¾µÏñÎÄ¼ş:</b>
-Í¨³£ÃüÃûÎª*.img .Ò»¸öÄÚº¬ÎÄ¼şÏµÍ³µÄ¾µÏñÎÄ¼ş¿É±»¹ÒÔØ,ºÍÆÕÍ¨´æ´¢Æ÷Ò»ÑùÊ¹ÓÃ.<br/>
-<b style="color:#009;">Êı¾İÔ´:</b>
-¿ÉÑ¡ÈÎÒâ¾µÏñÎÄ¼ş»ò¿éÉè±¸.ÈôÑ¡Ôò¿éÉè±¸,Çë½÷É÷²Ù×÷,ÒÔÃâÊı¾İ¶ªÊ§.<br/>
-<b style="color:#009;">ÅäÖÃÄ¿Â¼:</b>
-Í¨³£»á×Ô¶¯Ñ°ÕÒ,¿Éµã»÷"Ñ¡Ôñ"ÒÔÊÖ¶¯Ö¸¶¨.¶àÊıÊÖ»úÉÏ´ËÄ¿Â¼Îª  /sys/class/android_usb/android0 »ò  /sys/devices/virtual/android_usb/android0.<br/>
-<b style="color:#009;">Ö»¶Á:</b>
-UÅÌÖ»¶Á,ºÜ¶àÊÖ»úÉÏ¿ÉÄÜÎŞĞ§<br/><br/>
-<b style="color:#900;">
-    *ÓÉÓÚÄÚºËÔ­Òò,Ê¹ÓÃÈıĞÇĞ¾Æ¬µÄÒ»Ğ©ÊÖ»úÊ¹ÓÃ´Ë¹¦ÄÜ»á±»×÷Îª£Ã£Ä¡¡£Ò£Ï£Í</b><br/>
-<h4 style="color:#0F0">¹ÒÔØ</h4>
-<b style="color:#009;">Êı¾İÔ´:</b>
-¿ÉÒÔÖ¸¶¨ÄÚº¬ÎÄ¼şÏµÍ³µÄ¾µÏñÎÄ¼ş»ò¿éÉè±¸.<br/>
-<b style="color:#009;">¹ÒÔØµã:</b>
-Ö¸¶¨Ò»¸öÄ¿Â¼,"´ÅÅÌ"ÖĞµÄÎÄ¼ş»á±»·Åµ½ÕâÀï.<br/>
-<b style="color:#009;">ÎÄ¼şÏµÍ³:</b>
-ºöÂÔ,»á×Ô¶¯ÅĞ¶Ï.<br/>
-<b style="color:#009;">È¨ÏŞÑÚÂë:</b>
-ÓÃÓÚ¹ÒÔØvfatÊ±Ö¸¶¨ÎÄ¼ş·ÃÎÊÈ¨ÏŞ.<br/><br/>
-<b style="color:#900;"> 
-    *SuperSU ÖĞµÄ"¹ÒÔØ¿Õ¼ä·ÖÀë"¿ÉÄÜ»áÓ°Ïì±¾¹¦ÄÜ,¿É³¢ÊÔÔÚSuperSuÖĞÈ¡Ïû.</b><br/>
-<h4 style="color:#0F0">´´½¨¾µÏñ</h4>
-<b style="color:#009;">¸ñÊ½»¯:</b>
-ÎªÎÄ¼ş½¨Á¢ÎÄ¼şÏµÍ³,ÒÔ±ãÁ¢¼´¹ÒÔØ.<br/>
-<b style="color:#900;"></b>
-¿É½«Æô¶¯ÅÌµÄ´ÅÅÌ¾µÏñ×÷ÎªUÅÌµÄÊı¾İÔ´,ÕâÑù±ã¿É·½±ãµÄ½«ÊÖ»ú×÷ÎªµçÄÔÆô¶¯ÅÌ.<br/>
- 
-## Ö¸ÄÏ
- * [°²×¿4.4ÒÔÉÏ°æ±¾½«ÊÖ»ú×÷ÎªUÅÌÊ¹ÓÃ](http://jingyan.baidu.com/article/a3f121e4be8e7ffc9052bb19.html)
+* æ‘†è„±`MTP`, å®ç°PCä¸Androidçš„æ–‡ä»¶ä¼ è¾“, Mass Storage æ¯” MTP å…¼å®¹æ€§æ›´å¥½.
+* æ›¿ä»£å®ä½“Uç›˜, æºå¸¦æ‰‹æœºå, æ— éœ€å†å¸¦Uç›˜.
+* ä½¿ç”¨å·²æœ‰çš„isoæˆ–peé•œåƒ, ç”¨äºPCç³»ç»Ÿç»´æŠ¤, æ— éœ€åˆ»ç›˜, æ›¿ä»£PCå¯åŠ¨ç›˜.
+
+
+
+UMSInterface APPåé¢ä¸å†ç»´æŠ¤. å¦‚æœä»ç„¶æƒ³ä½¿ç”¨æ­¤APP, å¯å‚è€ƒ[APP Description](https://github.com/outofmemo/UMS-Interface/blob/master/README.md).
+
+
+
+ä½œä¸ºæ›¿ä»£, ä¸‹é¢æä¾›ä¸€ä¸ªåŸºäº`Termux`ç¯å¢ƒçš„shellè„šæœ¬ç¤ºä¾‹, æ¥å®Œæˆå¤§è‡´ç›¸åŒçš„åŠŸèƒ½. æ­¤æ–¹æ³•éœ€è¦ä½¿ç”¨è€…å¯¹linuxå’Œshellæœ‰ä¸€å®šçš„äº†è§£. åŒæ—¶, æŒ‚è½½/å¸è½½åˆ†åŒº, ä»¥åŠå¯¹å—è®¾å¤‡çš„æ“ä½œæœ¬æ¥å°±æ˜¯é«˜å±æ“ä½œ, å¦‚æœä½¿ç”¨è€…å¯¹linuxç¯å¢ƒä¸ç†Ÿæ‚‰, å¯èƒ½ä¼šæ—¶æ‰‹æœºå˜ç –, è¿™ä¹Ÿæ˜¯APPä¸å†ç»´æŠ¤çš„åŸå› ä¹‹ä¸€.
+
+
+
+æ›¿ä»£æ–¹æ³•å¦‚ä¸‹:
+
+1. æ­¤shellè„šæœ¬è¿è¡Œç¯å¢ƒåŸºäº`Termux`, è¯·å…ˆå®‰è£…[Termux](https://termux.com/). 
+
+   åŒæ—¶, ä¸ºäº†æ–¹ä¾¿ä¸€é”®æ“ä½œ, å»ºè®®å®‰è£… [Termux:Widget](https://wiki.termux.com/wiki/Termux:Widget);
+
+   ä¸ºäº†æ–¹ä¾¿æ˜¾ç¤ºtoastæ¶ˆæ¯, å»ºè®®å®‰è£… [Termux:API](https://wiki.termux.com/wiki/Termux:API).
+
+ 2. å°† [mass_storage.sh](https://github.com/outofmemo/UMS-Interface/blob/master/mass_storage.sh) æ‹·è´è‡³ `/data/data/com.termux/files/home/.shortcuts/` æˆ–æ‰§è¡Œ:
+
+    ```bash
+    mkdir /data/data/com.termux/files/home/.shortcuts
+    cd /data/data/com.termux/files/home/.shortcuts
+    apt install wget
+    wget https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/
+    ```
+
+    å…¶ä¸­çš„éƒ¨åˆ†å‚æ•°å¯æ ¹æ®å®é™…æƒ…å†µè¿›è¡Œä¿®æ”¹, å¦‚:
+
+    * `default_size_mb`: é»˜è®¤åˆ›å»ºçš„é•œåƒå¤§å°, å•ä½: MB.
+    * `src`: é•œåƒæ–‡ä»¶æˆ–å—è®¾å¤‡è·¯å¾„. 
+      * å¯ä»¥æŒ‡å®šä¸€ä¸ªä¸å­˜åœ¨çš„è·¯å¾„, æ­¤æ—¶ä¼šè‡ªåŠ¨åˆ›å»ºä¸€ä¸ªç©ºçš„é•œåƒ. 
+      * å¯ä»¥æŒ‡å®šä¸€ä¸ªå—è®¾å¤‡è·¯å¾„. ä½†è¦è°¨æ…è¿™ä¹ˆåš, å¦åˆ™å¯èƒ½å¯¼è‡´æ‰‹æœºæ— æ³•å¯åŠ¨.
+      * å¯ä»¥æŒ‡å®šä¸€ä¸ªå·²å­˜åœ¨çš„é•œåƒ. æ¯”å¦‚å¯ä»¥æŒ‡å®šisoé•œåƒ æˆ– peç£ç›˜é•œåƒç”¨äºPCçš„ç³»ç»Ÿç»´æŠ¤. æˆ–è€…ä¹Ÿå¯ä»¥æŒ‡å®šä¸€ä¸ªä½¿ç”¨`dd`å‘½ä»¤æ‹·è´çš„ç£ç›˜é•œåƒ.
+    * `dst`: æŒ‚è½½ç‚¹è·¯å¾„. ç•™ç©ºåˆ™ä¸æŒ‚è½½.
+
+	3. ä¸º`mass_storage.sh`æ·»åŠ å¯æ‰§è¡Œæƒé™:
+
+    ```bash
+    chmod +x /data/data/com.termux/files/home/.shortcuts/mass_storage.sh
+    ```
+
+	4. å¦‚æœæœ‰å®‰è£…`Termux:Widget`, åˆ™å¯åœ¨æ¡Œé¢æ·»åŠ ç›¸åº”çš„å°éƒ¨ä»¶, ç‚¹å‡»å°éƒ¨ä»¶ä¸Šçš„`mass_storage.sh`å³å¯æ‰§è¡Œæ­¤è„šæœ¬.
+
+    ![](https://raw.githubusercontent.com/outofmemo/UMS-Interface/master/screenshots/widget.png)
+
+    å¦‚æœæ²¡æœ‰å®‰è£…, å¯ç›´æ¥åœ¨`Termux`ä¸­æ‰§è¡Œæ­¤è„šæœ¬.
+
+	5. å¦‚æœå¸Œæœ›å¼€æœºæ—¶è‡ªåŠ¨è¿è¡Œæ­¤è„šæœ¬:
+
+    	1. å®‰è£… [Termux:Boot](https://wiki.termux.com/wiki/Termux:Boot).
+
+    	2. åº”ç”¨è®¾ç½®ä¸­æˆäºˆ `Termux:Boot` è‡ªå¯åŠ¨æƒé™
+
+    	3. å°† `mass_storage.sh` æ‹·è´è‡³ `/data/data/com.termux/files/home/.termux/boot`, å¹¶æ·»åŠ å¯æ‰§è¡Œæƒé™.
+
+        ```bash
+        cp /data/data/com.termux/files/home/.shortcuts/mass_storage.sh /data/data/com.termux/files/home/.termux/boot
+        chmod +x /data/data/com.termux/files/home/.termux/boot/mass_storage.sh
+        ```
+
+
+
+æ³¨æ„äº‹é¡¹:
+
+* PC ç«¯å‘ USB Driver ä¸­å†™å…¥æ–‡ä»¶å, Android æ— æ³•æ„ŸçŸ¥æ–‡ä»¶ç³»ç»Ÿçš„å˜åŒ–. å¯ä»¥é€šè¿‡å†æ¬¡æ‰§è¡Œ`mass_storage.sh`æ¥åˆ·æ–°.
+* åŒç†, Android ç«¯å‘é•œåƒæˆ–å—è®¾å¤‡ä¸­å†™å¦‚æ–‡ä»¶å, PCä¹Ÿæ— æ³•æ„ŸçŸ¥æ–‡ä»¶ç³»ç»Ÿçš„å˜åŒ–. å¯ä»¥é€šè¿‡é‡æ–°æ’æ‹”USBæˆ–å†æ¬¡æ‰§è¡Œ`mass_storage.sh`æ¥åˆ·æ–°.
+* PC å’Œ Android ç«¯ä¸è¦åŒæ—¶å¯¹æ–‡ä»¶ç³»ç»Ÿè¿›è¡Œå†™æ“ä½œ(å¦‚: æ–‡ä»¶çš„ç§»åŠ¨, å¤åˆ¶, é‡å‘½å, åˆ›å»º, åˆ é™¤, å†™å…¥), å¦åˆ™ä¼šæŸåæ–‡ä»¶ç³»ç»Ÿ, å¯¼è‡´æ–‡ä»¶ä¸¢å¤±.
+* ä¸è¦åœ¨æ²¡æœ‰å‰¯æœ¬çš„æƒ…å†µä¸‹, åŒ…é‡è¦æ–‡ä»¶å­˜æ”¾åˆ°ä¸Šè¿°è„šæœ¬æŒ‡å®šçš„é•œåƒæˆ–å—è®¾å¤‡ä¸­.
+
