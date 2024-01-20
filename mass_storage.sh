@@ -88,7 +88,7 @@ search_lun_file() {
 	local configfs_mount
 	local config_path
 
-	configfs_mount=`$mount | grep configfs`
+	configfs_mount=`$mount | grep ' type configfs '`
 	if [ -n "$configfs_mount" ]; then
 		config_path=`echo "$configfs_mount" | awk '{print $3}'`
 		lun_file=`$find "$config_path" -type f -name file`
