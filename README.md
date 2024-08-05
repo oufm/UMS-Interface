@@ -32,6 +32,8 @@ The alternative method is as follows:
 
    In order to display toast messages conveniently, it is recommended to install [Termux:API](https://wiki.termux.com/wiki/Termux:API).
 
+   Newer packages do not come with the `mount` command, you need to install `mount-utils` additionally in `Termux`: `pkg install mount-utils`.
+
 2. Copy [mass_storage.sh](https://github.com/outofmemo/UMS-Interface/blob/master/mass_storage.sh) to `/data/data/com.termux/files/home/.shortcuts/`.
 
    Some of the parameters can be modified according to actual conditions. For example:
@@ -110,6 +112,8 @@ Precautions:
    同时, 为了方便一键操作, 建议安装 [Termux:Widget](https://wiki.termux.com/wiki/Termux:Widget).
 
    为了方便显示toast消息, 建议安装 [Termux:API](https://wiki.termux.com/wiki/Termux:API).
+
+   较新版本的软件包未自带 `mount` 命令, 需要在 `Termux` 中额外安装 `mount-utils`: `pkg install mount-utils`.
 
 2. 将 [mass_storage.sh](https://github.com/outofmemo/UMS-Interface/blob/master/mass_storage.sh) 拷贝至 `/data/data/com.termux/files/home/.shortcuts/`.
 
