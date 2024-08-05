@@ -9,7 +9,7 @@ umount="$termux_bin"/umount
 losetup="$termux_bin"/losetup
 find="$termux_bin"/find
 truncate="$termux_bin"/truncate
-toast="$termux_bin"/termux-toast
+toast="timeout 1 $termux_bin/termux-toast"
 mkfs=''
 
 lun_file=''
